@@ -12,6 +12,7 @@ export function reference(scenarioId, stepId) {
 }
 
 export function partnersOf(scenario) {
+  if (!canShare(scenario)) return [];
   const seen = new Map();
   for (const step of scenario.steps) {
     if (step.partner && step.intent && !seen.has(step.partner.name)) {

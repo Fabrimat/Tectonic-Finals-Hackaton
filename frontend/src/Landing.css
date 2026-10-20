@@ -71,3 +71,9 @@
   border-radius: var(--radius-sm);
   padding: 14px;
 }
+
+.landing-stages {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}

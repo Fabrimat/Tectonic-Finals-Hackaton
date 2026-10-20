@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
-import { scenarios } from "../data/scenarios";
+import { scenarios, stageOrder, viewOf } from "../data/scenarios";
 
-const KEY = "ripple-state-v1";
+const KEY = "ripple-state-v2";
 const CHANNEL = "ripple-sync";
 
 // One state object shared by the customer app and the partner portal.
@@ -9,10 +9,11 @@ const CHANNEL = "ripple-sync";
 // so the partner screen updates while the customer taps on a phone-sized window.
 //
 // scenarioId: which scenario is active
+// stage:      which rung of the intent ladder is shown (a demo control)
 // confirmed:  true once the customer confirms the detected signal
 // decisions:  { [stepId]: "accepted" | "deferred" | "rejected" }
 function initial() {
-  return { scenarioId: scenarios[0].id, confirmed: false, decisions: {} };
+  return { scenarioId: scenarios[0].id, stage: stageOrder[0], confirmed: false, decisions: {} };
 }
 
 function load() {
@@ -56,7 +57,10 @@ function subscribe(fn) {
 
 export const actions = {
   selectScenario(scenarioId) {
-    commit({ scenarioId, confirmed: false, decisions: {} });
+    commit({ scenarioId, stage: stageOrder[0], confirmed: false, decisions: {} });
+  },
+  selectStage(stage) {
+    commit({ ...state, stage, confirmed: false, decisions: {} });
   },
   confirmSignal() {
     commit({ ...state, confirmed: true });
@@ -78,6 +82,7 @@ export const actions = {
 
 export function useRipple() {
   const snapshot = useSyncExternalStore(subscribe, () => state);
-  const scenario = scenarios.find((s) => s.id === snapshot.scenarioId) ?? scenarios[0];
+  const base = scenarios.find((s) => s.id === snapshot.scenarioId) ?? scenarios[0];
+  const scenario = viewOf(base, snapshot.stage);
   return { ...snapshot, scenario, actions };
 }

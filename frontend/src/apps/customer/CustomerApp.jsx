@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { scenarios } from "../../data/scenarios";
+import { scenarios, stages, stageOrder } from "../../data/scenarios";
 import { useRipple } from "../../lib/store";
 import ConfirmCard from "./ConfirmCard";
 import RippleReveal from "./RippleReveal";
@@ -42,6 +42,20 @@ export default function CustomerApp() {
             </option>
           ))}
         </select>
+      </div>
+      <div className="cx-switch cx-demo" role="group" aria-label="Demo control, ladder stage">
+        <span>Demo control, stage</span>
+        {stageOrder.map((key) => (
+          <button
+            key={key}
+            type="button"
+            className={key === stage ? "cx-stage-btn is-active" : "cx-stage-btn"}
+            aria-pressed={key === stage}
+            onClick={() => actions.selectStage(key)}
+          >
+            {stages[key].label}
+          </button>
+        ))}
       </div>
 
       <main className="cx-main">

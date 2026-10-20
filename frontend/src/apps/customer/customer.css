@@ -671,3 +671,34 @@
   margin-top: 14px;
   background: var(--card);
 }
+
+.cx-tag-lever {
+  background: var(--bg);
+  border: 1px solid var(--line);
+}
+
+.cx-demo {
+  flex-wrap: wrap;
+  padding-top: 6px;
+}
+
+.cx-demo > span {
+  flex: 1 0 100%;
+}
+
+.cx-stage-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px dashed var(--muted);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.cx-stage-btn.is-active {
+  border-style: solid;
+  border-color: var(--kbc-navy);
+  background: var(--kbc-navy);
+  color: #fff;
+}

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { scenarios, stages } from "./data/scenarios";
+import { scenarios, stages, stageOrder } from "./data/scenarios";
 import { useRipple } from "./lib/store";
 import "./Landing.css";
 
 export default function Landing() {
-  const { scenarioId, actions } = useRipple();
+  const { scenarioId, stage, actions } = useRipple();
 
   return (
     <main className="landing">
@@ -22,9 +22,15 @@ export default function Landing() {
             >
               {s.person.name}
               <span>{s.domain}</span>
-              <span>
-                {stages[s.stage].label}, about {s.monthsAhead} months ahead
-              </span>
+            </button>
+          ))}
+        </div>
+        <h2>Stage</h2>
+        <div className="landing-stages">
+          {stageOrder.map((key) => (
+            <button key={key} className={key === stage ? "choice active" : "choice"} onClick={() => actions.selectStage(key)}>
+              {stages[key].label}
+              <span>{stages[key].window}</span>
             </button>
           ))}
         </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { catalogueItem } from "../../data/scenarios";
+import { catalogueItem, levers } from "../../data/scenarios";
 import { money } from "./format";
 
 const STATE_LABEL = {
@@ -17,7 +17,7 @@ export function CatalogueTag({ step }) {
       </span>
     );
   }
-  if (step.proposed) return <span className="cx-tag cx-tag-new">New capability</span>;
+  if (step.proposed) return <span className="cx-tag cx-tag-new">Proposed</span>;
   return null;
 }
 
@@ -29,10 +29,11 @@ export default function StepCard({ step, signal, decision, onDecide, onUndo }) {
     <article className={`cx-card cx-step${decision ? ` is-${decision}` : ""}`}>
       <div className="cx-tags">
         <CatalogueTag step={step} />
+        {step.lever && <span className="cx-tag cx-tag-lever">{levers[step.lever]}</span>}
         {step.partner && (
           <span className="cx-badge">
             {step.partner.name}
-            {step.partner.newPartner && <em>New partner</em>}
+            {step.partner.proposed && <em>Proposed</em>}
           </span>
         )}
       </div>

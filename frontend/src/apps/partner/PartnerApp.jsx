@@ -31,7 +31,7 @@ export default function PartnerApp() {
               <option key={p.name} value={p.name}>{p.name}</option>
             ))}
           </select>
-          {current?.newPartner && <span className="pp-tag">New partner</span>}
+          {current?.proposed && <span className="pp-tag">Proposed partner</span>}
         </div>
         <Link className="pp-back" to="/">Back to start</Link>
       </header>
