@@ -5,16 +5,27 @@ import { CatalogueService } from '../catalogue/catalogue.service';
 import { loadConfig } from '../config/config';
 import { PlanRequestDto } from './dto/plan-request.dto';
 import {
+  ActionDef,
+  ActionKind,
+  Area,
   CachedScenario,
   Fact,
+  GroupRound,
   Plan,
+  PlanAction,
   PlanStep,
   Rule,
   Stage,
-  WatchedItem,
 } from './plan.types';
 import { evaluateRules, parseDate } from './rules';
 import { rewriteWhy } from './wording';
+
+// Kinds of action each stage may carry. Whisper stays awareness and customer-initiated actions.
+const KINDS_BY_STAGE: Record<Stage, ActionKind[]> = {
+  whisper: ['awareness', 'optional'],
+  forming: ['awareness', 'optional', 'opportunity', 'introduction'],
+  ready: ['awareness', 'optional', 'opportunity', 'introduction', 'plan'],
+};
 
 function readData<T>(name: string): T {
   return JSON.parse(readFileSync(join(__dirname, '..', '..', 'data', name), 'utf8')) as T;
@@ -23,6 +34,7 @@ function readData<T>(name: string): T {
 @Injectable()
 export class PlanService {
   private readonly rules = readData<Rule[]>('rules.json');
+  private readonly rounds = readData<GroupRound[]>('group-rounds.json');
   private readonly facts = new Map(readData<Fact[]>('facts.json').map((f) => [f.id, f]));
   private readonly scenarios: CachedScenario[];
   private readonly wording = loadConfig().wording;
@@ -53,29 +65,56 @@ export class PlanService {
     return { ...plan, steps, wording: used ? 'model' : 'deterministic' };
   }
 
-  build(dto: Pick<PlanRequestDto, 'scenarioId' | 'dates' | 'spend' | 'flags'>, asOf: Date): Plan {
-    const signals = { dates: dto.dates ?? [], spend: dto.spend ?? [], flags: dto.flags ?? [] };
+  build(
+    dto: Pick<PlanRequestDto, 'scenarioId' | 'dates' | 'spend' | 'flags' | 'area'>,
+    asOf: Date,
+  ): Plan {
+    const area: Area = dto.area ?? {};
+    const signals = { dates: dto.dates ?? [], spend: dto.spend ?? [], flags: dto.flags ?? [], area };
     const matches = evaluateRules(this.rules, signals, asOf);
     const steps: PlanStep[] = [];
-    const watching: WatchedItem[] = [];
+    const actions: PlanAction[] = [];
+    const areaNotes: Plan['areaNotes'] = [];
+    const groupRounds: GroupRound[] = [];
     const seenSteps = new Set<string>();
-    const seenWatched = new Set<string>();
+    const seenActions = new Set<string>();
 
     for (const { rule, stage } of matches) {
+      const open = this.rounds.filter(
+        (r) =>
+          (area.openGroupRounds ?? []).includes(r.id) &&
+          (rule.candidates.some((c) => c.id === r.catalogueId) ||
+            Object.values(rule.allowedActions).some((list) => list?.some((a) => a.id === r.catalogueId))),
+      );
+      if (stage !== 'whisper') {
+        for (const r of open) if (!groupRounds.some((g) => g.id === r.id)) groupRounds.push(r);
+        for (const note of rule.areaNotes) {
+          const applies =
+            (note.historicCentre === undefined || note.historicCentre === (area.historicCentre === true)) &&
+            (note.minBuildingStockAge === undefined || (area.buildingStockAge ?? 0) >= note.minBuildingStockAge);
+          if (applies && !areaNotes.some((n) => n.id === note.id)) {
+            areaNotes.push({ id: note.id, text: note.text, facts: this.factsFor(note.facts) });
+          }
+        }
+      }
+
+      for (const def of rule.allowedActions[stage] ?? []) {
+        const action = this.toAction(def, rule.intent, stage);
+        if (action && !seenActions.has(action.id)) {
+          seenActions.add(action.id);
+          actions.push(action);
+        }
+      }
+
+      if (stage !== 'ready') continue;
       const known = new Set(this.catalogue.keepKnown(rule.candidates.map((c) => c.id)));
       for (const c of rule.candidates) {
         const proposed = c.proposed === true;
         if (proposed ? this.catalogue.findOne(c.id) : !known.has(c.id)) continue;
-        const title = proposed ? (c.title ?? c.id) : (this.catalogue.findOne(c.id) as { name: string }).name;
-        if (stage !== 'ready') {
-          if (!proposed && !c.notNeeded && !seenWatched.has(c.id)) {
-            seenWatched.add(c.id);
-            watching.push({ id: c.id, title, intent: rule.intent });
-          }
-          continue;
-        }
         if (seenSteps.has(c.id)) continue;
         seenSteps.add(c.id);
+        const title = proposed ? (c.title ?? c.id) : (this.catalogue.findOne(c.id) as { name: string }).name;
+        const round = open.find((r) => r.catalogueId === c.id);
         steps.push({
           id: c.id,
           title,
@@ -85,6 +124,18 @@ export class PlanService {
           intent: rule.intent,
           proposed,
           notNeeded: c.notNeeded === true,
+          ...(round ? { groupRoundId: round.id } : {}),
+        });
+        actions.push({
+          id: c.id,
+          kind: 'plan',
+          title,
+          optional: true,
+          sharesData: c.notNeeded !== true,
+          partnerRole: c.role,
+          proposed,
+          why: c.why,
+          intent: rule.intent,
         });
       }
     }
@@ -101,24 +152,62 @@ export class PlanService {
         stage: m.stage,
         keyDate: m.keyDate,
         message: m.rule.messages[m.stage],
-        facts: m.rule.facts.flatMap((id) => this.facts.get(id) ?? []),
+        note: m.rule.notes[m.stage],
+        thresholds: m.rule.thresholds,
+        facts: this.factsFor(m.rule.facts),
       })),
       steps,
-      watching,
+      actions,
+      areaNotes,
+      groupRounds,
+    };
+  }
+
+  private factsFor(ids: string[]): Fact[] {
+    return ids.flatMap((id) => this.facts.get(id) ?? []);
+  }
+
+  // Validates an action against the catalogue and the stage gating. Returns null when it is not allowed.
+  private toAction(def: ActionDef, intent: string, stage: Stage): PlanAction | null {
+    if (!KINDS_BY_STAGE[stage].includes(def.kind)) return null;
+    if (def.sharesData && !def.optional) return null;
+    const proposed = def.proposed === true;
+    const product = this.catalogue.findOne(def.id);
+    if (proposed ? product : !product) return null;
+    return {
+      id: def.id,
+      kind: def.kind,
+      title: proposed ? (def.title ?? def.id) : (product as { name: string }).name,
+      optional: def.optional,
+      sharesData: def.sharesData,
+      ...(def.partnerRole ? { partnerRole: def.partnerRole } : {}),
+      proposed,
+      why: def.why,
+      intent,
     };
   }
 
   // Re-applies the catalogue and stage checks to a stored plan before it is served.
   private sanitize(plan: Plan): Plan {
     const stages = new Map(plan.matches.map((m) => [m.intent, m.stage]));
-    const steps = plan.steps.filter((s) => {
-      if (stages.get(s.intent) !== 'ready') return false;
-      return s.proposed ? !this.catalogue.findOne(s.id) : this.catalogue.findOne(s.id) !== undefined;
+    const exists = (id: string, proposed: boolean) =>
+      proposed ? !this.catalogue.findOne(id) : this.catalogue.findOne(id) !== undefined;
+    const steps = plan.steps.filter((s) => stages.get(s.intent) === 'ready' && exists(s.id, s.proposed));
+    const actions = plan.actions.filter((a) => {
+      const stage = stages.get(a.intent);
+      if (!stage || !KINDS_BY_STAGE[stage].includes(a.kind) || !exists(a.id, a.proposed)) return false;
+      if (stage !== 'ready' && a.sharesData && !a.optional) return false;
+      return a.kind !== 'plan' || steps.some((s) => s.id === a.id);
     });
-    const watching = plan.watching.filter((w) => {
-      const stage = stages.get(w.intent);
-      return stage !== undefined && stage !== 'ready' && this.catalogue.findOne(w.id) !== undefined;
-    });
-    return { ...plan, source: 'cached', steps, watching };
+    const hasMatch = (stage: Stage) => plan.matches.some((m) => m.stage === stage);
+    const late = hasMatch('forming') || hasMatch('ready');
+    return {
+      ...plan,
+      source: 'cached',
+      steps,
+      actions,
+      areaNotes: late ? plan.areaNotes : [],
+      groupRounds: late ? plan.groupRounds.filter((r) => this.rounds.some((k) => k.id === r.id)) : [],
+    };
   }
 }

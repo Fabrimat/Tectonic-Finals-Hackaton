@@ -4,6 +4,7 @@
     "intent": "home-energy-renovation",
     "title": "Home renovation ahead of the EPC deadline",
     "keyDate": "renovation_deadline",
+    "thresholds": { "ready": 3, "forming": 12, "whisper": 36 },
     "when": [{ "flag": "epc_e_or_f" }],
     "stages": {
       "whisper": [{ "date": "renovation_deadline", "stage": "whisper" }],
@@ -11,10 +12,85 @@
       "ready": [{ "flag": "boiler_repair_invoice" }]
     },
     "messages": {
-      "whisper": "The renovation clock for this home is running and the energy bill keeps rising. Nothing is shared with partners.",
-      "forming": "The heating system is reaching the end of its life. Are you planning to renovate?",
-      "ready": "A boiler repair points to work starting now. Here is a plan across partners for you to approve step by step."
+      "whisper": "This is your consumption trend. There is nothing to do now, it is just good to be aware.",
+      "forming": "Your heating system is getting older. Are you thinking about renovating?",
+      "ready": "A boiler repair suggests work is starting. Here is a plan for you to go through step by step."
     },
+    "notes": {
+      "whisper": "Data used: your mortgage start date, the EPC label we hold and your energy costs. Please confirm this is right. Nothing is shared with anyone.",
+      "forming": "Data used: the age of your heating system and your visits to the energy pages. Please confirm this is right before we build anything on it.",
+      "ready": "Data used: the boiler repair invoice, the EPC label and your mortgage. Please confirm this is right. Every step stays your choice."
+    },
+    "allowedActions": {
+      "whisper": [
+        {
+          "id": "energy-consumption-and-saving-tips",
+          "kind": "awareness",
+          "why": "Your energy use over the last years, for your own information.",
+          "optional": true,
+          "sharesData": false,
+          "partnerRole": "Data"
+        },
+        {
+          "id": "fluvius-meter-data-connection",
+          "kind": "optional",
+          "why": "If you want, you can connect your meter data so the trend uses real consumption. You decide whether to share it.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Data",
+          "proposed": true,
+          "title": "Connect meter data through Fluvius"
+        },
+        {
+          "id": "certificates-and-inspections-de-immowinkel",
+          "kind": "optional",
+          "why": "If you want, a small EPC check shows where the home stands. It only happens when you ask for it.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Certificates"
+        }
+      ],
+      "forming": [
+        {
+          "id": "energy-consumption-and-saving-tips",
+          "kind": "awareness",
+          "why": "Your energy use over the last years, for your own information.",
+          "optional": true,
+          "sharesData": false,
+          "partnerRole": "Data"
+        },
+        {
+          "id": "calculate-solar-panels-and-request-a-quote",
+          "kind": "opportunity",
+          "why": "Solar panels would fit the plan you are likely to end up with. Look at it when it suits you.",
+          "optional": true,
+          "sharesData": false,
+          "partnerRole": "Installation"
+        },
+        {
+          "id": "group-purchase-of-electricity-and-gas",
+          "kind": "introduction",
+          "why": "If you want, we can introduce a group purchase for your energy contract. Nothing is shared until you say so.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Collective buying and supply"
+        }
+      ]
+    },
+    "areaNotes": [
+      {
+        "id": "historic-centre-home",
+        "text": "This home is in a historic centre, so insulation and roof panels may need a different approach. Advisers will start from the local situation.",
+        "facts": ["historic-centre-rules"],
+        "historicCentre": true
+      },
+      {
+        "id": "older-homes-nearby",
+        "text": "Most homes nearby are old, so insulation is a common first step in this area.",
+        "facts": [],
+        "minBuildingStockAge": 50
+      }
+    ],
     "facts": ["renovation-obligation", "grant-changes"],
     "candidates": [
       {
@@ -80,17 +156,90 @@
     "id": "business-vans-and-premises",
     "intent": "business-energy-and-fleet",
     "title": "Premises and delivery vans",
+    "keyDate": "van_replacement_due",
+    "thresholds": { "ready": 3, "forming": 6, "whisper": 12 },
     "when": [],
     "stages": {
-      "whisper": [{ "flag": "energy_cost_rising" }],
-      "forming": [{ "flag": "delivery_vans_in_brussels_zone" }],
+      "whisper": [{ "flag": "energy_cost_rising" }, { "date": "van_replacement_due", "stage": "whisper" }],
+      "forming": [{ "flag": "delivery_vans_in_brussels_zone" }, { "date": "van_replacement_due", "stage": "forming" }],
       "ready": [{ "category": "vehicle_deposit", "minCount": 1 }]
     },
     "messages": {
-      "whisper": "Energy costs are rising faster than revenue. Nothing is shared with partners.",
-      "forming": "The Brussels low-emission zone now reaches your delivery vans. Are you planning to replace them?",
-      "ready": "A deposit on an electric van points to a decision now. Here is a plan across partners for you to approve step by step."
+      "whisper": "Energy costs are rising faster than revenue. This is just for your information.",
+      "forming": "The Brussels low-emission zone now reaches your delivery vans. Are you thinking about replacing them?",
+      "ready": "A deposit on an electric van suggests a decision now. Here is a plan for you to go through step by step."
     },
+    "notes": {
+      "whisper": "Data used: your energy costs and the planned replacement date of the vans. Please confirm this is right. Nothing is shared with anyone.",
+      "forming": "Data used: where the vans drive and their planned replacement date. Please confirm this is right before we build anything on it.",
+      "ready": "Data used: the vehicle deposit and your energy costs. Please confirm this is right. Every step stays your choice."
+    },
+    "allowedActions": {
+      "whisper": [
+        {
+          "id": "business-co2-insights-and-sector-comparison",
+          "kind": "awareness",
+          "why": "Your emissions and how similar bakeries compare, for your own information.",
+          "optional": true,
+          "sharesData": false,
+          "partnerRole": "Business footprint"
+        },
+        {
+          "id": "fluvius-meter-data-connection",
+          "kind": "optional",
+          "why": "If you want, you can connect your meter data so the trend uses real consumption. You decide whether to share it.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Data",
+          "proposed": true,
+          "title": "Connect meter data through Fluvius"
+        },
+        {
+          "id": "sustainability-advice-encon",
+          "kind": "optional",
+          "why": "If you want, a short preparation call with an adviser. It only happens when you ask for it.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Advice and grants"
+        }
+      ],
+      "forming": [
+        {
+          "id": "calculate-solar-panels-and-request-a-quote",
+          "kind": "opportunity",
+          "why": "Solar panels on the roof would fit the plan you are likely to end up with. Look at it when it suits you.",
+          "optional": true,
+          "sharesData": false,
+          "partnerRole": "Installation"
+        },
+        {
+          "id": "blink-charging-business",
+          "kind": "introduction",
+          "why": "If you want, we can introduce a charging partner for the new van. Nothing is shared until you say so.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Charging",
+          "proposed": true,
+          "title": "Business charging with Blink Charging"
+        },
+        {
+          "id": "group-purchase-of-electricity-and-gas",
+          "kind": "introduction",
+          "why": "If you want, we can introduce a group purchase for your energy contract. Nothing is shared until you say so.",
+          "optional": true,
+          "sharesData": true,
+          "partnerRole": "Collective buying and supply"
+        }
+      ]
+    },
+    "areaNotes": [
+      {
+        "id": "historic-centre-premises",
+        "text": "The premises are in a historic centre, so roof panels and facade work may need a different approach. Advisers will start from the local situation.",
+        "facts": ["historic-centre-rules"],
+        "historicCentre": true
+      }
+    ],
     "facts": ["brussels-low-emission-zone"],
     "candidates": [
       {

@@ -3,6 +3,8 @@ import { Rule, Signals } from './plan.types';
 
 const d = (value: string) => parseDate(value) as Date;
 const asOf = d('2026-10-20');
+const household = { ready: 3, forming: 12, whisper: 36 };
+const business = { ready: 3, forming: 6, whisper: 12 };
 
 describe('stageFor', () => {
   it.each([
@@ -12,13 +14,29 @@ describe('stageFor', () => {
     ['2027-10-20', 'forming'],
     ['2027-10-21', 'whisper'],
     ['2029-10-20', 'whisper'],
-  ])('%s is %s', (date, stage) => {
-    expect(stageFor(d(date), asOf)).toBe(stage);
+  ])('household: %s is %s', (date, stage) => {
+    expect(stageFor(d(date), asOf, household)).toBe(stage);
+  });
+
+  it.each([
+    ['2027-01-20', 'ready'],
+    ['2027-01-21', 'forming'],
+    ['2027-04-20', 'forming'],
+    ['2027-04-21', 'whisper'],
+    ['2027-10-20', 'whisper'],
+  ])('business: %s is %s', (date, stage) => {
+    expect(stageFor(d(date), asOf, business)).toBe(stage);
+  });
+
+  it('the same date lands in different stages per segment', () => {
+    expect(stageFor(d('2027-08-01'), asOf, household)).toBe('forming');
+    expect(stageFor(d('2027-08-01'), asOf, business)).toBe('whisper');
   });
 
   it('returns null for past dates and dates beyond three years', () => {
-    expect(stageFor(d('2026-10-19'), asOf)).toBeNull();
-    expect(stageFor(d('2029-10-21'), asOf)).toBeNull();
+    expect(stageFor(d('2026-10-19'), asOf, household)).toBeNull();
+    expect(stageFor(d('2029-10-21'), asOf, household)).toBeNull();
+    expect(stageFor(d('2027-10-21'), asOf, business)).toBeNull();
   });
 
   it('honours custom thresholds', () => {
@@ -45,6 +63,7 @@ describe('evaluateRules', () => {
     intent: 'test-intent',
     title: 'Test',
     keyDate: 'deadline',
+    thresholds: household,
     when: [{ flag: 'gate' }],
     stages: {
       whisper: [{ date: 'deadline', stage: 'whisper' }],
@@ -52,6 +71,9 @@ describe('evaluateRules', () => {
       ready: [{ flag: 'invoice' }],
     },
     messages: { whisper: 'w', forming: 'f', ready: 'r' },
+    notes: { whisper: 'w', forming: 'f', ready: 'r' },
+    allowedActions: {},
+    areaNotes: [],
     facts: [],
     candidates: [],
   };
@@ -79,13 +101,13 @@ describe('evaluateRules', () => {
 
   it('needs every condition of a rung', () => {
     const dates = [{ kind: 'deadline', date: '2027-05-01' }];
-    expect(evaluateRules([rule], signals({ dates }), asOf)).toEqual([]);
+    expect(evaluateRules([rule], signals({ dates }), asOf)[0].stage).toBe('whisper');
     const spend = [{ category: 'fuel', total: 600, count: 4 }];
     expect(evaluateRules([rule], signals({ dates, spend }), asOf)[0].stage).toBe('forming');
     const low = [{ category: 'fuel', total: 499, count: 4 }];
-    expect(evaluateRules([rule], signals({ dates, spend: low }), asOf)).toEqual([]);
+    expect(evaluateRules([rule], signals({ dates, spend: low }), asOf)[0].stage).toBe('whisper');
     const few = [{ category: 'fuel', total: 900, count: 1 }];
-    expect(evaluateRules([rule], signals({ dates, spend: few }), asOf)).toEqual([]);
+    expect(evaluateRules([rule], signals({ dates, spend: few }), asOf)[0].stage).toBe('whisper');
   });
 
   it('sums rows of the same category', () => {
@@ -115,5 +137,11 @@ describe('evaluateRules', () => {
   it('uses rule thresholds when present', () => {
     const custom: Rule = { ...rule, thresholds: { ready: 1, forming: 2, whisper: 3 } };
     expect(evaluateRules([custom], signals(), asOf)).toEqual([]);
+  });
+
+  it('a date condition holds for its stage or a sooner one', () => {
+    const r: Rule = { ...rule, stages: { whisper: [{ date: 'deadline', stage: 'whisper' }] } };
+    const near = [{ kind: 'deadline', date: '2026-12-01' }];
+    expect(evaluateRules([r], signals({ dates: near }), asOf)[0].stage).toBe('whisper');
   });
 });

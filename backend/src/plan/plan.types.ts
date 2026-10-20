@@ -17,10 +17,44 @@ export interface SpendSignal {
   count: number;
 }
 
+export interface Area {
+  buildingStockAge?: number;
+  historicCentre?: boolean;
+  openGroupRounds?: string[];
+}
+
 export interface Signals {
   dates: DateSignal[];
   spend: SpendSignal[];
   flags: string[];
+  area?: Area;
+}
+
+export type ActionKind = 'awareness' | 'optional' | 'opportunity' | 'introduction' | 'plan';
+
+export interface ActionDef {
+  id: string;
+  kind: ActionKind;
+  why: string;
+  optional: boolean;
+  sharesData: boolean;
+  partnerRole?: string;
+  proposed?: boolean;
+  title?: string;
+}
+
+export interface AreaNoteDef {
+  id: string;
+  text: string;
+  facts: string[];
+  historicCentre?: boolean;
+  minBuildingStockAge?: number;
+}
+
+export interface GroupRound {
+  id: string;
+  title: string;
+  catalogueId: string;
 }
 
 export type Condition =
@@ -43,10 +77,13 @@ export interface Rule {
   intent: string;
   title: string;
   keyDate?: string;
-  thresholds?: StageThresholds;
+  thresholds: StageThresholds;
   when: Condition[];
   stages: Partial<Record<Stage, Condition[]>>;
   messages: Record<Stage, string>;
+  notes: Record<Stage, string>;
+  allowedActions: Partial<Record<Stage, ActionDef[]>>;
+  areaNotes: AreaNoteDef[];
   facts: string[];
   candidates: Candidate[];
 }
@@ -71,6 +108,8 @@ export interface PlanMatch {
   stage: Stage;
   keyDate?: string;
   message: string;
+  note: string;
+  thresholds: StageThresholds;
   facts: Fact[];
 }
 
@@ -83,12 +122,25 @@ export interface PlanStep {
   intent: string;
   proposed: boolean;
   notNeeded: boolean;
+  groupRoundId?: string;
 }
 
-export interface WatchedItem {
+export interface PlanAction {
   id: string;
+  kind: ActionKind;
   title: string;
+  optional: boolean;
+  sharesData: boolean;
+  partnerRole?: string;
+  proposed: boolean;
+  why: string;
   intent: string;
+}
+
+export interface PlanAreaNote {
+  id: string;
+  text: string;
+  facts: Fact[];
 }
 
 export interface Plan {
@@ -98,7 +150,9 @@ export interface Plan {
   wording: 'deterministic' | 'model';
   matches: PlanMatch[];
   steps: PlanStep[];
-  watching: WatchedItem[];
+  actions: PlanAction[];
+  areaNotes: PlanAreaNote[];
+  groupRounds: GroupRound[];
 }
 
 export interface CachedScenario {

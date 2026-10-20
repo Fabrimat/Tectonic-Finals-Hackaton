@@ -1,7 +1,5 @@
 import { Condition, Rule, RuleMatch, Signals, Stage, StageThresholds } from './plan.types';
 
-export const DEFAULT_THRESHOLDS: StageThresholds = { ready: 3, forming: 12, whisper: 36 };
-
 export function parseDate(value: string): Date | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
   if (!m) return null;
@@ -20,11 +18,11 @@ export function addMonths(date: Date, months: number): Date {
   return new Date(Date.UTC(y, m, Math.min(date.getUTCDate(), lastDay)));
 }
 
-// whisper: 12 to 36 months ahead, forming: 3 to 12, ready: 0 to 3. Upper bounds are inclusive.
+// Windows come from the rule, so each segment has its own ladder. Upper bounds are inclusive.
 export function stageFor(
   keyDate: Date,
   asOf: Date,
-  thresholds: StageThresholds = DEFAULT_THRESHOLDS,
+  thresholds: StageThresholds,
 ): Stage | null {
   if (keyDate < asOf) return null;
   if (keyDate <= addMonths(asOf, thresholds.ready)) return 'ready';
@@ -44,17 +42,22 @@ function nearestUpcoming(signals: Signals, kind: string, asOf: Date): Date | nul
   return best;
 }
 
+// A date condition holds for its stage or any sooner one, so a stage is never skipped.
+const RANK: Record<Stage, number> = { ready: 0, forming: 1, whisper: 2 };
+
 function conditionHolds(
   condition: Condition,
   signals: Signals,
   asOf: Date,
-  thresholds?: StageThresholds,
+  thresholds: StageThresholds,
 ): boolean {
   if ('flag' in condition) return signals.flags.includes(condition.flag);
   if ('date' in condition) {
     const date = nearestUpcoming(signals, condition.date, asOf);
     if (!date) return false;
-    return condition.stage === undefined || stageFor(date, asOf, thresholds) === condition.stage;
+    if (condition.stage === undefined) return true;
+    const found = stageFor(date, asOf, thresholds);
+    return found !== null && RANK[found] <= RANK[condition.stage];
   }
   const rows = signals.spend.filter((s) => s.category === condition.category);
   if (rows.length === 0) return false;

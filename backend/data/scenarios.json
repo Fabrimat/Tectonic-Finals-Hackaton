@@ -15,7 +15,13 @@
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "whisper",
             "keyDate": "2029-06-15",
-            "message": "The renovation clock for this home is running and the energy bill keeps rising. Nothing is shared with partners.",
+            "message": "This is your consumption trend. There is nothing to do now, it is just good to be aware.",
+            "note": "Data used: your mortgage start date, the EPC label we hold and your energy costs. Please confirm this is right. Nothing is shared with anyone.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 12,
+              "whisper": 36
+            },
             "facts": [
               {
                 "id": "renovation-obligation",
@@ -33,43 +39,43 @@
           }
         ],
         "steps": [],
-        "watching": [
+        "actions": [
+          {
+            "id": "energy-consumption-and-saving-tips",
+            "kind": "awareness",
+            "title": "Energy consumption and saving tips",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Data",
+            "proposed": false,
+            "why": "Your energy use over the last years, for your own information.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "fluvius-meter-data-connection",
+            "kind": "optional",
+            "title": "Connect meter data through Fluvius",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Data",
+            "proposed": true,
+            "why": "If you want, you can connect your meter data so the trend uses real consumption. You decide whether to share it.",
+            "intent": "home-energy-renovation"
+          },
           {
             "id": "certificates-and-inspections-de-immowinkel",
+            "kind": "optional",
             "title": "Certificates and inspections - De Immowinkel",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "estimate-renovation-costs-and-grants-setle",
-            "title": "Estimate renovation costs and grants - Setle",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "insulation-quote-impact-us-today",
-            "title": "Insulation quote - Impact us today",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "calculate-solar-panels-and-request-a-quote",
-            "title": "Calculate solar panels and request a quote",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "group-purchase-of-electricity-and-gas",
-            "title": "Group purchase of electricity and gas",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "energy-loan",
-            "title": "Energy loan",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "home-insurance",
-            "title": "Home insurance",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Certificates",
+            "proposed": false,
+            "why": "If you want, a small EPC check shows where the home stands. It only happens when you ask for it.",
             "intent": "home-energy-renovation"
           }
-        ]
+        ],
+        "areaNotes": [],
+        "groupRounds": []
       },
       "forming": {
         "scenarioId": "household-maes",
@@ -83,7 +89,13 @@
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "forming",
             "keyDate": "2029-06-15",
-            "message": "The heating system is reaching the end of its life. Are you planning to renovate?",
+            "message": "Your heating system is getting older. Are you thinking about renovating?",
+            "note": "Data used: the age of your heating system and your visits to the energy pages. Please confirm this is right before we build anything on it.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 12,
+              "whisper": 36
+            },
             "facts": [
               {
                 "id": "renovation-obligation",
@@ -101,41 +113,53 @@
           }
         ],
         "steps": [],
-        "watching": [
+        "actions": [
           {
-            "id": "certificates-and-inspections-de-immowinkel",
-            "title": "Certificates and inspections - De Immowinkel",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "estimate-renovation-costs-and-grants-setle",
-            "title": "Estimate renovation costs and grants - Setle",
-            "intent": "home-energy-renovation"
-          },
-          {
-            "id": "insulation-quote-impact-us-today",
-            "title": "Insulation quote - Impact us today",
+            "id": "energy-consumption-and-saving-tips",
+            "kind": "awareness",
+            "title": "Energy consumption and saving tips",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Data",
+            "proposed": false,
+            "why": "Your energy use over the last years, for your own information.",
             "intent": "home-energy-renovation"
           },
           {
             "id": "calculate-solar-panels-and-request-a-quote",
+            "kind": "opportunity",
             "title": "Calculate solar panels and request a quote",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Solar panels would fit the plan you are likely to end up with. Look at it when it suits you.",
             "intent": "home-energy-renovation"
           },
           {
             "id": "group-purchase-of-electricity-and-gas",
+            "kind": "introduction",
             "title": "Group purchase of electricity and gas",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Collective buying and supply",
+            "proposed": false,
+            "why": "If you want, we can introduce a group purchase for your energy contract. Nothing is shared until you say so.",
             "intent": "home-energy-renovation"
-          },
+          }
+        ],
+        "areaNotes": [
           {
-            "id": "energy-loan",
-            "title": "Energy loan",
-            "intent": "home-energy-renovation"
-          },
+            "id": "older-homes-nearby",
+            "text": "Most homes nearby are old, so insulation is a common first step in this area.",
+            "facts": []
+          }
+        ],
+        "groupRounds": [
           {
-            "id": "home-insurance",
-            "title": "Home insurance",
-            "intent": "home-energy-renovation"
+            "id": "solar-panels-east-flanders-2026",
+            "title": "Group purchase of solar panels, East Flanders",
+            "catalogueId": "calculate-solar-panels-and-request-a-quote"
           }
         ]
       },
@@ -151,7 +175,13 @@
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "ready",
             "keyDate": "2029-06-15",
-            "message": "A boiler repair points to work starting now. Here is a plan across partners for you to approve step by step.",
+            "message": "A boiler repair suggests work is starting. Here is a plan for you to go through step by step.",
+            "note": "Data used: the boiler repair invoice, the EPC label and your mortgage. Please confirm this is right. Every step stays your choice.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 12,
+              "whisper": 36
+            },
             "facts": [
               {
                 "id": "renovation-obligation",
@@ -231,7 +261,8 @@
             ],
             "intent": "home-energy-renovation",
             "proposed": false,
-            "notNeeded": false
+            "notNeeded": false,
+            "groupRoundId": "solar-panels-east-flanders-2026"
           },
           {
             "id": "group-purchase-of-electricity-and-gas",
@@ -283,7 +314,121 @@
             "notNeeded": true
           }
         ],
-        "watching": []
+        "actions": [
+          {
+            "id": "certificates-and-inspections-de-immowinkel",
+            "kind": "plan",
+            "title": "Certificates and inspections - De Immowinkel",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Certificates",
+            "proposed": false,
+            "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "estimate-renovation-costs-and-grants-setle",
+            "kind": "plan",
+            "title": "Estimate renovation costs and grants - Setle",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Advice and grants",
+            "proposed": false,
+            "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "insulation-quote-impact-us-today",
+            "kind": "plan",
+            "title": "Insulation quote - Impact us today",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Insulation lowers the heat the home needs, so it comes before the heating system is sized.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "heat-pump-installation",
+            "kind": "plan",
+            "title": "Heat pump installation",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Installation",
+            "proposed": true,
+            "why": "The boiler is at the end of its life and a heat pump can replace it once the home is insulated.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "kind": "plan",
+            "title": "Calculate solar panels and request a quote",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Panels cover part of the electricity a heat pump will use.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "kind": "plan",
+            "title": "Group purchase of electricity and gas",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Collective buying and supply",
+            "proposed": false,
+            "why": "A group round gives a better price on the energy contract than a standard offer.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "energy-loan",
+            "kind": "plan",
+            "title": "Energy loan",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Finance and protection",
+            "proposed": false,
+            "why": "A loan sized against the expected savings spreads the cost of the renovation.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "home-insurance",
+            "kind": "plan",
+            "title": "Home insurance",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Finance and protection",
+            "proposed": false,
+            "why": "The insured value and cover change once the home is renovated.",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "calculate-a-home-battery-and-request-a-quote",
+            "kind": "plan",
+            "title": "Calculate a home battery and request a quote",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Not needed yet. A battery only pays back once solar panels produce more than the home uses during the day.",
+            "intent": "home-energy-renovation"
+          }
+        ],
+        "areaNotes": [
+          {
+            "id": "older-homes-nearby",
+            "text": "Most homes nearby are old, so insulation is a common first step in this area.",
+            "facts": []
+          }
+        ],
+        "groupRounds": [
+          {
+            "id": "solar-panels-east-flanders-2026",
+            "title": "Group purchase of solar panels, East Flanders",
+            "catalogueId": "calculate-solar-panels-and-request-a-quote"
+          }
+        ]
       }
     }
   },
@@ -302,7 +447,14 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "whisper",
-            "message": "Energy costs are rising faster than revenue. Nothing is shared with partners.",
+            "keyDate": "2027-06-01",
+            "message": "Energy costs are rising faster than revenue. This is just for your information.",
+            "note": "Data used: your energy costs and the planned replacement date of the vans. Please confirm this is right. Nothing is shared with anyone.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 6,
+              "whisper": 12
+            },
             "facts": [
               {
                 "id": "brussels-low-emission-zone",
@@ -314,33 +466,43 @@
           }
         ],
         "steps": [],
-        "watching": [
+        "actions": [
           {
             "id": "business-co2-insights-and-sector-comparison",
+            "kind": "awareness",
             "title": "Business CO2 insights and sector comparison",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Business footprint",
+            "proposed": false,
+            "why": "Your emissions and how similar bakeries compare, for your own information.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "fluvius-meter-data-connection",
+            "kind": "optional",
+            "title": "Connect meter data through Fluvius",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Data",
+            "proposed": true,
+            "why": "If you want, you can connect your meter data so the trend uses real consumption. You decide whether to share it.",
             "intent": "business-energy-and-fleet"
           },
           {
             "id": "sustainability-advice-encon",
+            "kind": "optional",
             "title": "Sustainability advice - Encon",
-            "intent": "business-energy-and-fleet"
-          },
-          {
-            "id": "calculate-solar-panels-and-request-a-quote",
-            "title": "Calculate solar panels and request a quote",
-            "intent": "business-energy-and-fleet"
-          },
-          {
-            "id": "b2b-asset-financing",
-            "title": "B2B Asset Financing",
-            "intent": "business-energy-and-fleet"
-          },
-          {
-            "id": "group-purchase-of-electricity-and-gas",
-            "title": "Group purchase of electricity and gas",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Advice and grants",
+            "proposed": false,
+            "why": "If you want, a short preparation call with an adviser. It only happens when you ask for it.",
             "intent": "business-energy-and-fleet"
           }
-        ]
+        ],
+        "areaNotes": [],
+        "groupRounds": []
       },
       "forming": {
         "scenarioId": "bakery-leuven",
@@ -353,7 +515,14 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "forming",
-            "message": "The Brussels low-emission zone now reaches your delivery vans. Are you planning to replace them?",
+            "keyDate": "2027-03-01",
+            "message": "The Brussels low-emission zone now reaches your delivery vans. Are you thinking about replacing them?",
+            "note": "Data used: where the vans drive and their planned replacement date. Please confirm this is right before we build anything on it.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 6,
+              "whisper": 12
+            },
             "facts": [
               {
                 "id": "brussels-low-emission-zone",
@@ -365,31 +534,60 @@
           }
         ],
         "steps": [],
-        "watching": [
-          {
-            "id": "business-co2-insights-and-sector-comparison",
-            "title": "Business CO2 insights and sector comparison",
-            "intent": "business-energy-and-fleet"
-          },
-          {
-            "id": "sustainability-advice-encon",
-            "title": "Sustainability advice - Encon",
-            "intent": "business-energy-and-fleet"
-          },
+        "actions": [
           {
             "id": "calculate-solar-panels-and-request-a-quote",
+            "kind": "opportunity",
             "title": "Calculate solar panels and request a quote",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Solar panels on the roof would fit the plan you are likely to end up with. Look at it when it suits you.",
             "intent": "business-energy-and-fleet"
           },
           {
-            "id": "b2b-asset-financing",
-            "title": "B2B Asset Financing",
+            "id": "blink-charging-business",
+            "kind": "introduction",
+            "title": "Business charging with Blink Charging",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Charging",
+            "proposed": true,
+            "why": "If you want, we can introduce a charging partner for the new van. Nothing is shared until you say so.",
             "intent": "business-energy-and-fleet"
           },
           {
             "id": "group-purchase-of-electricity-and-gas",
+            "kind": "introduction",
             "title": "Group purchase of electricity and gas",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Collective buying and supply",
+            "proposed": false,
+            "why": "If you want, we can introduce a group purchase for your energy contract. Nothing is shared until you say so.",
             "intent": "business-energy-and-fleet"
+          }
+        ],
+        "areaNotes": [
+          {
+            "id": "historic-centre-premises",
+            "text": "The premises are in a historic centre, so roof panels and facade work may need a different approach. Advisers will start from the local situation.",
+            "facts": [
+              {
+                "id": "historic-centre-rules",
+                "text": "Buildings in a protected historic centre can face extra requirements for facade insulation and roof panels. Check the local rules before planning.",
+                "source": "Local heritage office",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "groupRounds": [
+          {
+            "id": "electricity-gas-flemish-brabant-2026",
+            "title": "Group purchase of electricity and gas, Flemish Brabant",
+            "catalogueId": "group-purchase-of-electricity-and-gas"
           }
         ]
       },
@@ -404,7 +602,14 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "ready",
-            "message": "A deposit on an electric van points to a decision now. Here is a plan across partners for you to approve step by step.",
+            "keyDate": "2027-01-05",
+            "message": "A deposit on an electric van suggests a decision now. Here is a plan for you to go through step by step.",
+            "note": "Data used: the vehicle deposit and your energy costs. Please confirm this is right. Every step stays your choice.",
+            "thresholds": {
+              "ready": 3,
+              "forming": 6,
+              "whisper": 12
+            },
             "facts": [
               {
                 "id": "brussels-low-emission-zone",
@@ -486,7 +691,8 @@
             ],
             "intent": "business-energy-and-fleet",
             "proposed": false,
-            "notNeeded": false
+            "notNeeded": false,
+            "groupRoundId": "electricity-gas-flemish-brabant-2026"
           },
           {
             "id": "kube-esg",
@@ -501,7 +707,106 @@
             "notNeeded": true
           }
         ],
-        "watching": []
+        "actions": [
+          {
+            "id": "business-co2-insights-and-sector-comparison",
+            "kind": "plan",
+            "title": "Business CO2 insights and sector comparison",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Business footprint",
+            "proposed": false,
+            "why": "A view of emissions and a comparison with similar bakeries shows where energy cost comes from.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "sustainability-advice-encon",
+            "kind": "plan",
+            "title": "Sustainability advice - Encon",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Advice and grants",
+            "proposed": false,
+            "why": "Advice on the ovens and the building comes before any investment.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "kind": "plan",
+            "title": "Calculate solar panels and request a quote",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Installation",
+            "proposed": false,
+            "why": "Roof panels lower the daytime power cost and part of the charging cost.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "blink-charging-business",
+            "kind": "plan",
+            "title": "Business charging with Blink Charging",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Charging",
+            "proposed": true,
+            "why": "Charging at the bakery lets the new van charge overnight.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "b2b-asset-financing",
+            "kind": "plan",
+            "title": "B2B Asset Financing",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Finance and protection",
+            "proposed": false,
+            "why": "Asset financing spreads the cost of replacing the vans.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "kind": "plan",
+            "title": "Group purchase of electricity and gas",
+            "optional": true,
+            "sharesData": true,
+            "partnerRole": "Collective buying and supply",
+            "proposed": false,
+            "why": "A group round lowers the price of electricity and gas for the premises.",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "kube-esg",
+            "kind": "plan",
+            "title": "Kube ESG",
+            "optional": true,
+            "sharesData": false,
+            "partnerRole": "Business footprint",
+            "proposed": false,
+            "why": "Not needed at this size. An ESG report matters for larger companies and their reporting duties.",
+            "intent": "business-energy-and-fleet"
+          }
+        ],
+        "areaNotes": [
+          {
+            "id": "historic-centre-premises",
+            "text": "The premises are in a historic centre, so roof panels and facade work may need a different approach. Advisers will start from the local situation.",
+            "facts": [
+              {
+                "id": "historic-centre-rules",
+                "text": "Buildings in a protected historic centre can face extra requirements for facade insulation and roof panels. Check the local rules before planning.",
+                "source": "Local heritage office",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "groupRounds": [
+          {
+            "id": "electricity-gas-flemish-brabant-2026",
+            "title": "Group purchase of electricity and gas, Flemish Brabant",
+            "catalogueId": "group-purchase-of-electricity-and-gas"
+          }
+        ]
       }
     }
   }

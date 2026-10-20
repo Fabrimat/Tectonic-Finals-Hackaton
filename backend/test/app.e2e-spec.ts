@@ -92,6 +92,34 @@ describe('API (e2e)', () => {
         .expect(400);
     });
 
+    it('POST /api/plan accepts an area and rejects unknown area fields', async () => {
+      const area = {
+        buildingStockAge: 60,
+        historicCentre: true,
+        openGroupRounds: ['solar-panels-east-flanders-2026'],
+      };
+      const res = await request(app.getHttpServer())
+        .post('/api/plan')
+        .send({ ...body(true), area })
+        .expect(201);
+      expect(res.body.areaNotes.length).toBeGreaterThan(0);
+      expect(res.body.groupRounds[0].id).toBe('solar-panels-east-flanders-2026');
+      await request(app.getHttpServer())
+        .post('/api/plan')
+        .send({ ...body(true), area: { ...area, postcode: '9000' } })
+        .expect(400);
+      await request(app.getHttpServer())
+        .post('/api/plan')
+        .send({ ...body(true), area: { buildingStockAge: -1 } })
+        .expect(400);
+    });
+
+    it('POST /api/plan in whisper shares nothing by default', async () => {
+      const res = await request(app.getHttpServer()).post('/api/plan').send(body(false)).expect(201);
+      expect(res.body.actions.length).toBeGreaterThan(0);
+      for (const a of res.body.actions) expect(!a.sharesData || a.optional).toBe(true);
+    });
+
     it('POST /api/plan rejects invalid dates', async () => {
       await request(app.getHttpServer()).post('/api/plan').send({ ...body(true), dates: [{ kind: 'renovation_deadline', date: '2026-02-30' }] }).expect(400);
     });

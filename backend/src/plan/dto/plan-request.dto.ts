@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsArray,
+  IsBoolean,
   IsInt,
   IsISO8601,
   IsNumber,
@@ -37,6 +38,18 @@ export class SpendSignalDto {
   count: number;
 }
 
+export class AreaDto {
+  @IsOptional() @IsInt() @Min(0) @Max(500)
+  buildingStockAge?: number;
+
+  @IsOptional() @IsBoolean()
+  historicCentre?: boolean;
+
+  @IsOptional() @IsArray() @ArrayMaxSize(10) @IsString({ each: true }) @MaxLength(64, { each: true })
+  @Matches(KEY, { each: true })
+  openGroupRounds?: string[];
+}
+
 export class PlanRequestDto {
   @IsOptional() @IsString() @MinLength(1) @MaxLength(64) @Matches(KEY)
   scenarioId?: string;
@@ -53,4 +66,7 @@ export class PlanRequestDto {
   @IsOptional() @IsArray() @ArrayMaxSize(30) @IsString({ each: true }) @MaxLength(64, { each: true })
   @Matches(KEY, { each: true })
   flags?: string[];
+
+  @IsOptional() @ValidateNested() @Type(() => AreaDto)
+  area?: AreaDto;
 }
