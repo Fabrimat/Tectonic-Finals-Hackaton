@@ -9,7 +9,7 @@ const apiKey = process.env.PARTNER_API_KEY as string;
 async function createApp(trustProxy: number): Promise<INestApplication> {
   const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
   const app = moduleRef.createNestApplication();
-  configureApp(app, ['http://localhost:5173'], undefined, trustProxy);
+  configureApp(app, ['http://localhost:5173'], trustProxy);
   await app.init();
   return app;
 }

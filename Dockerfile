@@ -16,8 +16,7 @@ RUN npm run build && npm prune --omit=dev
 FROM node:24.22.0-alpine3.24@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f
 RUN apk upgrade --no-cache
 ENV NODE_ENV=production \
-    PORT=3000 \
-    STATIC_DIR=/app/frontend/dist
+    PORT=3000
 WORKDIR /app/backend
 COPY --from=backend --chown=node:node /build/node_modules ./node_modules
 COPY --from=backend --chown=node:node /build/dist ./dist

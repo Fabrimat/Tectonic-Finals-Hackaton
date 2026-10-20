@@ -6,11 +6,13 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/setup';
+import { setStaticRootForTests } from '../src/static-root';
 
-async function createApp(staticDir?: string): Promise<INestApplication> {
+async function createApp(staticDir: string): Promise<INestApplication> {
+  setStaticRootForTests(staticDir);
   const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
   const app = moduleRef.createNestApplication();
-  configureApp(app, ['http://localhost:5173'], staticDir);
+  configureApp(app, ['http://localhost:5173']);
   await app.init();
   return app;
 }

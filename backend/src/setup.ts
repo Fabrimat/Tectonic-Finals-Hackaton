@@ -1,21 +1,20 @@
 import { existsSync } from 'fs';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import type { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import { rejectPrototypeKeys } from './common/prototype-keys';
+import { staticRoot } from './static-root';
 
 const FILES = Object.freeze({ index: 'index.html' });
 
-// Resolved once at startup from configuration. Nothing in a request touches it.
-function resolveStaticRoot(dir?: string): string | null {
-  if (!dir) return null;
-  const root = resolve(dir);
-  return existsSync(join(root, FILES.index)) ? root : null;
+// Checked once at startup. Nothing in a request touches it.
+function resolveStaticRoot(): string | null {
+  return existsSync(join(staticRoot, FILES.index)) ? staticRoot : null;
 }
 
-export function configureApp(app: INestApplication, corsOrigins: string[], staticDir?: string, trustProxy = 0): void {
+export function configureApp(app: INestApplication, corsOrigins: string[], trustProxy = 0): void {
   if (trustProxy > 0) (app as NestExpressApplication).set('trust proxy', trustProxy);
   (app as NestExpressApplication).set('query parser', 'simple');
   (app as NestExpressApplication).useBodyParser('json', { limit: '10kb' });
@@ -45,7 +44,7 @@ export function configureApp(app: INestApplication, corsOrigins: string[], stati
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),
   );
-  const root = resolveStaticRoot(staticDir);
+  const root = resolveStaticRoot();
   if (root) serveFrontend(app, root);
 }
 

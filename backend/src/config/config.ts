@@ -1,11 +1,8 @@
-import { join } from 'path';
-
 export interface AppConfig {
   port: number;
   corsOrigins: string[];
   rateLimitPerMinute: number;
   partnerApiKey: string;
-  staticDir: string;
   trustProxy: number;
   wording: WordingConfig;
 }
@@ -81,7 +78,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     corsOrigins,
     rateLimitPerMinute: positiveInt('RATE_LIMIT_PER_MINUTE', env.RATE_LIMIT_PER_MINUTE, 300, 100000),
     partnerApiKey,
-    staticDir: env.STATIC_DIR || join(__dirname, '..', '..', '..', 'frontend', 'dist'),
     trustProxy: proxyHops(env.TRUST_PROXY),
     wording,
   };
