@@ -1,11 +1,5 @@
 import { catalogueItem } from "../../data/scenarios";
 
-const LABEL = {
-  optional: "Optional",
-  opportunity: "Something to keep in mind",
-  introduction: "An introduction",
-};
-
 const LAYER = {
   optional: "Consent layer: analysis. Nothing goes to a partner.",
   opportunity: "Consent layer: goal. Noted on this device only.",
@@ -18,26 +12,30 @@ export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }
 
   return (
     <article className="cx-card cx-action">
-      <div className="cx-tags">
-        <span className="cx-tag cx-tag-skip">{LABEL[action.kind]}</span>
-        {item && (
-          <span className="cx-tag">
-            {item.ecosystem} / {item.name}
-          </span>
-        )}
-        {names.map((name) => (
-          <span key={name} className="cx-badge">
-            {name}
-          </span>
-        ))}
-      </div>
+      {names.length > 0 && (
+        <div className="cx-tags">
+          {names.map((name) => (
+            <span key={name} className="cx-badge">
+              {name}
+            </span>
+          ))}
+        </div>
+      )}
       <h2 className="cx-step-title">{action.title}</h2>
       <p className="cx-step-summary">{action.body}</p>
-      <p className="cx-layer-chip">{LAYER[action.kind]}</p>
-      <p className="cx-shares">{action.shares}</p>
+      <details className="cx-more">
+        <summary>Details</summary>
+        {item && (
+          <p>
+            {item.ecosystem} / {item.name}
+          </p>
+        )}
+        <p className="cx-muted">{LAYER[action.kind]}</p>
+        <p className="cx-muted">{action.shares}</p>
+      </details>
       {chosen ? (
         <div className="cx-decided">
-          <span className="cx-state cx-state-deferred">Noted on this device only</span>
+          <span className="cx-state cx-state-deferred">Noted on this device</span>
           <button type="button" className="cx-link" onClick={onUndo}>
             Undo
           </button>
@@ -47,7 +45,7 @@ export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }
           <button type="button" className="cx-btn cx-btn-outline" disabled={!enabled} onClick={onChoose}>
             {action.choice}
           </button>
-          {!enabled && <span className="cx-muted">Confirm the data above first.</span>}
+          {!enabled && <span className="cx-muted">Confirm above first.</span>}
         </div>
       )}
     </article>

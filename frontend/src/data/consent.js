@@ -2,11 +2,11 @@
 export const layers = [
   { id: "analysis", label: "Analysis" },
   { id: "goal", label: "Goal" },
-  { id: "sharing", label: "Sharing" },
-  { id: "commitment", label: "Commitment" },
+  { id: "sharing", label: "Share" },
+  { id: "commitment", label: "Commit" },
 ];
 
-// What applies at each point of the customer journey and what is not happening yet.
+// The full wording per layer: what applies now and what is not happening yet. Shown behind Details.
 export const contexts = {
   analysis: {
     layer: 1,
@@ -24,3 +24,6 @@ export const contexts = {
     not: "Nothing is bought. A quote or loan needs its own approval.",
   },
 };
+
+// What each layer is called in full, for the Details text.
+export const layerNames = ["Analysis", "Goal confirmation", "Sharing anonymously with a partner", "Commitment to a paid step"];

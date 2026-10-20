@@ -25,13 +25,13 @@ test("no historic note when the home is not in a historic centre", () => {
 test("an open group round matching the step service is pointed out", () => {
   const solar = stepsOf(household).find((s) => s.id === "solar");
   const notes = areaNotes(household.area, solar);
-  assert.ok(notes.some((n) => n.includes("group round is open")));
+  assert.ok(notes.some((n) => n.includes("Group round open")));
 });
 
 test("a round that is not listed as open for the area is ignored", () => {
   const solar = stepsOf(household).find((s) => s.id === "solar");
   const area = { ...household.area, openGroupRounds: [] };
-  assert.ok(!areaNotes(area, solar).some((n) => n.includes("group round")));
+  assert.ok(!areaNotes(area, solar).some((n) => n.includes("Group round")));
 });
 
 test("every open round id in the scenarios exists in the rounds list", () => {

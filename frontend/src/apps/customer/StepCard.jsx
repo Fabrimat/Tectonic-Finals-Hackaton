@@ -4,48 +4,28 @@ import { money } from "./format";
 
 const STATE_LABEL = {
   accepted: "Accepted",
-  deferred: "Saved for later",
+  deferred: "Later",
   rejected: "Not for me",
 };
-
-export function CatalogueTag({ step }) {
-  const item = step.catalogueId ? catalogueItem(step.catalogueId) : null;
-  if (item) {
-    return (
-      <span className="cx-tag">
-        {item.ecosystem} / {item.name}
-      </span>
-    );
-  }
-  if (step.proposed) return <span className="cx-tag cx-tag-new">Proposed</span>;
-  return null;
-}
 
 export default function StepCard({ step, signal, notes = [], decision, onDecide, onUndo }) {
   const [open, setOpen] = useState(false);
   const panelId = `why-${step.id}`;
+  const item = step.catalogueId ? catalogueItem(step.catalogueId) : null;
 
   return (
     <article className={`cx-card cx-step${decision ? ` is-${decision}` : ""}`}>
-      <div className="cx-tags">
-        <CatalogueTag step={step} />
-        {step.lever && <span className="cx-tag cx-tag-lever">{levers[step.lever]}</span>}
-        {step.partner && (
+      {step.partner && (
+        <div className="cx-tags">
           <span className="cx-badge">
             {step.partner.name}
             {step.partner.proposed && <em>Proposed</em>}
           </span>
-        )}
-      </div>
+        </div>
+      )}
 
       <h2 className="cx-step-title">{step.title}</h2>
       <p className="cx-step-summary">{step.summary}</p>
-      {notes.map((note) => (
-        <p key={note} className="cx-area-note">
-          {note}
-        </p>
-      ))}
-      {step.saving > 0 && <p className="cx-saving">Estimated saving about {money(step.saving)} per year</p>}
 
       <button
         type="button"
@@ -54,13 +34,24 @@ export default function StepCard({ step, signal, notes = [], decision, onDecide,
         aria-controls={panelId}
         onClick={() => setOpen(!open)}
       >
-        Why this
+        Details
         <span className={`cx-chevron${open ? " is-open" : ""}`} aria-hidden="true" />
       </button>
       {open && (
         <div id={panelId} className="cx-why">
           <p>{step.why}</p>
-          <p className="cx-why-data">Based on: {signal.dataUsed.join("; ")}.</p>
+          {step.saving > 0 && <p className="cx-saving">Demo estimate: about {money(step.saving)} per year</p>}
+          {notes.map((note) => (
+            <p key={note} className="cx-area-note">
+              {note}
+            </p>
+          ))}
+          <p className="cx-why-data">
+            {[item ? `${item.ecosystem} / ${item.name}` : step.proposed ? "Proposed" : null, step.lever ? levers[step.lever] : null]
+              .filter(Boolean)
+              .join(". ")}
+          </p>
+          <p className="cx-why-data">Based on: {signal.dataUsed.join(", ")}.</p>
         </div>
       )}
 

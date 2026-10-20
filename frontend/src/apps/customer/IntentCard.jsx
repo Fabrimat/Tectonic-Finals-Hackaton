@@ -7,13 +7,13 @@ function summary(scenario, confirmed, decisions) {
   }
   if (stage === "forming") {
     return confirmed
-      ? { icon: "radar", kicker: "Energy radar", text: "Thank you. We will come back when the timing is closer.", cta: "Open" }
+      ? { icon: "radar", kicker: "Energy radar", text: "Noted. We will come back later.", cta: "Open" }
       : { icon: "radar", kicker: "A quick question", text: scenario.signal.question, cta: "Answer" };
   }
   const steps = scenario.steps.filter((s) => s.kind === "action");
   const decided = steps.filter((s) => decisions[s.id]).length;
   return confirmed
-    ? { icon: "list", kicker: "Your energy plan", text: `${steps.length} steps across partners, ${decided} decided so far.`, cta: "Open your plan" }
+    ? { icon: "list", kicker: "Your energy plan", text: `${steps.length} steps, ${decided} decided`, cta: "Open your plan" }
     : { icon: "list", kicker: "Your energy plan", text: scenario.signal.question, cta: "Open your plan" };
 }
 

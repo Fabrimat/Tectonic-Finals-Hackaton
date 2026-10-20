@@ -23,17 +23,18 @@ export default function SummaryBar({ scenario, decisions, onReset }) {
           <span>{count(steps, decisions, "rejected")} not for me</span>
         </p>
         <p className="cx-totals">
-          Estimated saving per year: <strong>{money(saved)}</strong>
+          Saving per year <strong>{money(saved)}</strong>
           {avoided > 0 && (
             <>
               {" "}
-              <span className="cx-muted">+ {money(avoided)} estimated avoided cost</span>
+              <span className="cx-muted">+ {money(avoided)} avoided</span>
             </>
           )}
+          <small className="cx-demo-mark">Demo estimate</small>
         </p>
         <div className="cx-summary-row">
           <button type="button" className="cx-btn cx-btn-outline" onClick={() => setSheet(true)}>
-            What partners receive
+            What partners see
           </button>
           <button type="button" className="cx-link" onClick={onReset}>
             Start over

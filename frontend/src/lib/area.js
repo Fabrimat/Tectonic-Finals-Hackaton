@@ -11,7 +11,7 @@ export function areaNotes(area, step) {
   if (step.roundService) {
     const open = groupRounds.filter((r) => area.openGroupRounds?.includes(r.id) && r.service === step.roundService);
     for (const round of open) {
-      notes.push(`A group round is open nearby: ${round.name}, run by ${round.runBy}. You can join it instead of asking for a separate quote.`);
+      notes.push(`Group round open nearby: ${round.name}, run by ${round.runBy}.`);
     }
   }
   return notes;
@@ -19,5 +19,5 @@ export function areaNotes(area, step) {
 
 export function stockLine(area) {
   if (!area || !area.buildingStockAge) return "";
-  return `Buildings around you are typically about ${area.buildingStockAge} years old.`;
+  return `Buildings nearby are about ${area.buildingStockAge} years old.`;
 }

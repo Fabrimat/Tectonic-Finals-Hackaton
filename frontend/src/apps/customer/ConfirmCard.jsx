@@ -2,8 +2,8 @@ import { useState } from "react";
 import ConsentStrip from "./ConsentStrip";
 
 const REPLIES = {
-  later: "No problem. We will not ask again until you open the app next time.",
-  no: "Understood. Nothing was computed and nothing was shared with anyone.",
+  later: "No problem. We will ask next time.",
+  no: "Understood. Nothing was computed or shared.",
 };
 
 export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
@@ -17,23 +17,13 @@ export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
 
   return (
     <section className="cx-card cx-confirm" aria-labelledby="cx-question">
-      <p className="cx-eyebrow">A quick check</p>
       <h1 id="cx-question" className="cx-question">
         {signal.question}
       </h1>
 
-      <ul className="cx-evidence">
-        {signal.evidence.map((item) => (
-          <li key={item.label}>
-            <span className="cx-evidence-label">{item.label}</span>
-            <span className="cx-evidence-detail">{item.detail}</span>
-          </li>
-        ))}
-      </ul>
-
       <div className="cx-datanote">
-        <h2 className="cx-small-title">Data used</h2>
-        <ul className="cx-plain-list">
+        <p className="cx-small-title">Data used</p>
+        <ul className="cx-chips">
           {signal.dataUsed.map((line) => (
             <li key={line}>{line}</li>
           ))}
@@ -45,6 +35,14 @@ export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
 
       <details className="cx-disclosure">
         <summary>Why am I seeing this?</summary>
+        <ul className="cx-evidence">
+          {signal.evidence.map((item) => (
+            <li key={item.label}>
+              <span className="cx-evidence-label">{item.label}</span>
+              <span className="cx-evidence-detail">{item.detail}</span>
+            </li>
+          ))}
+        </ul>
         <h2 className="cx-small-title">What we did not use</h2>
         <ul className="cx-plain-list">
           {signal.dataNotUsed.map((line) => (

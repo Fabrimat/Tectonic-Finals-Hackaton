@@ -20,14 +20,18 @@ export default function PartnerSheet({ steps, onClose }) {
         aria-labelledby="cx-sheet-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <h2 id="cx-sheet-title">What partners receive</h2>
-        <p className="cx-sheet-note">
-          Your name, contact details and transactions are not shared. Partners see the anonymous request below,
-          and only for steps you accepted. Contact details are released only when you authorise that partner for that step. A request that has been sent cannot be taken back yet.
-        </p>
+        <h2 id="cx-sheet-title">What partners see</h2>
+        <p className="cx-sheet-note">Anonymous, and only for steps you accepted.</p>
+        <details className="cx-more">
+          <summary>Details</summary>
+          <p className="cx-muted">
+            Your name, contact details and transactions are not shared. Contact details are released only when you
+            authorise that partner for that step. A request that has been sent cannot be taken back yet.
+          </p>
+        </details>
 
         {steps.length === 0 ? (
-          <p className="cx-muted">Nothing is shared yet. Accept a step with a partner to see what would be sent.</p>
+          <p className="cx-muted">Nothing is shared yet.</p>
         ) : (
           <ul className="cx-intents">
             {steps.map((step) => (

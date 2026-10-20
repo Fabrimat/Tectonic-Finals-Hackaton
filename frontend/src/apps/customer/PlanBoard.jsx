@@ -6,8 +6,8 @@ import SkipCard from "./SkipCard";
 import { areaNotes, stockLine } from "../../lib/area";
 
 const syncText = {
-  sent: "Your request reached the partner.",
-  local: "Saved on this device. It will not reach the partner until the service is back.",
+  sent: "Request sent to the partner.",
+  local: "Saved here. It is sent when the service is back.",
 };
 
 export default function PlanBoard({ scenario, decisions, actions }) {
@@ -26,7 +26,12 @@ export default function PlanBoard({ scenario, decisions, actions }) {
       </h1>
       <p className="cx-seen">{scenario.seen}</p>
       <ConsentStrip context="plan" />
-      {stockLine(scenario.area) && <p className="cx-muted">{stockLine(scenario.area)}</p>}
+      {stockLine(scenario.area) && (
+        <details className="cx-more cx-plain-more">
+          <summary>About your area</summary>
+          <p className="cx-muted">{stockLine(scenario.area)}</p>
+        </details>
+      )}
       <ol className="cx-steps">
         {steps.map((step) => (
           <li key={step.id}>

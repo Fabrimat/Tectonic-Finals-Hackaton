@@ -9,9 +9,9 @@ export const homes = {
       { id: "card", name: "SOFIE MAES", tone: "card", amount: "1 026", cents: "90", tag: "Just activated" },
     ],
     feed: [
-      { icon: "document", text: "Your energy bill for September is ready to view." },
-      { icon: "card", text: "Spread a larger home expense with a credit card." },
-      { icon: "chart", text: "Want to make your own investments online? Learn more about the investment platform." },
+      { icon: "document", text: "Your September energy bill is ready." },
+      { icon: "card", text: "Spread a big expense with a credit card." },
+      { icon: "chart", text: "Invest online. Learn more." },
     ],
   },
   "bakery-leuven": {
@@ -21,9 +21,9 @@ export const homes = {
       { id: "card", name: "PIETER JANSSENS", tone: "card", amount: "812", cents: "40", tag: "Just activated" },
     ],
     feed: [
-      { icon: "document", text: "You have received a billing statement." },
-      { icon: "card", text: "Pay your business expenses quickly and securely with a business credit card." },
-      { icon: "chart", text: "Want to make your own investments online? Learn more about the investment platform." },
+      { icon: "document", text: "A billing statement has arrived." },
+      { icon: "card", text: "Pay business expenses with a business credit card." },
+      { icon: "chart", text: "Invest online. Learn more." },
     ],
   },
 };
@@ -31,7 +31,7 @@ export const homes = {
 export const walletPromo = {
   title: "Wallet",
   link: "Open wallet",
-  body: "Keep your payment cards and loyalty cards in one place for quick access, wherever you are.",
+  body: "Your cards in one place.",
 };
 
 export function homeOf(scenarioId) {

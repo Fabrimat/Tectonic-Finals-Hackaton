@@ -490,24 +490,81 @@
   color: var(--kbc-navy);
 }
 
-.cx-layer-now,
-.cx-layer-not {
-  font-size: 13px;
-  line-height: 1.35;
+.cx-layers .is-now .cx-layer-label::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--kbc-blue);
+  vertical-align: 1px;
 }
 
-.cx-layer-now {
+/* short data chips */
+.cx-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cx-chips li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--kbc-blue-soft);
   color: var(--kbc-navy);
-}
-
-.cx-layer-not {
-  margin-top: 3px;
-  color: var(--cx-muted);
-}
-
-.cx-layer-chip {
-  margin: 8px 0 6px;
-  color: var(--cx-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
+}
+
+/* small Details disclosure */
+.cx-more {
+  margin: 4px 0 8px;
+  font-size: 14px;
+}
+
+.cx-more summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--kbc-blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.cx-more p {
+  margin: 4px 0;
+}
+
+.cx-consent-strip .cx-more {
+  margin: 0;
+}
+
+.cx-consent-strip .cx-more summary {
+  min-height: 32px;
+}
+
+.cx-demo-mark {
+  display: block;
+  margin-top: 2px;
+  color: var(--cx-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cx-choices .cx-btn-outline {
+  grid-column: 1 / -1;
+}
+
+.cx-plain-more {
+  margin: 0 0 10px;
+}
+
+.cx-reply + .cx-disclosure {
+  margin-top: 10px;
 }
