@@ -14,7 +14,7 @@ export class CatalogueController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     const product = this.catalogue.findOne(id);
-    if (!product) throw new NotFoundException(`Product "${id}" not found`);
+    if (!product) throw new NotFoundException('Product not found');
     return product;
   }
 }

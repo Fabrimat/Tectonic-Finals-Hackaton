@@ -28,7 +28,7 @@ export function configureApp(app: INestApplication, corsOrigins: string[], stati
       },
     }),
   );
-  app.enableCors({ origin: corsOrigins });
+  app.enableCors({ origin: corsOrigins, methods: ['GET', 'POST'], maxAge: 600 });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }),

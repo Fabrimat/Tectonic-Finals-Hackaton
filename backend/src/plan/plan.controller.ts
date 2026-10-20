@@ -22,7 +22,7 @@ export class PlanController {
   @Get('scenarios/:id')
   findScenario(@Param('id') id: string, @Query() query: ScenarioQueryDto) {
     const plan = this.plans.findScenario(id, query.stage);
-    if (!plan) throw new NotFoundException(`Scenario "${id}" not found`);
+    if (!plan) throw new NotFoundException('Scenario not found');
     return plan;
   }
 }
