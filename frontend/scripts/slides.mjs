@@ -38,7 +38,7 @@ const phoneStates = [
   ["forming", `/app?${hh}&stage=forming&open=1&${quiet}`, "Slide 4, forming question"],
   ["ready-confirm", `/app?${hh}&stage=ready&open=1&${quiet}`, "Slide 5, confirm card with the four consent layers"],
   ["ready-board", `/app?${hh}&stage=ready&confirmed=1&open=1&${quiet}`, "Slide 6, plan board before any decision"],
-  ["ready-decided", `/app?${hh}&stage=ready&accepted=insulation&deferred=heating&rejected=solar&open=1&${quiet}`, "Slide 6, plan board with decisions and the not needed cards"],
+  ["ready-decided", `/app?${hh}&stage=ready&accepted=insulation&deferred=heating&rejected=solar&open=1&${quiet}`, "Slide 6, plan board with decisions and the not needed cards", false, [["decided", ".cx-state-deferred", 62], ["not-needed", ".cx-skip"]]],
   ["bakery-forming", `/app?${bk}&stage=forming&open=1&${quiet}`, "Slide 9, bakery forming question"],
   ["bakery-board", `/app?${bk}&stage=ready&accepted=co2,solar&open=1&${quiet}`, "Slide 9, bakery plan board"],
 ];
@@ -74,12 +74,14 @@ const desktopSlides = [
     file: "numbers-household.png",
     path: `/partner/numbers?${hh}&stage=ready&${allHousehold}&${quiet}`,
     css: `${portal}.pp-main{max-width:1560px}.pp-view{display:none}`,
+    openDetails: true,
     purpose: "Slide 8, numbers and assumptions, household",
   },
   {
     file: "numbers-bakery.png",
     path: `/partner/numbers?${bk}&stage=ready&${allBakery}&${quiet}`,
     css: `${portal}.pp-main{max-width:1560px}.pp-view{display:none}`,
+    openDetails: true,
     purpose: "Slide 8 or 9, numbers and assumptions, bakery",
   },
   {
@@ -152,7 +154,7 @@ async function shoot(page, file, clip) {
 }
 
 // Captures one phone state, scrolling for the parts. Returns the file paths.
-async function exportPhone(page, base, [name, path, purpose, single]) {
+async function exportPhone(page, base, [name, path, purpose, single, focus = []]) {
   await open(page, base + path, PHONE[0], PHONE[1]);
   const height = await evaluate(page, "document.documentElement.scrollHeight");
   const parts = single || height <= PHONE[1] ? 1 : 1 + Math.ceil((height - PHONE[1]) / SCROLL_STEP);
@@ -164,6 +166,15 @@ async function exportPhone(page, base, [name, path, purpose, single]) {
     await shoot(page, file);
     files.push(file);
     record(file, `${purpose}${parts > 1 ? ` (part ${i + 1} of ${parts})` : ""}`);
+  }
+  // focus captures scroll a named element into the middle, for states where the interesting card is far down
+  for (const [suffix, selector, offset = 0] of focus) {
+    await evaluate(page, `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({ block: "center" }); window.scrollBy(0, ${offset})`);
+    await sleep(250);
+    const file = join(phonesDir, `${name}-${suffix}-screen.png`);
+    await shoot(page, file);
+    files.push(file);
+    record(file, `${purpose} (${suffix})`);
   }
   return files;
 }
@@ -228,6 +239,10 @@ async function desktopSlide(page, base, spec) {
     `document.head.appendChild(Object.assign(document.createElement("style"), { textContent: ${JSON.stringify(`html,body{background:${BACKGROUND}}${spec.css}`)} }))`,
   );
   await sleep(300);
+  if (spec.openDetails) {
+    await evaluate(page, `document.querySelectorAll(".pp-toggle[aria-expanded=false]").forEach((b) => b.click())`);
+    await sleep(300);
+  }
   if (spec.zoom) {
     await evaluate(page, `document.documentElement.style.zoom = ${spec.zoom}; document.head.appendChild(Object.assign(document.createElement("style"), { textContent: ".pp{min-height:${SLIDE[1] / spec.zoom}px}" }))`);
     await sleep(300);
@@ -259,7 +274,7 @@ async function main() {
     }
 
     const part = (name, n = 1) => screens[name][Math.min(n, screens[name].length) - 1];
-    const tail = (name) => screens[name].at(-1);
+    const named = (name, suffix) => screens[name].find((f) => f.includes(`-${suffix}-screen`));
 
     await composeSlide(page, join(slidesDir, "title-phone.png"), [part("home-household-forming")], "Slide 1, title, one phone on the right and room for the title text", "right");
     await composeSlide(
@@ -277,7 +292,7 @@ async function main() {
     await composeSlide(
       page,
       join(slidesDir, "decisions-household.png"),
-      [part("ready-decided", 1), part("ready-decided", 3), part("ready-decided", 4), tail("ready-decided")],
+      [part("ready-decided", 1), named("ready-decided", "decided"), named("ready-decided", "not-needed")],
       "Slide 6, plan board with accepted, deferred, rejected and the not needed card",
     );
     await composeSlide(

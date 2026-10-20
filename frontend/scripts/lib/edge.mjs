@@ -133,8 +133,12 @@ export async function startSession() {
     page?.close();
     server.kill();
     spawnSync("taskkill", ["/PID", String(browser.pid), "/T", "/F"], { stdio: "ignore" });
-    await sleep(500);
-    rmSync(profile, { recursive: true, force: true });
+    await sleep(1000);
+    try {
+      rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 400 });
+    } catch {
+      // the temporary profile is cleaned up by the system later
+    }
   };
   try {
     const base = `http://127.0.0.1:${port}`;
