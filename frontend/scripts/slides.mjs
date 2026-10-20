@@ -58,12 +58,14 @@ const desktopSlides = [
   },
   {
     file: "dashboard-household.png",
+    zoom: 1.12,
     path: `/partner?${hh}&stage=ready&${allHousehold}&partner=all&${quiet}`,
     css: portal,
     purpose: "Slide 8, advisor dashboard, household",
   },
   {
     file: "dashboard-bakery.png",
+    zoom: 1.3,
     path: `/partner?${bk}&stage=ready&${allBakery}&partner=all&${quiet}`,
     css: portal,
     purpose: "Slide 8 or 9, advisor dashboard, bakery",
@@ -226,8 +228,12 @@ async function desktopSlide(page, base, spec) {
     `document.head.appendChild(Object.assign(document.createElement("style"), { textContent: ${JSON.stringify(`html,body{background:${BACKGROUND}}${spec.css}`)} }))`,
   );
   await sleep(300);
+  if (spec.zoom) {
+    await evaluate(page, `document.documentElement.style.zoom = ${spec.zoom}; document.head.appendChild(Object.assign(document.createElement("style"), { textContent: ".pp{min-height:${SLIDE[1] / spec.zoom}px}" }))`);
+    await sleep(300);
+  }
   const height = await evaluate(page, "document.documentElement.scrollHeight");
-  if (height > SLIDE[1]) {
+  if (!spec.zoom && height > SLIDE[1]) {
     const zoom = SLIDE[1] / height;
     await evaluate(page, `document.documentElement.style.zoom = ${zoom}`);
     if (zoom < 0.7) console.warn(`Warning: ${spec.file} is scaled to ${Math.round(zoom * 100)}%, text may be small`);
