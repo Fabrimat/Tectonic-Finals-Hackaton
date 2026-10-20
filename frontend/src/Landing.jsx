@@ -1,18 +1,19 @@
 import { Link } from "react-router-dom";
 import { scenarios, stages, stageOrder, viewOf } from "./data/scenarios";
 import { useRipple } from "./lib/store";
+import KbcLogo from "./components/KbcLogo";
 import "./Landing.css";
 
 export default function Landing() {
   const { scenarioId, stage, actions } = useRipple();
-
   const base = scenarios.find((s) => s.id === scenarioId) ?? scenarios[0];
-
   return (
     <main className="landing">
-      <h1>Ripple</h1>
-      <p className="landing-lead">Demo controls. Open the customer app and the partner portal side by side.</p>
-
+      <div className="landing-brand">
+        <KbcLogo />
+      </div>
+      <h1>KBC energy transition</h1>
+      <p className="landing-lead">Controls for the proof of concept. All data is synthetic and every integration is simulated.</p>
       <section className="landing-card">
         <h2>Scenario</h2>
         <div className="landing-choices">
@@ -40,10 +41,10 @@ export default function Landing() {
           Reset decisions
         </button>
       </section>
-
       <nav className="landing-links">
         <Link to="/app">Customer app</Link>
-        <Link to="/partner">Partner portal</Link>
+        <Link to="/partner">Advisor dashboard</Link>
+        <Link to="/partner/numbers">Numbers</Link>
         <Link to="/map">Ecosystem map</Link>
       </nav>
     </main>

@@ -423,3 +423,50 @@
   color: var(--ink);
   width: 14rem;
 }
+
+.pp-private {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.pp-lead {
+  margin: -8px 0 16px;
+}
+
+.pp-secondary {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.pp-mid {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.pp-assume thead th {
+  padding-top: 14px;
+  color: var(--kbc-navy);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pp-assume td {
+  color: var(--ink);
+}
+
+.pp-assume-lead {
+  margin: -6px 0 8px;
+}
+
+.pp-sum dt {
+  color: var(--ink);
+}
+
+.pp-sum dd {
+  white-space: nowrap;
+}

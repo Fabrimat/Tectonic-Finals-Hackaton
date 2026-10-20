@@ -1,4 +1,4 @@
-const hidden = ["Name", "Address", "Contact details", "Account balance", "Transaction history"];
+const hidden = ["Name", "Address", "Phone and email", "Account balance", "Transaction history", "The data KBC used to predict the need"];
 
 function Lock() {
   return (
@@ -12,13 +12,13 @@ function Lock() {
 export default function HiddenPanel() {
   return (
     <aside className="pp-hidden" aria-labelledby="hidden-h">
-      <h2 id="hidden-h" className="pp-h"><Lock /> What you do not see</h2>
+      <h2 id="hidden-h" className="pp-h"><Lock /> Not shared before the customer authorises</h2>
       <ul>
         {hidden.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <p>KBC passes on the confirmed intent only. Nothing else about the customer leaves the bank.</p>
+      <p>A partner first receives an anonymous intent: service, area, timeframe and budget band. Contact details are released only after the customer authorises that partner for that step. A paid step needs its own approval from the customer.</p>
     </aside>
   );
 }

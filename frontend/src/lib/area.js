@@ -1,4 +1,4 @@
-import { facts } from "../data/facts.js";
+import { facts, factLine } from "../data/facts.js";
 import { groupRounds } from "../data/groupRounds.js";
 
 // Notes the plan adds for one step, based on where the customer lives.
@@ -6,7 +6,7 @@ export function areaNotes(area, step) {
   if (!area) return [];
   const notes = [];
   if (area.historicCentre && step.areaTopics?.includes("historic")) {
-    notes.push(facts.historicCentre.text);
+    notes.push(factLine(facts.historicCentre));
   }
   if (step.roundService) {
     const open = groupRounds.filter((r) => area.openGroupRounds?.includes(r.id) && r.service === step.roundService);

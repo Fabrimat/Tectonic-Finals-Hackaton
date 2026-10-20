@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { fetchIntents, readAccessKey, writeAccessKey } from "../../lib/api";
 import { useRipple } from "../../lib/store";
+import { view } from "../../lib/params";
+import KbcLogo from "../../components/KbcLogo";
 import { allPartners, leadsFor, leadsFromIntents, partnersOf } from "./leadData";
 import AccessField from "./AccessField";
 import Leads from "./Leads";
@@ -15,7 +17,7 @@ export default function PartnerApp() {
   const live = remote.status === "ok";
   const localPartners = partnersOf(scenario);
   const partners = live ? allPartners() : localPartners;
-  const [picked, setPicked] = useState(null);
+  const [picked, setPicked] = useState(view.partner || null);
   const [offers, setOffers] = useState({});
 
   const current = partners.find((p) => p.name === picked) ?? partners[0];
@@ -45,13 +47,14 @@ export default function PartnerApp() {
   return (
     <div className="pp">
       <header className="pp-bar">
-        <h1 className="pp-title">Ripple Partner Portal</h1>
-        <nav className="pp-nav" aria-label="Portal sections">
+        <span className="logo-chip"><KbcLogo /></span>
+        <h1 className="pp-title">Advisor dashboard</h1>
+        <nav className="pp-nav" aria-label="Dashboard sections">
           <NavLink to="/partner" end>Leads</NavLink>
           <NavLink to="/partner/numbers">Numbers</NavLink>
         </nav>
         <div className="pp-view">
-          <label htmlFor="pp-partner">View as</label>
+          <label htmlFor="pp-partner">Partner leads for</label>
           <select id="pp-partner" value={current?.name ?? ""} onChange={(e) => setPicked(e.target.value)}>
             {partners.map((p) => (
               <option key={p.name} value={p.name}>{p.name}</option>
@@ -62,7 +65,7 @@ export default function PartnerApp() {
         <Link className="pp-back" to="/">Back to start</Link>
       </header>
       <main className="pp-main">
-        <AccessField value={key} onChange={changeKey} status={remote.status} />
+        {view.tools && <AccessField value={key} onChange={changeKey} status={remote.status} />}
         <Routes>
           <Route
             index

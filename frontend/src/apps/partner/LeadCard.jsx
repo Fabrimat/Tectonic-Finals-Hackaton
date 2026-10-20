@@ -29,6 +29,7 @@ export default function LeadCard({ lead, offer, onSend }) {
         <div><dt>Timeframe</dt><dd>{lead.timeframe}</dd></div>
         <div><dt>Budget band</dt><dd>{bandLabels[lead.band]}</dd></div>
       </dl>
+      <p className="pp-private">Contact details: not shared, waiting for the customer to authorise.</p>
       {offer && (
         <p className="pp-offer">
           Your offer: EUR {offer.price}. {offer.message}

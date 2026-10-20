@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import KbcLogo from "../../components/KbcLogo";
 import { hub, roles, flowKinds, status } from "../../data/partners";
 import "./map.css";
 
@@ -37,12 +38,12 @@ function Flow({ x, y, h, flow, slot, slots }) {
   const uy = dy / len;
   const nx = -uy;
   const ny = ux;
-  const off = (slot - (slots - 1) / 2) * 40;
+  const off = (slot - (slots - 1) / 2) * 46;
   const end = edgePoint(x, y, BOX_W + 8, h + 8);
   const start = { x: CX + ux * (HUB_R + 4), y: CY + uy * (HUB_R + 4) };
   const [a, b] = flow.direction === "out" ? [start, end] : [end, start];
   const color = flowKinds[flow.kind].color;
-  const t = flow.direction === "out" ? 0.66 : 0.34;
+  const t = flow.direction === "out" ? 0.74 : 0.26;
   const mid = { x: start.x + (end.x - start.x) * t + nx * off, y: start.y + (end.y - start.y) * t + ny * off };
   return (
     <g>
@@ -67,6 +68,7 @@ export default function MapApp() {
   return (
     <div className="map">
       <header className="map-bar">
+        <span className="logo-chip"><KbcLogo /></span>
         <h1>Ecosystem map</h1>
         <p className="map-status">{status}</p>
         <Link to="/">Back to start</Link>

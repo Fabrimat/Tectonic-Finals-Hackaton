@@ -77,3 +77,20 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
+
+.landing-brand .kbc-logo {
+  display: block;
+  height: 64px;
+  width: auto;
+}
+
+.landing-brand .kbc-logo-text {
+  color: var(--kbc-navy);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.landing-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
