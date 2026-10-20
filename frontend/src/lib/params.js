@@ -48,7 +48,7 @@ export function stateFromParams(search) {
 
 export function viewParams(search) {
   const params = new URLSearchParams(search);
-  return { partner: params.get("partner") ?? "", tools: params.get("tools") !== "0", open: truthy(params.get("open")) };
+  return { partner: params.get("partner") ?? "", tools: params.get("tools") !== "0", open: truthy(params.get("open")), evidence: truthy(params.get("open")) && truthy(params.get("evidence")) };
 }
 
 export const view = viewParams(typeof window === "undefined" ? "" : window.location.search);
