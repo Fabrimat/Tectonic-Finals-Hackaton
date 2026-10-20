@@ -1,0 +1,107 @@
+/* Evidence breakdown inside the Why disclosure */
+.ev {
+  display: grid;
+  gap: 14px;
+  padding-top: 4px;
+  color: var(--kbc-navy);
+  font-size: 14px;
+}
+
+.ev-signals {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ev-signal {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.ev-label {
+  line-height: 1.3;
+}
+
+.ev-track {
+  grid-column: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--kbc-blue-soft);
+  overflow: hidden;
+}
+
+.ev-bar {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--kbc-blue);
+}
+
+.ev-num {
+  grid-column: 2;
+  grid-row: 2;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 6px;
+}
+
+.ev-meter {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--line);
+}
+
+.ev-meter-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 6px;
+  background: var(--kbc-navy);
+}
+
+.ev-tick {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--warn);
+}
+
+.ev-scale {
+  position: relative;
+  height: 18px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ev-scale span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ev-withheld {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.ev-demo {
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--kbc-blue-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
