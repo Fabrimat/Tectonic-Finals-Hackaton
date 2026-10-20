@@ -70,6 +70,14 @@ cd frontend && npm run shots:slides
 
 It writes 1920x1080 slides (3840x2160 pixels) and phone compositions to `frontend/shots/slides`, every phone screen as `-screen.png` and as `-framed.png` with a transparent background in `frontend/shots/slides/phones`, and `INDEX.txt` listing each file, its size and the outline slide it belongs to.
 
+The pitch deck has its own command:
+
+```
+cd frontend && npm run deck
+```
+
+It renders nine 1920x1080 slides from `frontend/scripts/deck` to `frontend/shots/deck` as `deck.pdf`, one PNG per slide in `png/` and `notes.txt` with the speaker notes. The slide set from `npm run shots:slides` is rendered first if it is missing, and the figures on the value slide are read from `frontend/src/data/synthetic.json`.
+
 ## URL parameters
 
 Any state opens directly. Parameters apply on load, are not saved and are not sent to other tabs. Unknown values are ignored.

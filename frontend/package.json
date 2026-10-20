@@ -10,7 +10,8 @@
     "test": "node --test",
     "preview": "vite preview",
     "shots": "node scripts/shots.mjs",
-    "shots:slides": "node scripts/slides.mjs"
+    "shots:slides": "node scripts/slides.mjs",
+    "deck": "node scripts/deck.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
