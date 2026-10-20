@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { assumptions as a, eur, eurWhole } from "./economics";
 
 const pct = (n) => `${Math.round(n * 100)}%`;
@@ -5,9 +6,15 @@ const pct = (n) => `${Math.round(n * 100)}%`;
 export default function Assumptions({ kbc, leads }) {
   const { conversion, leadValue } = a.partnerLeads;
   const r = a.retention;
+  const [open, setOpen] = useState(false);
   return (
     <section className="pp-assume" aria-labelledby="assume-h">
-      <h3 id="assume-h" className="pp-h">Assumptions</h3>
+      <h3 id="assume-h" className="pp-h">
+        <button type="button" className="pp-toggle" aria-expanded={open} aria-controls="assume-body" onClick={() => setOpen(!open)}>
+          {open ? "Hide assumptions" : "Show assumptions"}
+        </button>
+      </h3>
+      <div id="assume-body" hidden={!open}>
       <table>
         <thead>
           <tr><th scope="col">KBC product</th><th scope="col">Take-up</th><th scope="col">Year 1 value</th></tr>
@@ -45,6 +52,7 @@ export default function Assumptions({ kbc, leads }) {
           {leads.length === 1 ? "" : "s"}.
         </p>
       </details>
+      </div>
     </section>
   );
 }

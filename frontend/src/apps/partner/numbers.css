@@ -1,0 +1,86 @@
+.pp-numbers .pp-counted {
+  margin: -6px 0 16px;
+  font-size: 1rem;
+  color: #4a5666;
+}
+
+.pp-numbers .pp-cols {
+  align-items: start;
+}
+
+.pp-numbers .pp-big {
+  font-size: 3rem;
+}
+
+.pp-numbers .pp-col-main .pp-big {
+  font-size: 3.6rem;
+}
+
+.pp-numbers .pp-note,
+.pp-numbers .pp-more summary,
+.pp-numbers .pp-sum,
+.pp-numbers .pp-split li {
+  font-size: 0.95rem;
+}
+
+.pp-numbers .pp-note,
+.pp-numbers .pp-mid {
+  color: #4a5666;
+}
+
+.pp-numbers .pp-h .pp-tag {
+  font-size: 0.875rem;
+}
+
+.pp-numbers .pp-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.pp-numbers .pp-assume thead th {
+  font-size: 0.875rem;
+}
+
+.pp-numbers .pp-assume th,
+.pp-numbers .pp-assume td {
+  font-size: 0.95rem;
+}
+
+.pp-numbers .pp-assume th {
+  color: #4a5666;
+}
+
+.pp-numbers .pp-assume {
+  padding: 14px 20px;
+}
+
+.pp-numbers .pp-assume .pp-h {
+  margin: 0;
+}
+
+.pp-numbers .pp-toggle {
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--kbc-blue);
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+.pp-numbers .pp-toggle::before {
+  content: "+ ";
+}
+
+.pp-numbers .pp-toggle[aria-expanded="true"]::before {
+  content: "- ";
+}
+
+.pp-numbers .pp-assume #assume-body {
+  margin-top: 12px;
+}

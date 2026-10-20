@@ -1,6 +1,8 @@
 import { catalogueItem } from "../../data/scenarios";
-import { assumptions, eur, eurWhole, kbcEstimate } from "./economics";
+import { acceptedSteps, assumptions, decisionCounts, defaultDecisions, eur, eurWhole, kbcEstimate } from "./economics";
+import { leadsFor } from "./leadData";
 import Assumptions from "./Assumptions";
+import "./numbers.css";
 
 function Bar({ value, max, label }) {
   const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
@@ -20,10 +22,19 @@ function ecosystemsOf(steps) {
   return [...names];
 }
 
-export default function Numbers({ scenario, decisions, leads, partners }) {
-  const accepted = scenario.steps.filter((s) => s.kind === "action" && decisions[s.id] === "accepted");
+function captionOf(counts) {
+  return [`${counts.accepted} accepted`, `${counts.deferred} later`, `${counts.rejected} declined`].join(", ");
+}
+
+export default function Numbers({ scenario, decisions: given, leads: givenLeads, partners }) {
+  const decided = Object.keys(given).length > 0;
+  const decisions = decided ? given : defaultDecisions(scenario.id);
+  const leads = decided ? givenLeads : leadsFor(scenario, decisions, true);
+  const actions = scenario.steps.filter((s) => s.kind === "action");
+  const accepted = acceptedSteps(scenario.steps, decisions);
+  const counts = decisionCounts(scenario.steps, decisions);
   const saving = accepted.reduce((sum, s) => sum + s.saving, 0);
-  const savingPossible = scenario.steps.filter((s) => s.kind === "action").reduce((sum, s) => sum + s.saving, 0);
+  const savingPossible = actions.reduce((sum, s) => sum + s.saving, 0);
   const avoided = scenario.steps.filter((s) => s.kind === "skip").reduce((sum, s) => sum + s.saving, 0);
   const kbc = kbcEstimate({ acceptedIds: accepted.map((s) => s.id), leads });
   const perPartner = partners.map((p) => ({ name: p.name, count: leads.filter((l) => l.partner === p.name).length }));
@@ -34,31 +45,23 @@ export default function Numbers({ scenario, decisions, leads, partners }) {
   return (
     <div className="pp-numbers">
       <h2 className="pp-h">Value per customer <span className="pp-tag">Demo estimate</span></h2>
+      <p className="pp-counted">Counting {captionOf(counts)}</p>
       <div className="pp-cols">
         <section className="pp-col pp-col-main" aria-labelledby="col-kbc">
-          <h3 id="col-kbc">KBC products</h3>
+          <h3 id="col-kbc">Into KBC products</h3>
           <p className="pp-big">{eurWhole(kbc.own)}</p>
-          <p className="pp-note">First year</p>
-          <dl className="pp-sum">
-            {kbc.products.items.map((item) => (
-              <div key={item.id}><dt>{item.label}, {Math.round(item.conversion * 100)}%</dt><dd>{eurWhole(item.expected)}</dd></div>
-            ))}
-            {kbc.products.items.length === 0 && <div><dt>No KBC product step yet</dt><dd>{eur(0)}</dd></div>}
-            <div><dt>Retention</dt><dd>{eurWhole(kbc.retention.amount)}</dd></div>
-          </dl>
-          <Bar value={Math.min(accepted.length, minSteps)} max={minSteps} label="Progress to retention threshold" />
-          <p className="pp-note">{Math.min(accepted.length, minSteps)} of {minSteps} steps for retention</p>
-          <p className="pp-note">
-            At {assumptions.cohort.toLocaleString("en-GB")} customers: {eurWhole(kbc.own * assumptions.cohort)}
+          <p className="pp-note">First year, per customer</p>
+          <p className="pp-line"><span>Product take-up</span><strong>{eurWhole(kbc.products.total)}</strong></p>
+          <p className="pp-line">
+            <span>Retention ({Math.min(accepted.length, minSteps)} of {minSteps} steps)</span>
+            <strong>{eurWhole(kbc.retention.amount)}</strong>
           </p>
         </section>
         <section className="pp-col" aria-labelledby="col-customer">
           <h3 id="col-customer">Customer</h3>
           <p className="pp-big">{eur(saving)}</p>
-          <p className="pp-note">Saved per year</p>
+          <p className="pp-note">Saved per year, {accepted.length} of {actions.length} steps</p>
           <Bar value={saving} max={savingPossible} label="Share of possible estimated saving" />
-          <p className="pp-big pp-big-sm">{accepted.length} of {scenario.steps.filter((s) => s.kind === "action").length}</p>
-          <p className="pp-note">Steps accepted</p>
           {avoided > 0 && <p className="pp-note">Avoided cost: {eur(avoided)}</p>}
         </section>
         <section className="pp-col" aria-labelledby="col-partners">
