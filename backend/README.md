@@ -41,7 +41,7 @@ All routes are under `/api`.
 | GET | `/api/health` | Returns `{ "status": "ok" }` |
 | GET | `/api/catalogue` | Lists products, optional `?ecosystem=<ecosystemId>` |
 | GET | `/api/catalogue/:id` | One product, 404 if unknown |
-| POST | `/api/intents` | Creates an anonymous intent, returns it with a reference like `REQ-4F2A` and status `new` |
+| POST | `/api/intents` | Creates an anonymous intent, returns it with a reference like `LD-4F2A` and status `new` |
 | GET | `/api/intents` | Lists intents. Needs the `x-api-key` header, 401 otherwise |
 | POST | `/api/plan` | Builds a plan from signals with the rules in `data/rules.json` |
 | GET | `/api/plan/scenarios` | Lists the cached scenarios |

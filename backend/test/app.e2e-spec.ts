@@ -34,7 +34,7 @@ describe('API (e2e)', () => {
 
   it('POST /api/intents accepts a valid body', async () => {
     const res = await request(app.getHttpServer()).post('/api/intents').send(validIntent).expect(201);
-    expect(res.body.reference).toMatch(/^REQ-[0-9A-F]{4}$/);
+    expect(res.body.reference).toMatch(/^LD-[0-9A-F]{4}$/);
     expect(res.body.status).toBe('new');
   });
 

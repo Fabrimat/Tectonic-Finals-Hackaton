@@ -45,7 +45,7 @@ test("a lead carries intent fields only, nothing about the person", () => {
 test("references are stable and unique per step", () => {
   assert.equal(reference("s", "a"), reference("s", "a"));
   assert.notEqual(reference("s", "a"), reference("s", "b"));
-  assert.match(reference("s", "a"), /^REQ-[0-9A-F]{4}$/);
+  assert.match(reference("s", "a"), /^LD-[0-9A-F]{4}$/);
 });
 
 test("partnersOf lists each partner once", () => {
@@ -66,15 +66,15 @@ test("server intents map to partner leads and unknown steps are dropped", () => 
   const step = shareable[0];
   const row = { service: "S", region: "R", timeframe: "T", budgetBand: "B" };
   const intents = [
-    { reference: "REQ-AAAA", scenarioId: base.id, stepId: step.id, ...row },
-    { reference: "REQ-BBBB", scenarioId: base.id, stepId: "no-such-step", ...row },
-    { reference: "REQ-CCCC", scenarioId: "no-such-scenario", stepId: step.id, ...row },
+    { reference: "LD-AAAA", scenarioId: base.id, stepId: step.id, ...row },
+    { reference: "LD-BBBB", scenarioId: base.id, stepId: "no-such-step", ...row },
+    { reference: "LD-CCCC", scenarioId: "no-such-scenario", stepId: step.id, ...row },
   ];
   const leads = leadsFromIntents(intents);
   assert.equal(leads.length, 1);
   assert.deepEqual(leads[0], {
     id: step.id,
-    ref: "REQ-AAAA",
+    ref: "LD-AAAA",
     partner: step.partner.name,
     service: "S",
     region: "R",
