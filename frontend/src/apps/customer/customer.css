@@ -52,19 +52,10 @@
 }
 
 .cx-wordmark {
+  display: inline-flex;
+  align-items: center;
   font-size: 22px;
   font-weight: 700;
-  letter-spacing: 0.01em;
-}
-
-.cx-wordmark::after {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-left: 4px;
-  border-radius: 50%;
-  background: var(--kbc-blue);
 }
 
 .cx-person {
@@ -854,4 +845,40 @@
 
 .cx-btn:disabled {
   opacity: 0.5;
+}
+
+/* logo and consent */
+.cx-logo {
+  display: block;
+  height: 26px;
+  width: auto;
+}
+
+.cx-logo.kbc-logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.cx-datanote {
+  margin-bottom: 14px;
+}
+
+.cx-consent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 14px;
+  color: var(--kbc-navy);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cx-consent::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
 }

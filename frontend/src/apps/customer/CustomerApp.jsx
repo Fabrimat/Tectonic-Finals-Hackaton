@@ -9,6 +9,7 @@ import ActionCard from "./ActionCard";
 import HoldCard from "./HoldCard";
 import PlanBoard from "./PlanBoard";
 import SummaryBar from "./SummaryBar";
+import KbcLogo from "../../components/KbcLogo";
 import "./customer.css";
 
 export default function CustomerApp() {
@@ -26,7 +27,9 @@ export default function CustomerApp() {
   return (
     <div className="cx">
       <header className="cx-top">
-        <span className="cx-wordmark">Ripple</span>
+        <span className="cx-wordmark">
+          <KbcLogo className="cx-logo" />
+        </span>
         <span className="cx-person">
           <span className="cx-person-name">{person.name}</span>
           <span className="cx-avatar" aria-hidden="true">

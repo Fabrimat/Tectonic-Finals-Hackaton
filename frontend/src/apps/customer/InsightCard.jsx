@@ -9,7 +9,7 @@ export default function InsightCard({ scenario, confirmed, onConfirm, onDecline 
         {insight.title}
       </h1>
       <p className="cx-insight-body">{insight.body}</p>
-      <h2 className="cx-small-title">What this is based on</h2>
+      <h2 className="cx-small-title">Data used</h2>
       <ul className="cx-plain-list">
         {insight.basis.map((line) => (
           <li key={line}>{line}</li>
@@ -22,6 +22,7 @@ export default function InsightCard({ scenario, confirmed, onConfirm, onDecline 
         </p>
       ) : (
         <>
+          <p className="cx-consent">With your consent, in line with GDPR</p>
           <p className="cx-muted">Please check that this data is right. Nothing is built on it until you confirm.</p>
           <div className="cx-actions">
             <button type="button" className="cx-btn cx-btn-outline" onClick={onConfirm}>

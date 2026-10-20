@@ -30,14 +30,18 @@ export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
         ))}
       </ul>
 
-      <details className="cx-disclosure">
-        <summary>Why am I seeing this?</summary>
-        <h2 className="cx-small-title">What we looked at</h2>
+      <div className="cx-datanote">
+        <h2 className="cx-small-title">Data used</h2>
         <ul className="cx-plain-list">
           {signal.dataUsed.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
+        <p className="cx-consent">With your consent, in line with GDPR</p>
+      </div>
+
+      <details className="cx-disclosure">
+        <summary>Why am I seeing this?</summary>
         <h2 className="cx-small-title">What we did not use</h2>
         <ul className="cx-plain-list">
           {signal.dataNotUsed.map((line) => (
