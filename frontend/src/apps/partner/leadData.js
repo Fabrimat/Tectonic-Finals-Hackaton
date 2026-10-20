@@ -8,7 +8,7 @@ function hash(text) {
 
 export function reference(scenarioId, stepId) {
   const code = hash(`${scenarioId}:${stepId}`).toString(16).toUpperCase().slice(-4).padStart(4, "0");
-  return `RPL-${code}`;
+  return `REQ-${code}`;
 }
 
 export function partnersOf(scenario) {
