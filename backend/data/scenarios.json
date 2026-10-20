@@ -301,7 +301,7 @@
             "id": "certificates-and-inspections-de-immowinkel",
             "title": "Certificates and inspections - De Immowinkel",
             "partnerRole": "Certificates",
-            "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+            "why": "An up-to-date EPC certificate shows where the home stands. Rules for older homes may ask for improvements over time, so check the official source before deciding.",
             "dataUsed": [
               "EPC label",
               "purchase date"
@@ -314,7 +314,7 @@
             "id": "estimate-renovation-costs-and-grants-setle",
             "title": "Estimate renovation costs and grants - Setle",
             "partnerRole": "Advice and grants",
-            "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+            "why": "A cost and grant estimate shows what each renovation step may cost. Grants can change, so check the current ones before deciding.",
             "dataUsed": [
               "EPC label",
               "renovation deadline"
@@ -421,7 +421,7 @@
             "sharesData": true,
             "partnerRole": "Certificates",
             "proposed": false,
-            "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+            "why": "An up-to-date EPC certificate shows where the home stands. Rules for older homes may ask for improvements over time, so check the official source before deciding.",
             "intent": "home-energy-renovation"
           },
           {
@@ -432,7 +432,7 @@
             "sharesData": true,
             "partnerRole": "Advice and grants",
             "proposed": false,
-            "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+            "why": "A cost and grant estimate shows what each renovation step may cost. Grants can change, so check the current ones before deciding.",
             "intent": "home-energy-renovation"
           },
           {
@@ -672,7 +672,7 @@
               }
             ],
             "keyDate": "2027-03-01",
-            "message": "The Brussels low-emission zone now reaches your delivery vans. Are you thinking about replacing them?",
+            "message": "Rules for vehicles in some city zones may affect your vans over time. Check the official source before deciding. Are you thinking about replacing them?",
             "note": "Data used: where the vans drive and their planned replacement date. Please confirm this is right before we build anything on it.",
             "thresholds": {
               "ready": 3,

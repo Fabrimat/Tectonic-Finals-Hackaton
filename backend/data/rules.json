@@ -106,13 +106,13 @@
       {
         "id": "certificates-and-inspections-de-immowinkel",
         "role": "Certificates",
-        "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+        "why": "An up-to-date EPC certificate shows where the home stands. Rules for older homes may ask for improvements over time, so check the official source before deciding.",
         "dataUsed": ["EPC label", "purchase date"]
       },
       {
         "id": "estimate-renovation-costs-and-grants-setle",
         "role": "Advice and grants",
-        "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+        "why": "A cost and grant estimate shows what each renovation step may cost. Grants can change, so check the current ones before deciding.",
         "dataUsed": ["EPC label", "renovation deadline"]
       },
       {
@@ -185,7 +185,7 @@
     },
     "messages": {
       "whisper": "Energy costs are rising faster than revenue. This is just for your information.",
-      "forming": "The Brussels low-emission zone now reaches your delivery vans. Are you thinking about replacing them?",
+      "forming": "Rules for vehicles in some city zones may affect your vans over time. Check the official source before deciding. Are you thinking about replacing them?",
       "ready": "A deposit on an electric van suggests a decision now. Here is a plan for you to go through step by step."
     },
     "notes": {
