@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Landing from "./Landing.jsx";
 import CustomerApp from "./apps/customer/CustomerApp.jsx";
+import MapApp from "./apps/map/MapApp.jsx";
 import PartnerApp from "./apps/partner/PartnerApp.jsx";
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/app/*" element={<CustomerApp />} />
         <Route path="/partner/*" element={<PartnerApp />} />
+        <Route path="/map" element={<MapApp />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

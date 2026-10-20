@@ -1,0 +1,139 @@
+.map {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.map-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  padding: 14px 24px;
+  background: var(--kbc-navy);
+  color: #fff;
+}
+
+.map-bar h1 {
+  font-size: 1.125rem;
+}
+
+.map-status {
+  flex: 1;
+  color: #bcd3e6;
+  font-size: 0.875rem;
+}
+
+.map-bar a {
+  color: #fff;
+}
+
+.map-main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.map-main svg {
+  width: 100%;
+  height: auto;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.map-hub {
+  fill: var(--kbc-navy);
+}
+
+.map-hub-name {
+  fill: #fff;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.map-hub-sub {
+  fill: #bcd3e6;
+  font-size: 13px;
+}
+
+.map-role {
+  fill: var(--kbc-blue-soft);
+  stroke: var(--kbc-blue);
+  stroke-width: 1.5;
+}
+
+.map-role-label {
+  fill: var(--kbc-navy);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.map-partner {
+  fill: var(--ink);
+  font-size: 13px;
+}
+
+.map-flow-label {
+  fill: var(--ink);
+  font-size: 12px;
+  paint-order: stroke;
+  stroke: #fff;
+  stroke-width: 4px;
+}
+
+.map-side {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.map-side h2 {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: var(--kbc-navy);
+}
+
+.map-roles,
+.map-legend {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.map-roles li {
+  display: grid;
+  font-size: 0.875rem;
+}
+
+.map-roles span {
+  color: var(--muted);
+}
+
+.map-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+}
+
+.map-swatch {
+  flex: none;
+  width: 28px;
+  border-top: 3px solid var(--c);
+}
+
+.map-swatch.dashed {
+  border-top-style: dashed;
+}
+
+@media (max-width: 900px) {
+  .map-main {
+    grid-template-columns: 1fr;
+    padding: 12px;
+  }
+}
