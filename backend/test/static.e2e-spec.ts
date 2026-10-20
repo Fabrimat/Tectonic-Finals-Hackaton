@@ -55,7 +55,15 @@ describe('static frontend (e2e)', () => {
   });
 
   it('never serves files from outside the root', async () => {
-    const paths = ['/..%2f..%2fetc/passwd', '/%2e%2e/', '/..%5c..%5cwindows/win.ini', '/.env', '//etc/passwd', '/%2e%2e/%2e%2e/etc/passwd'];
+    const dots = "%2e%2e";
+    const paths = [
+      `/..%2f..%2fetc/passwd`,
+      `/${dots}/`,
+      `/..%5c..%5cwindows/win.ini`,
+      "/.env",
+      "//etc/passwd",
+      `/${dots}/${dots}/etc/passwd`,
+    ];
     for (const path of paths) {
       const res = await request(app.getHttpServer()).get(path);
       expect([200, 400, 403, 404]).toContain(res.status);
