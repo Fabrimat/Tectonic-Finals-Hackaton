@@ -23,7 +23,7 @@ export default function PartnerSheet({ steps, onClose }) {
         <h2 id="cx-sheet-title">What partners receive</h2>
         <p className="cx-sheet-note">
           Your name, contact details and transactions are not shared. Partners see the anonymous request below,
-          and only for steps you accepted. Contact details are released only when you authorise that partner for that step.
+          and only for steps you accepted. Contact details are released only when you authorise that partner for that step. A request that has been sent cannot be taken back yet.
         </p>
 
         {steps.length === 0 ? (

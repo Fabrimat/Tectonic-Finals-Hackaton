@@ -77,5 +77,6 @@ All estimates, assumptions and per product conversion rates live in `frontend/sr
 - Partner names and roles are assumptions, no partner has agreed to anything.
 - Legal and grant statements in `backend/data/facts.json` are marked `verified: false` and have not been checked against official sources.
 - The step status flow after acceptance is not built.
+- Withdrawing an intent after it was sent is not built, undo and start over only clear decisions kept on this device.
 - Most of the KBC Mobile frame is for the look only, only the intent card and the Start tab lead anywhere.
 - The container build and the single process serving are left as they are and have had no further work.

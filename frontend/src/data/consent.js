@@ -1,4 +1,4 @@
-// The four consent layers. Each is asked for on its own and can be withdrawn.
+// The four consent layers. Each is asked for on its own.
 export const layers = [
   { id: "analysis", label: "Analysis" },
   { id: "goal", label: "Goal" },

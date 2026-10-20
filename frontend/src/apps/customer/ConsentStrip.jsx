@@ -20,7 +20,7 @@ export default function ConsentStrip({ context }) {
       <p className="cx-layer-now">
         <strong>Now:</strong> {now}
       </p>
-      <p className="cx-layer-not">Not yet: {not.charAt(0).toLowerCase() + not.slice(1)} You can withdraw each layer at any time.</p>
+      <p className="cx-layer-not">Not yet: {not.charAt(0).toLowerCase() + not.slice(1)} Before a request is sent you can change your mind on each layer.</p>
     </div>
   );
 }
