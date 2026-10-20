@@ -5,6 +5,16 @@
     "title": "Home renovation ahead of the EPC deadline",
     "keyDate": "renovation_deadline",
     "thresholds": { "ready": 3, "forming": 12, "whisper": 36 },
+    "confidence": { "low": 25, "high": 50 },
+    "signals": [
+      { "id": "deadline-window", "label": "The renovation deadline is within three years", "weight": 20, "condition": { "date": "renovation_deadline", "stage": "whisper" } },
+      { "id": "deadline-near", "label": "The renovation deadline is within a year", "weight": 10, "condition": { "date": "renovation_deadline", "stage": "forming" } },
+      { "id": "bill-rising", "label": "Energy costs have risen year after year", "weight": 15, "condition": { "flag": "energy_bill_rising" } },
+      { "id": "boiler-old", "label": "The heating system reaches the end of its life within a year", "weight": 25, "condition": { "date": "boiler_end_of_life", "stage": "forming" } },
+      { "id": "energy-pages", "label": "Recent visits to the energy pages", "weight": 10, "condition": { "flag": "energy_pages_visited" } },
+      { "id": "repair-invoice", "label": "A boiler repair invoice", "weight": 15, "condition": { "flag": "boiler_repair_invoice" } },
+      { "id": "older-area", "label": "Most homes nearby are old", "weight": 5, "condition": { "buildingStockAgeAtLeast": 50 } }
+    ],
     "when": [{ "flag": "epc_e_or_f" }],
     "stages": {
       "whisper": [{ "date": "renovation_deadline", "stage": "whisper" }],
@@ -158,6 +168,15 @@
     "title": "Premises and delivery vans",
     "keyDate": "van_replacement_due",
     "thresholds": { "ready": 3, "forming": 6, "whisper": 12 },
+    "confidence": { "low": 25, "high": 50 },
+    "signals": [
+      { "id": "energy-cost-rising", "label": "Energy costs are rising against revenue", "weight": 15, "condition": { "flag": "energy_cost_rising" } },
+      { "id": "van-date-window", "label": "The planned van replacement is within a year", "weight": 20, "condition": { "date": "van_replacement_due", "stage": "whisper" } },
+      { "id": "van-date-near", "label": "The planned van replacement is within six months", "weight": 15, "condition": { "date": "van_replacement_due", "stage": "forming" } },
+      { "id": "vans-in-zone", "label": "Delivery vans drive into the Brussels low-emission zone", "weight": 25, "condition": { "flag": "delivery_vans_in_brussels_zone" } },
+      { "id": "vehicle-deposit", "label": "A deposit on a vehicle", "weight": 20, "condition": { "category": "vehicle_deposit", "minCount": 1 } },
+      { "id": "older-area", "label": "Most buildings nearby are old", "weight": 5, "condition": { "buildingStockAgeAtLeast": 50 } }
+    ],
     "when": [],
     "stages": {
       "whisper": [{ "flag": "energy_cost_rising" }, { "date": "van_replacement_due", "stage": "whisper" }],

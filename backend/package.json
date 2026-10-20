@@ -9,7 +9,9 @@
     "start:dev": "nest start --watch",
     "typecheck": "tsc --noEmit",
     "test": "jest --config jest.config.js",
-    "test:e2e": "jest --config test/jest-e2e.config.js"
+    "test:e2e": "jest --config test/jest-e2e.config.js",
+    "generate:scenarios": "npm run build && node scripts/generate-scenarios.js",
+    "generate:eval": "node scripts/generate-eval.js"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.7",

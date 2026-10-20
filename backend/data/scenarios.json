@@ -14,6 +14,28 @@
             "intent": "home-energy-renovation",
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "whisper",
+            "windowStage": "whisper",
+            "score": 40,
+            "evidence": [
+              {
+                "signalId": "deadline-window",
+                "label": "The renovation deadline is within three years",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "bill-rising",
+                "label": "Energy costs have risen year after year",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most homes nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2029-06-15",
             "message": "This is your consumption trend. There is nothing to do now, it is just good to be aware.",
             "note": "Data used: your mortgage start date, the EPC label we hold and your energy costs. Please confirm this is right. Nothing is shared with anyone.",
@@ -75,7 +97,8 @@
           }
         ],
         "areaNotes": [],
-        "groupRounds": []
+        "groupRounds": [],
+        "suppressed": []
       },
       "forming": {
         "scenarioId": "household-maes",
@@ -88,6 +111,40 @@
             "intent": "home-energy-renovation",
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "forming",
+            "windowStage": "forming",
+            "score": 75,
+            "evidence": [
+              {
+                "signalId": "deadline-window",
+                "label": "The renovation deadline is within three years",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "bill-rising",
+                "label": "Energy costs have risen year after year",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "boiler-old",
+                "label": "The heating system reaches the end of its life within a year",
+                "weight": 25,
+                "contribution": 25
+              },
+              {
+                "signalId": "energy-pages",
+                "label": "Recent visits to the energy pages",
+                "weight": 10,
+                "contribution": 10
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most homes nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2029-06-15",
             "message": "Your heating system is getting older. Are you thinking about renovating?",
             "note": "Data used: the age of your heating system and your visits to the energy pages. Please confirm this is right before we build anything on it.",
@@ -161,7 +218,8 @@
             "title": "Group purchase of solar panels, East Flanders",
             "catalogueId": "calculate-solar-panels-and-request-a-quote"
           }
-        ]
+        ],
+        "suppressed": []
       },
       "ready": {
         "scenarioId": "household-maes",
@@ -174,6 +232,46 @@
             "intent": "home-energy-renovation",
             "title": "Home renovation ahead of the EPC deadline",
             "stage": "ready",
+            "windowStage": "ready",
+            "score": 90,
+            "evidence": [
+              {
+                "signalId": "deadline-window",
+                "label": "The renovation deadline is within three years",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "bill-rising",
+                "label": "Energy costs have risen year after year",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "boiler-old",
+                "label": "The heating system reaches the end of its life within a year",
+                "weight": 25,
+                "contribution": 25
+              },
+              {
+                "signalId": "energy-pages",
+                "label": "Recent visits to the energy pages",
+                "weight": 10,
+                "contribution": 10
+              },
+              {
+                "signalId": "repair-invoice",
+                "label": "A boiler repair invoice",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most homes nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2029-06-15",
             "message": "A boiler repair suggests work is starting. Here is a plan for you to go through step by step.",
             "note": "Data used: the boiler repair invoice, the EPC label and your mortgage. Please confirm this is right. Every step stays your choice.",
@@ -428,7 +526,8 @@
             "title": "Group purchase of solar panels, East Flanders",
             "catalogueId": "calculate-solar-panels-and-request-a-quote"
           }
-        ]
+        ],
+        "suppressed": []
       }
     }
   },
@@ -447,6 +546,28 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "whisper",
+            "windowStage": "whisper",
+            "score": 40,
+            "evidence": [
+              {
+                "signalId": "energy-cost-rising",
+                "label": "Energy costs are rising against revenue",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "van-date-window",
+                "label": "The planned van replacement is within a year",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most buildings nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2027-06-01",
             "message": "Energy costs are rising faster than revenue. This is just for your information.",
             "note": "Data used: your energy costs and the planned replacement date of the vans. Please confirm this is right. Nothing is shared with anyone.",
@@ -502,7 +623,8 @@
           }
         ],
         "areaNotes": [],
-        "groupRounds": []
+        "groupRounds": [],
+        "suppressed": []
       },
       "forming": {
         "scenarioId": "bakery-leuven",
@@ -515,6 +637,40 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "forming",
+            "windowStage": "forming",
+            "score": 80,
+            "evidence": [
+              {
+                "signalId": "energy-cost-rising",
+                "label": "Energy costs are rising against revenue",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "van-date-window",
+                "label": "The planned van replacement is within a year",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "van-date-near",
+                "label": "The planned van replacement is within six months",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "vans-in-zone",
+                "label": "Delivery vans drive into the Brussels low-emission zone",
+                "weight": 25,
+                "contribution": 25
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most buildings nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2027-03-01",
             "message": "The Brussels low-emission zone now reaches your delivery vans. Are you thinking about replacing them?",
             "note": "Data used: where the vans drive and their planned replacement date. Please confirm this is right before we build anything on it.",
@@ -589,7 +745,8 @@
             "title": "Group purchase of electricity and gas, Flemish Brabant",
             "catalogueId": "group-purchase-of-electricity-and-gas"
           }
-        ]
+        ],
+        "suppressed": []
       },
       "ready": {
         "scenarioId": "bakery-leuven",
@@ -602,6 +759,46 @@
             "intent": "business-energy-and-fleet",
             "title": "Premises and delivery vans",
             "stage": "ready",
+            "windowStage": "ready",
+            "score": 100,
+            "evidence": [
+              {
+                "signalId": "energy-cost-rising",
+                "label": "Energy costs are rising against revenue",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "van-date-window",
+                "label": "The planned van replacement is within a year",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "van-date-near",
+                "label": "The planned van replacement is within six months",
+                "weight": 15,
+                "contribution": 15
+              },
+              {
+                "signalId": "vans-in-zone",
+                "label": "Delivery vans drive into the Brussels low-emission zone",
+                "weight": 25,
+                "contribution": 25
+              },
+              {
+                "signalId": "vehicle-deposit",
+                "label": "A deposit on a vehicle",
+                "weight": 20,
+                "contribution": 20
+              },
+              {
+                "signalId": "older-area",
+                "label": "Most buildings nearby are old",
+                "weight": 5,
+                "contribution": 5
+              }
+            ],
             "keyDate": "2027-01-05",
             "message": "A deposit on an electric van suggests a decision now. Here is a plan for you to go through step by step.",
             "note": "Data used: the vehicle deposit and your energy costs. Please confirm this is right. Every step stays your choice.",
@@ -806,7 +1003,8 @@
             "title": "Group purchase of electricity and gas, Flemish Brabant",
             "catalogueId": "group-purchase-of-electricity-and-gas"
           }
-        ]
+        ],
+        "suppressed": []
       }
     }
   }

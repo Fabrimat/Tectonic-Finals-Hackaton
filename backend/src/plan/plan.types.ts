@@ -23,11 +23,22 @@ export interface Area {
   openGroupRounds?: string[];
 }
 
+export type Decision = 'dismissed' | 'snoozed' | 'accepted';
+
+export interface HistoryEntry {
+  intent: string;
+  decision: Decision;
+  daysAgo: number;
+  category?: string;
+}
+
 export interface Signals {
   dates: DateSignal[];
   spend: SpendSignal[];
   flags: string[];
   area?: Area;
+  history?: HistoryEntry[];
+  confirmedIntents?: string[];
 }
 
 export type ActionKind = 'awareness' | 'optional' | 'opportunity' | 'introduction' | 'plan';
@@ -60,7 +71,39 @@ export interface GroupRound {
 export type Condition =
   | { flag: string }
   | { date: string; stage?: Stage }
-  | { category: string; minTotal?: number; minCount?: number };
+  | { category: string; minTotal?: number; minCount?: number }
+  | { buildingStockAgeAtLeast: number }
+  | { historicCentre: boolean };
+
+export interface ScoredSignal {
+  id: string;
+  label: string;
+  weight: number;
+  condition: Condition;
+}
+
+export interface ConfidenceThresholds {
+  low: number;
+  high: number;
+}
+
+export interface EngineConfig {
+  sensitiveCategories: string[];
+  cooldownDays: { dismissed: number; snoozed: number };
+  snoozeFactor: number;
+  categoryMemoryDays: number;
+  categoryFactors: { dismissed: number; accepted: number };
+  graph: { maxBoost: number; links: { from: string; to: string; weight: number }[] };
+}
+
+export interface Evidence {
+  signalId: string;
+  label: string;
+  weight: number;
+  contribution: number;
+}
+
+export type SuppressedReason = 'low-confidence' | 'cooldown-dismissed';
 
 export interface Candidate {
   id: string;
@@ -78,6 +121,8 @@ export interface Rule {
   title: string;
   keyDate?: string;
   thresholds: StageThresholds;
+  confidence: ConfidenceThresholds;
+  signals: ScoredSignal[];
   when: Condition[];
   stages: Partial<Record<Stage, Condition[]>>;
   messages: Record<Stage, string>;
@@ -97,7 +142,11 @@ export interface Fact {
 
 export interface RuleMatch {
   rule: Rule;
-  stage: Stage;
+  windowStage: Stage;
+  stage: Stage | null;
+  score: number;
+  evidence: Evidence[];
+  suppressed?: SuppressedReason;
   keyDate?: string;
 }
 
@@ -106,6 +155,9 @@ export interface PlanMatch {
   intent: string;
   title: string;
   stage: Stage;
+  windowStage: Stage;
+  score: number;
+  evidence: Evidence[];
   keyDate?: string;
   message: string;
   note: string;
@@ -137,6 +189,14 @@ export interface PlanAction {
   intent: string;
 }
 
+export interface PlanSuppressed {
+  ruleId: string;
+  intent: string;
+  reason: SuppressedReason;
+  score: number;
+  evidence: Evidence[];
+}
+
 export interface PlanAreaNote {
   id: string;
   text: string;
@@ -153,6 +213,7 @@ export interface Plan {
   actions: PlanAction[];
   areaNotes: PlanAreaNote[];
   groupRounds: GroupRound[];
+  suppressed: PlanSuppressed[];
 }
 
 export interface CachedScenario {

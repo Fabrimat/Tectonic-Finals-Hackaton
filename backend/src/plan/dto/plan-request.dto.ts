@@ -3,6 +3,7 @@ import {
   ArrayMaxSize,
   IsArray,
   IsBoolean,
+  IsIn,
   IsInt,
   IsISO8601,
   IsNumber,
@@ -50,6 +51,20 @@ export class AreaDto {
   openGroupRounds?: string[];
 }
 
+export class HistoryEntryDto {
+  @IsString() @MinLength(1) @MaxLength(64) @Matches(KEY)
+  intent: string;
+
+  @IsIn(['dismissed', 'snoozed', 'accepted'])
+  decision: 'dismissed' | 'snoozed' | 'accepted';
+
+  @IsInt() @Min(0) @Max(3650)
+  daysAgo: number;
+
+  @IsOptional() @IsString() @MinLength(1) @MaxLength(64) @Matches(KEY)
+  category?: string;
+}
+
 export class PlanRequestDto {
   @IsOptional() @IsString() @MinLength(1) @MaxLength(64) @Matches(KEY)
   scenarioId?: string;
@@ -69,4 +84,11 @@ export class PlanRequestDto {
 
   @IsOptional() @ValidateNested() @Type(() => AreaDto)
   area?: AreaDto;
+
+  @IsOptional() @IsArray() @ArrayMaxSize(50) @ValidateNested({ each: true }) @Type(() => HistoryEntryDto)
+  history?: HistoryEntryDto[];
+
+  @IsOptional() @IsArray() @ArrayMaxSize(20) @IsString({ each: true }) @MaxLength(64, { each: true })
+  @Matches(KEY, { each: true })
+  confirmedIntents?: string[];
 }

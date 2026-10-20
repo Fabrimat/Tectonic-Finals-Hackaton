@@ -9,6 +9,7 @@ import {
   ActionKind,
   Area,
   CachedScenario,
+  EngineConfig,
   Fact,
   GroupRound,
   Plan,
@@ -34,6 +35,7 @@ function readData<T>(name: string): T {
 @Injectable()
 export class PlanService {
   private readonly rules = readData<Rule[]>('rules.json');
+  private readonly engine = readData<EngineConfig>('engine.json');
   private readonly rounds = readData<GroupRound[]>('group-rounds.json');
   private readonly facts = new Map(readData<Fact[]>('facts.json').map((f) => [f.id, f]));
   private readonly scenarios: CachedScenario[];
@@ -66,12 +68,25 @@ export class PlanService {
   }
 
   build(
-    dto: Pick<PlanRequestDto, 'scenarioId' | 'dates' | 'spend' | 'flags' | 'area'>,
+    dto: Pick<PlanRequestDto, 'scenarioId' | 'dates' | 'spend' | 'flags' | 'area' | 'history' | 'confirmedIntents'>,
     asOf: Date,
   ): Plan {
     const area: Area = dto.area ?? {};
-    const signals = { dates: dto.dates ?? [], spend: dto.spend ?? [], flags: dto.flags ?? [], area };
-    const matches = evaluateRules(this.rules, signals, asOf);
+    const signals = {
+      dates: dto.dates ?? [],
+      spend: dto.spend ?? [],
+      flags: dto.flags ?? [],
+      area,
+      history: dto.history ?? [],
+      confirmedIntents: dto.confirmedIntents ?? [],
+    };
+    const evaluated = evaluateRules(this.rules, signals, asOf, this.engine);
+    const matches = evaluated.flatMap((m) => (m.stage ? [{ ...m, stage: m.stage }] : []));
+    const suppressed = evaluated.flatMap((m) =>
+      m.suppressed
+        ? [{ ruleId: m.rule.id, intent: m.rule.intent, reason: m.suppressed, score: m.score, evidence: m.evidence }]
+        : [],
+    );
     const steps: PlanStep[] = [];
     const actions: PlanAction[] = [];
     const areaNotes: Plan['areaNotes'] = [];
@@ -150,6 +165,9 @@ export class PlanService {
         intent: m.rule.intent,
         title: m.rule.title,
         stage: m.stage,
+        windowStage: m.windowStage,
+        score: m.score,
+        evidence: m.evidence,
         keyDate: m.keyDate,
         message: m.rule.messages[m.stage],
         note: m.rule.notes[m.stage],
@@ -160,6 +178,7 @@ export class PlanService {
       actions,
       areaNotes,
       groupRounds,
+      suppressed,
     };
   }
 
@@ -208,6 +227,7 @@ export class PlanService {
       actions,
       areaNotes: late ? plan.areaNotes : [],
       groupRounds: late ? plan.groupRounds.filter((r) => this.rounds.some((k) => k.id === r.id)) : [],
+      suppressed: plan.suppressed ?? [],
     };
   }
 }

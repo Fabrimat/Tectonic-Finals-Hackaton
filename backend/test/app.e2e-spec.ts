@@ -62,8 +62,13 @@ describe('API (e2e)', () => {
   describe('plan', () => {
     const body = (boilerInvoice: boolean) => ({
       asOf: '2026-10-20',
-      flags: boilerInvoice ? ['epc_e_or_f', 'boiler_repair_invoice'] : ['epc_e_or_f'],
-      dates: [{ kind: 'renovation_deadline', date: '2029-06-15' }],
+      flags: boilerInvoice
+        ? ['epc_e_or_f', 'energy_bill_rising', 'energy_pages_visited', 'boiler_repair_invoice']
+        : ['epc_e_or_f', 'energy_bill_rising'],
+      dates: [
+        { kind: 'renovation_deadline', date: '2029-06-15' },
+        ...(boilerInvoice ? [{ kind: 'boiler_end_of_life', date: '2027-03-01' }] : []),
+      ],
     });
 
     it('POST /api/plan returns catalogue steps for a ready moment', async () => {
@@ -112,6 +117,28 @@ describe('API (e2e)', () => {
         .post('/api/plan')
         .send({ ...body(true), area: { buildingStockAge: -1 } })
         .expect(400);
+    });
+
+    it('POST /api/plan returns score and evidence, and honours a recent dismissal', async () => {
+      const res = await request(app.getHttpServer()).post('/api/plan').send(body(true)).expect(201);
+      expect(res.body.matches[0].score).toBeGreaterThan(0);
+      expect(res.body.matches[0].evidence[0]).toEqual(
+        expect.objectContaining({ signalId: expect.any(String), label: expect.any(String) }),
+      );
+      const history = [{ intent: 'home-energy-renovation', decision: 'dismissed', daysAgo: 10 }];
+      const hidden = await request(app.getHttpServer())
+        .post('/api/plan')
+        .send({ ...body(true), history, confirmedIntents: ['business-energy-and-fleet'] })
+        .expect(201);
+      expect(hidden.body.matches).toEqual([]);
+      expect(hidden.body.suppressed[0].reason).toBe('cooldown-dismissed');
+    });
+
+    it('POST /api/plan rejects bad history entries', async () => {
+      const bad = [{ intent: 'x', decision: 'maybe', daysAgo: 1 }];
+      await request(app.getHttpServer()).post('/api/plan').send({ ...body(true), history: bad }).expect(400);
+      const extra = [{ intent: 'x', decision: 'snoozed', daysAgo: 1, name: 'Jane' }];
+      await request(app.getHttpServer()).post('/api/plan').send({ ...body(true), history: extra }).expect(400);
     });
 
     it('POST /api/plan in whisper shares nothing by default', async () => {

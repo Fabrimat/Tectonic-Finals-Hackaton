@@ -1,0 +1,14 @@
+{
+  "sensitiveCategories": ["health", "medical", "pharmacy", "religion", "political", "union", "gambling", "adult"],
+  "cooldownDays": { "dismissed": 90, "snoozed": 30 },
+  "snoozeFactor": 0.5,
+  "categoryMemoryDays": 180,
+  "categoryFactors": { "dismissed": 0.5, "accepted": 1.1 },
+  "graph": {
+    "maxBoost": 10,
+    "links": [
+      { "from": "home-energy-renovation", "to": "business-energy-and-fleet", "weight": 8 },
+      { "from": "business-energy-and-fleet", "to": "home-energy-renovation", "weight": 8 }
+    ]
+  }
+}

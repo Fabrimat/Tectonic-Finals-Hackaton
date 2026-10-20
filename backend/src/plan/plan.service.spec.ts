@@ -8,9 +8,15 @@ import { parseDate } from './rules';
 process.env.PARTNER_API_KEY ??= 'test-key-0123456789abcdef-test';
 
 const asOf = parseDate('2026-10-20') as Date;
-const whisper = { flags: ['epc_e_or_f'], dates: [{ kind: 'renovation_deadline', date: '2029-06-15' }] };
-const forming = { ...whisper, dates: [...whisper.dates, { kind: 'boiler_end_of_life', date: '2027-03-01' }] };
-const ready = { ...forming, flags: [...whisper.flags, 'boiler_repair_invoice'] };
+const whisper = {
+  flags: ['epc_e_or_f', 'energy_bill_rising'],
+  dates: [{ kind: 'renovation_deadline', date: '2029-06-15' }],
+};
+const forming = {
+  flags: [...whisper.flags, 'energy_pages_visited'],
+  dates: [...whisper.dates, { kind: 'boiler_end_of_life', date: '2027-03-01' }],
+};
+const ready = { ...forming, flags: [...forming.flags, 'boiler_repair_invoice'] };
 
 describe('PlanService', () => {
   const catalogue = new CatalogueService();
