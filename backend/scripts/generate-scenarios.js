@@ -1,9 +1,10 @@
 // Rebuilds data/scenarios.json from the rules engine. Run with `npm run generate:scenarios`.
 const { writeFileSync } = require('fs');
 const { join } = require('path');
+const { randomBytes } = require('crypto');
 
 const root = join(__dirname, '..');
-process.env.PARTNER_API_KEY = process.env.PARTNER_API_KEY || 'scenario-generator-key-0123456789';
+process.env.PARTNER_API_KEY = process.env.PARTNER_API_KEY || randomBytes(24).toString('hex');
 
 const { PlanService } = require(join(root, 'dist/plan/plan.service'));
 const { CatalogueService } = require(join(root, 'dist/catalogue/catalogue.service'));
