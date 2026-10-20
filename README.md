@@ -22,8 +22,8 @@ Two scenarios are included, a household (`household-maes`) and a bakery (`bakery
 
 ## Layout
 
-- `frontend/` React and Vite single page app
-- `backend/` NestJS API, see `backend/README.md` for endpoints and settings
+- `frontend/` React and Vite single page app, with `frontend/scripts` for screenshots and slides and tests next to the code in `frontend/src`
+- `backend/` NestJS API, see `backend/README.md` for endpoints and settings, with `backend/scripts` for the data generators and tests in `backend/src`
 - `Dockerfile` builds both and serves them from one process
 
 ## Run
@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-The app opens on http://localhost:5173. The backend is optional: without it everything runs from the browser, using the same data. To run it as well, set `PARTNER_API_KEY` (at least 24 characters) in `backend/.env` and start it with `npm run start:dev` in `backend/`. Vite proxies `/api` to it.
+The app opens on http://localhost:5173. The backend is optional: without it everything runs from the browser, using a precomputed copy of the backend rules (scenarios are cached in both places and a test keeps them aligned). To run it as well, set `PARTNER_API_KEY` (at least 24 characters) in `backend/.env` and start it with `npm run start:dev` in `backend/`. Vite proxies `/api` to it.
 
 Checks:
 
