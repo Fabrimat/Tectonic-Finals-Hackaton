@@ -26,6 +26,11 @@ export async function postIntent(scenarioId, step) {
   }
 }
 
+// A new run can post its intents again.
+export function forgetSent() {
+  sent.clear();
+}
+
 // Resolves to { status: "ok", intents } or { status: "nokey" | "denied" | "offline" }.
 export async function fetchIntents(key) {
   if (!key) return { status: "nokey" };

@@ -1,15 +1,14 @@
 import { useSyncExternalStore } from "react";
-import { scenarios, viewOf } from "../data/scenarios";
-import { deepLinkState } from "./params";
-import { initial, reduce } from "./reducer";
-import { parseState } from "./validate";
+import { scenarios, viewOf } from "../data/scenarios.js";
+import { forgetSent } from "./api.js";
+import { deepLinkState } from "./params.js";
+import { initial, reduce } from "./reducer.js";
+import { parseState } from "./validate.js";
 
 const KEY = "ripple-state-v3";
 const CHANNEL = "ripple-sync";
 
-// One state object shared by the customer app and the partner portal.
-// Both read it through useRipple(), and changes are mirrored across tabs
-// so the partner screen updates while the customer taps on a phone-sized window.
+// One state object shared by the customer app and the partner portal, mirrored across tabs.
 // The state shape and transitions live in reducer.js.
 //
 // scenarioId: which scenario is active
@@ -30,11 +29,13 @@ function load() {
 
 // A deep link state is shown without being saved or sent to other tabs until the user acts.
 let state = deepLinkState ?? load();
+let pinned = deepLinkState !== null;
 const listeners = new Set();
 let channel = null;
 try {
   channel = new BroadcastChannel(CHANNEL);
   channel.onmessage = (event) => {
+    if (pinned) return;
     const next = parseState(event.data);
     if (!next) return;
     state = next;
@@ -45,6 +46,7 @@ try {
 }
 
 function commit(next) {
+  pinned = false;
   state = next;
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
@@ -64,13 +66,21 @@ export const actions = {
   selectScenario: (scenarioId) => commit(reduce(state, { type: "selectScenario", scenarioId })),
   selectStage: (stage) => commit(reduce(state, { type: "selectStage", stage })),
   confirmSignal: () => commit(reduce(state, { type: "confirmSignal" })),
-  declineSignal: () => commit(reduce(state, { type: "declineSignal" })),
+  declineSignal: () => {
+    forgetSent();
+    commit(reduce(state, { type: "declineSignal" }));
+  },
   decide: (stepId, decision) => commit(reduce(state, { type: "decide", stepId, decision })),
   clearDecision: (stepId) => commit(reduce(state, { type: "clearDecision", stepId })),
   choose: (id) => commit(reduce(state, { type: "choose", id })),
   unchoose: (id) => commit(reduce(state, { type: "unchoose", id })),
-  reset: () => commit(reduce(state, { type: "reset" })),
+  reset: () => {
+    forgetSent();
+    commit(reduce(state, { type: "reset" }));
+  },
 };
+
+export const getState = () => state;
 
 export function useRipple() {
   const snapshot = useSyncExternalStore(subscribe, () => state);
