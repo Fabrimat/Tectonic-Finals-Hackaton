@@ -1,9 +1,9 @@
 import { catalogueItem } from "../../data/scenarios";
 
 const LAYER = {
-  optional: "Consent layer: analysis. Nothing goes to a partner.",
-  opportunity: "Consent layer: goal. Noted on this device only.",
-  introduction: "Consent layer: sharing, not yet. You authorise each partner per step.",
+  optional: "Only you see this.",
+  opportunity: "Noted on this device only.",
+  introduction: "Not shared yet. You authorise each partner per step.",
 };
 
 export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }) {
@@ -42,7 +42,7 @@ export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }
         </div>
       ) : (
         <div className="cx-choices">
-          <button type="button" className="cx-btn cx-btn-outline" disabled={!enabled} onClick={onChoose}>
+          <button type="button" className="cx-btn cx-btn-outline" aria-disabled={!enabled} onClick={enabled ? onChoose : undefined}>
             {action.choice}
           </button>
           {!enabled && <span className="cx-muted">Confirm above first.</span>}

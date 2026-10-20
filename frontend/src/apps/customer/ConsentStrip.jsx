@@ -1,8 +1,24 @@
 import { contexts, layers, layerNames } from "../../data/consent";
 
-// Four consents as small chips, the one that applies now marked. The full wording is behind Details.
-export default function ConsentStrip({ context }) {
-  const { layer, now, not } = contexts[context];
+function ConsentText({ context }) {
+  const { now, not } = contexts[context];
+  return (
+    <>
+      <p>
+        <strong>Now:</strong> {now}
+      </p>
+      <p className="cx-muted">
+        Not yet: {not.charAt(0).toLowerCase() + not.slice(1)} Before a request is sent you can change your mind on each layer.
+      </p>
+      <p className="cx-muted">Four separate consents: {layerNames.join(", ").toLowerCase()}.</p>
+    </>
+  );
+}
+
+// Four consents as small chips, the one that applies now marked, with a plain caption underneath.
+// The full wording is behind Details, or the caller shows it elsewhere with inline set.
+export default function ConsentStrip({ context, note, inline = false }) {
+  const { layer, caption } = contexts[context];
   return (
     <div className="cx-consent-strip">
       <ol className="cx-layers" aria-label="Four separate consents">
@@ -17,16 +33,18 @@ export default function ConsentStrip({ context }) {
           );
         })}
       </ol>
-      <details className="cx-more">
-        <summary>Details</summary>
-        <p>
-          <strong>Now:</strong> {now}
-        </p>
-        <p className="cx-muted">
-          Not yet: {not.charAt(0).toLowerCase() + not.slice(1)} Before a request is sent you can change your mind on each layer.
-        </p>
-        <p className="cx-muted">Four separate consents: {layerNames.join(", ").toLowerCase()}.</p>
-      </details>
+      <p className="cx-consent-caption">
+        Step {layer} of {layers.length}: {caption}
+        {note ? `. ${note}` : ""}
+      </p>
+      {!inline && (
+        <details className="cx-more">
+          <summary>Details</summary>
+          <ConsentText context={context} />
+        </details>
+      )}
     </div>
   );
 }
+
+export { ConsentText };
