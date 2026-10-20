@@ -1,0 +1,24 @@
+{
+  "note": "Synthetic estimates for the proof of concept. Assumptions, not results. The slides read the same figures.",
+  "cohort": 1000,
+  "kbcProducts": [
+    { "id": "energy-loan", "label": "Energy loan", "stepIds": ["energy-loan"], "conversion": 0.4, "value": 220 },
+    { "id": "home-insurance", "label": "Home insurance update", "stepIds": ["home-insurance"], "conversion": 0.6, "value": 90 },
+    { "id": "leasing", "label": "Van leasing", "stepIds": ["van-finance"], "conversion": 0.35, "value": 480 }
+  ],
+  "partnerLeads": {
+    "conversion": 0.25,
+    "leadValue": { "A": 150, "B": 450, "C": 900 }
+  },
+  "commission": {
+    "Samen Overstappen": 0.08,
+    "Impact us today": 0.05,
+    "Solar and battery installer (to choose)": 0.06
+  },
+  "retention": {
+    "share": 0.03,
+    "minSteps": 3,
+    "years": 1,
+    "marginPerYear": 180
+  }
+}
