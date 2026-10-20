@@ -6,13 +6,12 @@
 export const hub = {
   id: "kbc",
   name: "KBC",
-  tagline: "Orchestrator. The customer confirms every step.",
 };
 
-export const status = "Partner names are demo assumptions, not agreements";
+export const status = "Demo partners, not agreements";
 
 const trade = [
-  { direction: "out", kind: "intent", label: "Confirmed intents" },
+  { direction: "out", kind: "intent", label: "Intents" },
   { direction: "in", kind: "commission", label: "Commission" },
 ];
 
@@ -20,64 +19,56 @@ export const roles = [
   {
     id: "data",
     label: "Data",
-    brings: "Meter and consumption data, shared only with consent",
     partners: [{ name: "Fluvius", proposed: true }],
-    flows: [{ direction: "in", kind: "data", label: "Consumption data", consent: true }],
+    flows: [{ direction: "in", kind: "data", label: "Data", consent: true }],
   },
   {
     id: "certificates",
     label: "Certificates",
-    brings: "EPC certificates and inspections",
     partners: [{ name: "De Immowinkel" }],
     flows: trade,
   },
   {
     id: "advice",
-    label: "Advice and grants",
-    brings: "Renovation cost and grant estimates, sustainability advice",
+    label: "Advice",
     partners: [{ name: "Setle" }, { name: "Encon" }],
     flows: trade,
   },
   {
     id: "installation",
-    label: "Installation",
-    brings: "Insulation, heating, air conditioning, panels, batteries",
-    partners: [{ name: "Impact us today" }, { name: "Solar and battery installer (to choose)", proposed: true }],
+    label: "Install",
+    partners: [{ name: "Impact us today" }, { name: "Solar installer", proposed: true }],
     flows: trade,
   },
   {
     id: "charging",
     label: "Charging",
-    brings: "Home and business charging for electric vehicles",
-    partners: [{ name: "Blink Charging (formerly Blue Corner)", proposed: true }],
+    partners: [{ name: "Blink Charging", proposed: true }],
     flows: trade,
   },
   {
     id: "collective",
-    label: "Collective buying and supply",
-    brings: "Group prices on electricity, gas and solar panels",
+    label: "Group buying",
     partners: [
       { name: "Samen Overstappen" },
-      { name: "Provincial group purchases", proposed: true },
-      { name: "EnergyVision (recent winner)", proposed: true },
-      { name: "Mega (recent winner)", proposed: true },
+      { name: "Provincial groups", proposed: true },
+      { name: "EnergyVision", proposed: true },
+      { name: "Mega", proposed: true },
     ],
     flows: [
-      { direction: "out", kind: "intent", label: "Round enrolment" },
+      { direction: "out", kind: "intent", label: "Enrolment" },
       { direction: "in", kind: "commission", label: "Commission" },
     ],
   },
   {
     id: "footprint",
-    label: "Business footprint",
-    brings: "Emissions insight, ESG reporting, water resilience",
-    partners: [{ name: "KBC business CO2 insights" }, { name: "Kube ESG" }, { name: "Sweco" }],
+    label: "Footprint",
+    partners: [{ name: "KBC CO2 insights" }, { name: "Kube ESG" }, { name: "Sweco" }],
     flows: trade,
   },
   {
     id: "finance",
-    label: "Finance and protection",
-    brings: "Energy loan, home insurance, electric car insurance, leasing",
+    label: "Finance",
     inHouse: true,
     partners: [{ name: "KBC" }],
     flows: [],
@@ -85,7 +76,7 @@ export const roles = [
 ];
 
 export const flowKinds = {
-  intent: { label: "Anonymous confirmed intent: service, area, timeframe, budget band", color: "#00a0dc" },
-  commission: { label: "Commission and leads back to KBC", color: "#1a9d6c" },
-  data: { label: "Data, only with the customer's consent", color: "#f5a623" },
+  intent: { label: "Anonymous intent", color: "#00a0dc" },
+  commission: { label: "Commission", color: "#1a9d6c" },
+  data: { label: "Data, with consent", color: "#f5a623" },
 };

@@ -30,8 +30,7 @@
 
 .map-main {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-  gap: 24px;
+  gap: 16px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 24px;
@@ -89,40 +88,24 @@
   stroke-width: 4px;
 }
 
-.map-side {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-}
-
-.map-side h2 {
-  margin-top: 8px;
-  font-size: 1rem;
-  color: var(--kbc-navy);
-}
-
-.map-roles,
 .map-legend {
   list-style: none;
+  margin: 0;
   padding: 0;
-  display: grid;
-  gap: 10px;
-}
-
-.map-roles li {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
   font-size: 0.875rem;
-}
-
-.map-roles span {
-  color: var(--muted);
 }
 
 .map-legend li {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.875rem;
+}
+
+.map-italic {
+  font-style: italic;
 }
 
 .map-swatch {
@@ -137,7 +120,6 @@
 
 @media (max-width: 900px) {
   .map-main {
-    grid-template-columns: 1fr;
     padding: 12px;
   }
 }

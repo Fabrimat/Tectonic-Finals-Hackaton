@@ -1,4 +1,4 @@
-const hidden = ["Name", "Address", "Phone and email", "Account balance", "Transaction history", "The data KBC used to predict the need"];
+const hidden = ["Name", "Address", "Phone and email", "Balance", "Transactions", "Prediction data"];
 
 function Lock() {
   return (
@@ -12,13 +12,16 @@ function Lock() {
 export default function HiddenPanel() {
   return (
     <aside className="pp-hidden" aria-labelledby="hidden-h">
-      <h2 id="hidden-h" className="pp-h"><Lock /> Not shared before the customer authorises</h2>
+      <h2 id="hidden-h" className="pp-h"><Lock /> Hidden until the customer authorises</h2>
       <ul>
         {hidden.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <p>A partner first receives an anonymous intent: service, area, timeframe and budget band. Contact details are released only after the customer authorises that partner for that step. A paid step needs its own approval from the customer.</p>
+      <details className="pp-more">
+        <summary>What a partner sees</summary>
+        <p>First an anonymous intent: service, area, timeframe and budget band. Contact details are released only after the customer authorises that partner for that step. A paid step needs its own approval.</p>
+      </details>
     </aside>
   );
 }

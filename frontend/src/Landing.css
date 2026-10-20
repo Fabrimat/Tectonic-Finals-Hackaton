@@ -11,10 +11,6 @@
   font-size: 2rem;
 }
 
-.landing-lead {
-  color: var(--muted);
-}
-
 .landing-card {
   background: var(--card);
   border: 1px solid var(--line);

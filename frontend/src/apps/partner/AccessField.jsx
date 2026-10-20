@@ -1,8 +1,8 @@
 const notes = {
-  ok: "Showing requests from the service.",
-  nokey: "No access key, showing requests stored on this device.",
-  denied: "That key was not accepted, showing requests stored on this device.",
-  offline: "Service not reachable, showing requests stored on this device.",
+  ok: "Live requests.",
+  nokey: "No key, using this device.",
+  denied: "Key not accepted, using this device.",
+  offline: "Service offline, using this device.",
 };
 
 export default function AccessField({ value, onChange, status }) {

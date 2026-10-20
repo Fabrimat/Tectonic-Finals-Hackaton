@@ -55,16 +55,16 @@ export default function PartnerApp() {
           <NavLink to="/partner/numbers">Numbers</NavLink>
         </nav>
         <div className="pp-view">
-          <label htmlFor="pp-partner">Partner leads for</label>
+          <label htmlFor="pp-partner">Partner</label>
           <select id="pp-partner" value={showAll ? "all" : (current?.name ?? "")} onChange={(e) => setPicked(e.target.value)}>
             <option value="all">All partners</option>
             {partners.map((p) => (
               <option key={p.name} value={p.name}>{p.name}</option>
             ))}
           </select>
-          {current?.proposed && <span className="pp-tag">Proposed partner</span>}
+          {current?.proposed && <span className="pp-tag">Proposed</span>}
         </div>
-        <Link className="pp-back" to="/">Back to start</Link>
+        <Link className="pp-back" to="/">Start</Link>
       </header>
       <main className="pp-main">
         {view.tools && <AccessField value={key} onChange={changeKey} status={remote.status} />}

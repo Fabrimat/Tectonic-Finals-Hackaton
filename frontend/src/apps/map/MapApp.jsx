@@ -71,7 +71,7 @@ export default function MapApp() {
         <span className="logo-chip"><KbcLogo /></span>
         <h1>Ecosystem map</h1>
         <p className="map-status">{status}</p>
-        <Link to="/">Back to start</Link>
+        <Link to="/">Start</Link>
       </header>
 
       <main className="map-main">
@@ -116,42 +116,18 @@ export default function MapApp() {
           })}
         </svg>
 
-        <section className="map-side" aria-label="Details">
-          <h2>{hub.name}</h2>
-          <p>{hub.tagline}</p>
-          {inHouse.map((role) => (
-            <p key={role.id}>
-              In house: {role.label.toLowerCase()}. {role.brings}.
-            </p>
+        <ul className="map-legend" aria-label="Legend">
+          {Object.entries(flowKinds).map(([kind, { label, color }]) => (
+            <li key={kind}>
+              <span className={kind === "data" ? "map-swatch dashed" : "map-swatch"} style={{ "--c": color }} />
+              {label}
+            </li>
           ))}
-
-          <h2>Roles</h2>
-          <ul className="map-roles">
-            {external.map((role) => (
-              <li key={role.id}>
-                <strong>{role.label}</strong>
-                <span>{role.brings}</span>
-                <span>
-                  {role.partners
-                    .map((p) => (p.proposed ? `${p.name}, proposed` : p.name))
-                    .join(", ")}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          <p>Names in italics are proposed, not yet in the KBC catalogue. All names are demo assumptions, not agreements.</p>
-
-          <h2>Flows</h2>
-          <ul className="map-legend">
-            {Object.entries(flowKinds).map(([kind, { label, color }]) => (
-              <li key={kind}>
-                <span className={kind === "data" ? "map-swatch dashed" : "map-swatch"} style={{ "--c": color }} />
-                {label}
-              </li>
-            ))}
-          </ul>
-        </section>
+          <li className="map-italic">Italic: proposed</li>
+          {inHouse.map((role) => (
+            <li key={role.id}>In house: {role.label}</li>
+          ))}
+        </ul>
       </main>
     </div>
   );

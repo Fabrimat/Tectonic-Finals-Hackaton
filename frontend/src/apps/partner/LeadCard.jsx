@@ -1,6 +1,24 @@
 import { useState } from "react";
 import { bandLabels } from "../../data/scenarios";
 
+const icons = {
+  region: <path d="M12 21s-6-5.6-6-10a6 6 0 0 1 12 0c0 4.4-6 10-6 10z M12 8.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z" />,
+  timeframe: <path d="M5 6h14v14H5z M5 10h14 M9 3v5 M15 3v5" />,
+  band: <path d="M17 7.5A6 6 0 1 0 17 16.5 M6 10h8 M6 14h8" />,
+};
+
+function Fact({ kind, label, value }) {
+  return (
+    <div title={label}>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {icons[kind]}
+      </svg>
+      <dt className="pp-sr">{label}</dt>
+      <dd>{value}</dd>
+    </div>
+  );
+}
+
 // Accepted is the end state of a lead. In this prototype the customer's
 // final choice is not modelled, so cards stop at Offer sent unless marked.
 export default function LeadCard({ lead, offer, onSend, showPartner = false }) {
@@ -24,16 +42,22 @@ export default function LeadCard({ lead, offer, onSend, showPartner = false }) {
         <span className={`pp-status is-${status.toLowerCase().replace(" ", "-")}`}>{status}</span>
       </div>
       <h3 className="pp-service">{lead.service}</h3>
-      {showPartner && <p className="pp-for">For {lead.partner}</p>}
+      {showPartner && <p className="pp-for">{lead.partner}</p>}
       <dl className="pp-facts">
-        <div><dt>Region</dt><dd>{lead.region}</dd></div>
-        <div><dt>Timeframe</dt><dd>{lead.timeframe}</dd></div>
-        <div><dt>Budget band</dt><dd>{bandLabels[lead.band]}</dd></div>
+        <Fact kind="region" label="Region" value={lead.region} />
+        <Fact kind="timeframe" label="Timeframe" value={lead.timeframe} />
+        <Fact kind="band" label="Budget band" value={bandLabels[lead.band]} />
       </dl>
-      <p className="pp-private">Contact details: not shared, waiting for the customer to authorise.</p>
+      <p className="pp-private" title="Contact details are not shared before the customer authorises">
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2" fill="currentColor" />
+          <path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
+        Contact hidden
+      </p>
       {offer && (
         <p className="pp-offer">
-          Your offer: EUR {offer.price}. {offer.message}
+          EUR {offer.price}. {offer.message}
         </p>
       )}
       {offer && !offer.accepted && (

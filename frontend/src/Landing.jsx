@@ -13,10 +13,8 @@ export default function Landing() {
         <KbcLogo />
       </div>
       <h1>KBC energy transition</h1>
-      <p className="landing-lead">Controls for the proof of concept. All data is synthetic and every integration is simulated.</p>
       <section className="landing-card">
-        <h2>Scenario</h2>
-        <div className="landing-choices">
+        <div className="landing-choices" role="group" aria-label="Scenario">
           {scenarios.map((s) => (
             <button
               key={s.id}
@@ -28,8 +26,7 @@ export default function Landing() {
             </button>
           ))}
         </div>
-        <h2>Stage</h2>
-        <div className="landing-stages">
+        <div className="landing-stages" role="group" aria-label="Stage">
           {stageOrder.map((key) => (
             <button key={key} className={key === stage ? "choice active" : "choice"} onClick={() => actions.selectStage(key)}>
               {stages[key].label}
@@ -38,7 +35,7 @@ export default function Landing() {
           ))}
         </div>
         <button className="landing-reset" onClick={actions.reset}>
-          Reset decisions
+          Reset
         </button>
       </section>
       <nav className="landing-links">
