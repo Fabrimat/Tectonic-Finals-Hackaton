@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { scenarios, viewOf } from "../data/scenarios";
+import { deepLinkState } from "./params";
 import { initial, reduce } from "./reducer";
 
 const KEY = "ripple-state-v3";
@@ -26,7 +27,8 @@ function load() {
   return initial();
 }
 
-let state = load();
+// A deep link state is shown without being saved or sent to other tabs until the user acts.
+let state = deepLinkState ?? load();
 const listeners = new Set();
 let channel = null;
 try {
