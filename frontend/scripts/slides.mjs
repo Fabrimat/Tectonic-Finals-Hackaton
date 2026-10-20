@@ -7,15 +7,16 @@
 //   phones/NAME-framed.png  the same screen in a slim rounded frame, transparent outside the frame
 //   INDEX.txt        file, pixel size and the outline slide each file is for
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { inflateSync } from "node:zlib";
-import { ensureBuild, evaluate, open, root, sleep, startSession } from "./lib/edge.mjs";
+import { ensureBuild, evaluate, open, sleep, startSession } from "./lib/edge.mjs";
+import { PHONE_NAMES, SLIDES_DIR, SLIDE_IMAGES, allowed, parseFlags, safeJoin } from "./lib/paths.mjs";
 import { decisionQuery } from "./lib/states.mjs";
 
-const slidesDir = join(root, "shots", "slides");
-const phonesDir = join(slidesDir, "phones");
-const tmpDir = join(slidesDir, ".compose");
+const slidesDir = SLIDES_DIR;
+const phonesDir = safeJoin(slidesDir, "phones");
+const tmpDir = safeJoin(slidesDir, ".compose");
 
 const PHONE = [390, 844];
 const SLIDE = [1920, 1080];
@@ -113,13 +114,13 @@ const desktopSlides = [
 const rows = [];
 
 function pngInfo(file) {
-  const buf = readFileSync(file);
+  const buf = readFileSync(safeJoin(slidesDir, file));
   return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20), colorType: buf[25] };
 }
 
 // Decodes an 8 bit RGBA PNG and returns [r, g, b, a] at x, y. Enough to check corners without a library.
 function pixelAt(file, x, y) {
-  const buf = readFileSync(file);
+  const buf = readFileSync(safeJoin(slidesDir, file));
   const width = buf.readUInt32BE(16);
   const height = buf.readUInt32BE(20);
   if (buf[24] !== 8 || buf[25] !== 6) throw new Error(`${file} is not 8 bit RGBA`);
@@ -179,7 +180,7 @@ async function exportPhone(page, base, [name, path, purpose, single, focus = []]
   for (let i = 0; i < parts; i += 1) {
     await evaluate(page, `window.scrollTo(0, ${i * SCROLL_STEP})`);
     await sleep(250);
-    const file = join(phonesDir, `${parts === 1 ? name : `${name}-part${i + 1}`}-screen.png`);
+    const file = safeJoin(phonesDir, `${parts === 1 ? name : `${name}-part${i + 1}`}-screen.png`);
     await shoot(page, file);
     files.push(file);
     record(file, `${purpose}${parts > 1 ? ` (part ${i + 1} of ${parts})` : ""}`);
@@ -188,7 +189,7 @@ async function exportPhone(page, base, [name, path, purpose, single, focus = []]
   for (const [suffix, selector, offset = 0] of focus) {
     await evaluate(page, `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({ block: "center" }); window.scrollBy(0, ${offset})`);
     await sleep(250);
-    const file = join(phonesDir, `${name}-${suffix}-screen.png`);
+    const file = safeJoin(phonesDir, `${name}-${suffix}-screen.png`);
     await shoot(page, file);
     files.push(file);
     record(file, `${purpose} (${suffix})`);
@@ -202,7 +203,7 @@ const frameCss = `
 `;
 
 function writeHtml(name, body) {
-  const file = join(tmpDir, `${name}.html`);
+  const file = safeJoin(tmpDir, `${name}.html`);
   writeFileSync(file, `<!doctype html><meta charset="utf-8"><title>${name}</title><style>html,body{margin:0}${body.css}</style>${body.html}`);
   return file;
 }
@@ -271,13 +272,17 @@ async function desktopSlide(page, base, spec) {
     if (zoom < 0.7) console.warn(`Warning: ${spec.file} is scaled to ${Math.round(zoom * 100)}%, text may be small`);
     await sleep(300);
   }
-  const file = join(slidesDir, spec.file);
+  const file = safeJoin(slidesDir, spec.file);
   await shoot(page, file);
   record(file, spec.purpose);
 }
 
 async function main() {
-  ensureBuild(process.argv.includes("--build"));
+  const { flags, rest: extra } = parseFlags(process.argv.slice(2), ["--build"]);
+  if (extra.length) throw new Error("This command takes no names, only --build");
+  for (const [name] of phoneStates) allowed(PHONE_NAMES, name, "phone state");
+  for (const spec of desktopSlides) allowed(SLIDE_IMAGES, spec.file.replace(/\.png$/, ""), "slide");
+  ensureBuild(flags.has("--build"));
   for (const dir of [phonesDir, tmpDir]) {
     rmSync(dir, { recursive: true, force: true });
     mkdirSync(dir, { recursive: true });
@@ -293,28 +298,28 @@ async function main() {
     const part = (name, n = 1) => screens[name][Math.min(n, screens[name].length) - 1];
     const named = (name, suffix) => screens[name].find((f) => f.includes(`-${suffix}-screen`));
 
-    await composeSlide(page, join(slidesDir, "title-phone.png"), [part("home-household-forming")], "Slide 1, title, one phone on the right and room for the title text", "right");
+    await composeSlide(page, safeJoin(slidesDir, "title-phone.png"), [part("home-household-forming")], "Slide 1, title, one phone on the right and room for the title text", "right");
     await composeSlide(
       page,
-      join(slidesDir, "ladder-household.png"),
+      safeJoin(slidesDir, "ladder-household.png"),
       [part("whisper"), part("forming"), part("ready-confirm")],
       "Slide 4, intent ladder: whisper, forming, ready (opened cards, they show the stage best)",
     );
     await composeSlide(
       page,
-      join(slidesDir, "consent-layers.png"),
+      safeJoin(slidesDir, "consent-layers.png"),
       [part("whisper"), part("ready-confirm"), part("ready-board")],
       "Slide 5, four consents: analysis, goal (confirm card), sharing (plan)",
     );
     await composeSlide(
       page,
-      join(slidesDir, "decisions-household.png"),
+      safeJoin(slidesDir, "decisions-household.png"),
       [part("ready-decided", 1), named("ready-decided", "decided"), named("ready-decided", "not-needed")],
       "Slide 6, plan board with accepted, deferred, rejected and the not needed card",
     );
     await composeSlide(
       page,
-      join(slidesDir, "bakery-forming-ready.png"),
+      safeJoin(slidesDir, "bakery-forming-ready.png"),
       [part("bakery-forming"), part("bakery-board")],
       "Slide 9, bakery: forming and ready side by side",
     );
@@ -333,7 +338,7 @@ async function main() {
   const w1 = Math.max(...table.map((r) => r[1].length), 4);
   const lines = [`${"File".padEnd(w0)}  ${"Size".padEnd(w1)}  Slide`, ...table.map((r) => `${r[0].padEnd(w0)}  ${r[1].padEnd(w1)}  ${r[2]}`)];
   const text = `${lines.join("\n")}\n`;
-  writeFileSync(join(slidesDir, "INDEX.txt"), text);
+  writeFileSync(safeJoin(slidesDir, "INDEX.txt"), text);
   console.log(text);
   const bad = alphaChecks.filter((c) => c.corners.some((a) => a !== 0) || c.centre !== 255);
   console.log(`Alpha check: ${alphaChecks.length} framed phones, corner alpha 0 and centre alpha 255 in ${alphaChecks.length - bad.length}`);

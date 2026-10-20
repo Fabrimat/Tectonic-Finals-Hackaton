@@ -2,10 +2,10 @@
 // Usage: npm run shots [-- --build] [-- name ...]  (names filter the list, --build forces a build)
 // The 16:9 slide set is a separate command, see slides.mjs.
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { ensureBuild, evaluate, open, root, sleep, startSession } from "./lib/edge.mjs";
+import { ensureBuild, evaluate, open, sleep, startSession } from "./lib/edge.mjs";
+import { SHOTS_DIR, allowed, parseFlags, safeJoin } from "./lib/paths.mjs";
 
-const outDir = join(root, "shots");
+const outDir = SHOTS_DIR;
 
 // Size is [width, height]. A height of "fit" grows the frame to the whole page.
 const phone = [390, 844];
@@ -57,20 +57,17 @@ async function capture(page, url, file, [width, height]) {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  const names = args.filter((a) => !a.startsWith("--"));
+  const { flags, rest: names } = parseFlags(process.argv.slice(2), ["--build"]);
+  const known = shots.map(([n]) => n);
+  for (const name of names) allowed(known, name, "shot");
   const list = names.length ? shots.filter(([name]) => names.includes(name)) : shots;
-  if (list.length === 0) {
-    console.error(`No shot matches. Known: ${shots.map(([n]) => n).join(", ")}`);
-    process.exit(1);
-  }
-  ensureBuild(args.includes("--build"));
+  ensureBuild(flags.has("--build"));
   mkdirSync(outDir, { recursive: true });
   const { base, page, stop } = await startSession();
   let failed = 0;
   try {
     for (const [name, path, size] of list) {
-      const file = join(outDir, `${name}.png`);
+      const file = safeJoin(outDir, `${name}.png`);
       rmSync(file, { force: true });
       try {
         const done = await capture(page, base + path, file, size);

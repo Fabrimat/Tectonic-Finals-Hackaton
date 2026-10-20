@@ -6,21 +6,35 @@
 // which this script runs first when they are missing. Figures on slide 8 come from
 // src/data/synthetic.json through the same economics code as the numbers page.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { eurWhole, kbcEstimate } from "../src/apps/partner/economics.js";
 import { leadsFor } from "../src/apps/partner/leadData.js";
 import { scenarios, viewOf } from "../src/data/scenarios.js";
 import data from "../src/data/synthetic.json" with { type: "json" };
-import { ensureBuild, evaluate, open, root, sleep, startSession } from "./lib/edge.mjs";
+import { ensureBuild, evaluate, open, sleep, startSession } from "./lib/edge.mjs";
+import {
+  ASSET_NAMES,
+  DECK_DIR,
+  DECK_SLIDE_FILES,
+  DECK_SRC,
+  PHONE_NAMES,
+  PHONE_PARTS,
+  PUBLIC_DIR,
+  ROOT,
+  SLIDES_DIR,
+  SLIDE_IMAGES,
+  allowed,
+  parseFlags,
+  safeJoin,
+} from "./lib/paths.mjs";
 import { decisionMap } from "./lib/states.mjs";
 
-const deckSrc = join(root, "scripts", "deck");
-const outDir = join(root, "shots", "deck");
-const pngDir = join(outDir, "png");
-const assetDir = join(outDir, "assets");
-const slidesDir = join(root, "shots", "slides");
+const deckSrc = DECK_SRC;
+const outDir = DECK_DIR;
+const pngDir = safeJoin(outDir, "png");
+const assetDir = safeJoin(outDir, "assets");
+const slidesDir = SLIDES_DIR;
 const SLIDE = [1920, 1080];
 const TITLE = "Energy transition pitch";
 
@@ -53,43 +67,46 @@ async function captureMap(page, base) {
   await sleep(300);
   const box = await evaluate(page, `(() => { const r = document.querySelector(".map-main svg").getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; })()`);
   const { data: png } = await page.send("Page.captureScreenshot", { format: "png", clip: { ...box, scale: 1 } });
-  const file = join(assetDir, "map.png");
+  const file = safeJoin(assetDir, "map.png");
   writeFileSync(file, Buffer.from(png, "base64"));
   return file;
 }
 
 function resolveToken(token, values) {
   const [kind, name] = token.split(":");
-  if (kind === "logo") return fileUrl(join(root, "public", "kbc-logo.svg"));
-  if (kind === "phone") return fileUrl(join(slidesDir, "phones", `${name}-framed.png`));
-  if (kind === "slide") return fileUrl(join(slidesDir, `${name}.png`));
-  if (kind === "asset") return fileUrl(join(assetDir, `${name}.png`));
+  if (kind === "logo") return fileUrl(safeJoin(PUBLIC_DIR, "kbc-logo.svg"));
+  if (kind === "phone") {
+    const known = PHONE_NAMES.flatMap((n) => PHONE_PARTS.map((part) => `${n}${part}`));
+    return fileUrl(safeJoin(slidesDir, "phones", `${allowed(known, name, "phone")}-framed.png`));
+  }
+  if (kind === "slide") return fileUrl(safeJoin(slidesDir, `${allowed(SLIDE_IMAGES, name, "slide image")}.png`));
+  if (kind === "asset") return fileUrl(safeJoin(assetDir, `${allowed(ASSET_NAMES, name, "asset")}.png`));
   if (kind === "fig") return values[name];
   throw new Error(`Unknown token {{${token}}}`);
 }
 
 function assemble(values) {
-  const css = readFileSync(join(deckSrc, "style.css"), "utf8");
-  const files = readdirSync(join(deckSrc, "slides")).filter((f) => f.endsWith(".html")).sort();
+  const css = readFileSync(safeJoin(deckSrc, "style.css"), "utf8");
+  const files = DECK_SLIDE_FILES;
   const body = files
-    .map((f) => readFileSync(join(deckSrc, "slides", f), "utf8").replace(/\{\{([^}]+)\}\}/g, (_, token) => {
+    .map((f) => readFileSync(safeJoin(deckSrc, "slides", f), "utf8").replace(/\{\{([^}]+)\}\}/g, (_, token) => {
       const value = resolveToken(token.trim(), values);
       if (value === undefined) throw new Error(`No value for {{${token}}} in ${f}`);
       return value;
     }))
     .join("\n");
-  const file = join(outDir, "deck.html");
+  const file = safeJoin(outDir, "deck.html");
   writeFileSync(file, `<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<title>${TITLE}</title>\n<style>\n${css}\n</style>\n</head>\n<body>\n${body}\n</body>\n</html>\n`);
   return { file, count: files.length, files };
 }
 
 function notesText() {
-  const text = readFileSync(join(deckSrc, "notes.md"), "utf8");
+  const text = readFileSync(safeJoin(deckSrc, "notes.md"), "utf8");
   return text.replace(/^# .*\n+/, "").replace(/^## (\d+)\. (.*)$/gm, "Slide $1: $2").trim() + "\n";
 }
 
 function checkPdf(file, count) {
-  const buf = readFileSync(file).toString("latin1");
+  const buf = readFileSync(safeJoin(outDir, file)).toString("latin1");
   const pages = (buf.match(/\/Type\s*\/Page[^s]/g) ?? []).length;
   const box = buf.match(/\/MediaBox\s*\[([^\]]+)\]/)?.[1].trim().split(/\s+/).map(Number);
   const title = buf.match(/\/Title\s*\(([^)]*)\)/)?.[1] ?? buf.match(/\/Title\s*<([0-9A-Fa-f]+)>/)?.[1];
@@ -97,11 +114,12 @@ function checkPdf(file, count) {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  ensureBuild(args.includes("--build"));
-  if (!existsSync(join(slidesDir, "numbers-household.png")) || !existsSync(join(slidesDir, "phones", "ready-confirm-framed.png"))) {
+  const { flags, rest } = parseFlags(process.argv.slice(2), ["--build"]);
+  if (rest.length) throw new Error("This command takes no names, only --build");
+  ensureBuild(flags.has("--build"));
+  if (!existsSync(safeJoin(slidesDir, "numbers-household.png")) || !existsSync(safeJoin(slidesDir, "phones", "ready-confirm-framed.png"))) {
     console.log("Rendering the slide set first");
-    const run = spawnSync(process.execPath, [join(root, "scripts", "slides.mjs")], { cwd: root, stdio: "inherit" });
+    const run = spawnSync(process.execPath, [safeJoin(ROOT, "scripts", "slides.mjs")], { cwd: ROOT, stdio: "inherit" });
     if (run.status !== 0) process.exit(run.status ?? 1);
   }
   rmSync(outDir, { recursive: true, force: true });
@@ -121,7 +139,7 @@ async function main() {
         captureBeyondViewport: true,
         clip: { x: 0, y: i * SLIDE[1], width: SLIDE[0], height: SLIDE[1], scale: 1 },
       });
-      writeFileSync(join(pngDir, `slide-${i + 1}.png`), Buffer.from(png, "base64"));
+      writeFileSync(safeJoin(pngDir, `slide-${i + 1}.png`), Buffer.from(png, "base64"));
     }
     const { data: pdf } = await page.send("Page.printToPDF", {
       paperWidth: SLIDE[0] / 96,
@@ -133,14 +151,14 @@ async function main() {
       printBackground: true,
       preferCSSPageSize: true,
     });
-    writeFileSync(join(outDir, "deck.pdf"), Buffer.from(pdf, "base64"));
+    writeFileSync(safeJoin(outDir, "deck.pdf"), Buffer.from(pdf, "base64"));
     result = { deck, values };
   } finally {
     await stop();
   }
 
-  writeFileSync(join(outDir, "notes.txt"), notesText());
-  const check = checkPdf(join(outDir, "deck.pdf"), result.deck.count);
+  writeFileSync(safeJoin(outDir, "notes.txt"), notesText());
+  const check = checkPdf("deck.pdf", result.deck.count);
   console.log(`Figures: ${JSON.stringify(result.values)}`);
   console.log(`PDF: ${check.pages} pages, media box ${check.box?.join(" ")} pt, title ${check.title ?? "none"}`);
   if (!check.ok) {
