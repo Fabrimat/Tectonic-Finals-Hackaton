@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import { scenarios, viewOf } from "../data/scenarios";
 import { initial, reduce } from "./reducer";
 
-const KEY = "ripple-state-v2";
+const KEY = "ripple-state-v3";
 const CHANNEL = "ripple-sync";
 
 // One state object shared by the customer app and the partner portal.

@@ -91,7 +91,7 @@ export function viewOf(scenario, stage) {
 // lever: timing, preparation, introduction or financing.
 export const scenarios = [
   {
-    id: "maes-household",
+    id: "household-maes",
     segment: "household",
     area: {
       buildingStockAge: 60,
@@ -329,7 +329,7 @@ export const scenarios = [
     },
   },
   {
-    id: "bakery",
+    id: "bakery-leuven",
     segment: "business",
     area: {
       buildingStockAge: 25,

@@ -106,3 +106,8 @@ test("every view carries the area object on its signal", () => {
     }
   }
 });
+
+test("scenario ids match the backend ids and fit the intent id limits", () => {
+  assert.deepEqual(scenarios.map((s) => s.id), ["household-maes", "bakery-leuven"]);
+  for (const s of scenarios) assert.match(s.id, /^[a-z0-9-]{1,64}$/);
+});
