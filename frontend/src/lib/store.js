@@ -2,6 +2,7 @@ import { useSyncExternalStore } from "react";
 import { scenarios, viewOf } from "../data/scenarios";
 import { deepLinkState } from "./params";
 import { initial, reduce } from "./reducer";
+import { parseState } from "./validate";
 
 const KEY = "ripple-state-v3";
 const CHANNEL = "ripple-sync";
@@ -20,7 +21,7 @@ const CHANNEL = "ripple-sync";
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return { ...initial(), ...JSON.parse(raw) };
+    if (raw) return parseState(JSON.parse(raw)) ?? initial();
   } catch {
     // storage can be blocked, the in-memory state is enough
   }
@@ -34,7 +35,9 @@ let channel = null;
 try {
   channel = new BroadcastChannel(CHANNEL);
   channel.onmessage = (event) => {
-    state = event.data;
+    const next = parseState(event.data);
+    if (!next) return;
+    state = next;
     listeners.forEach((fn) => fn());
   };
 } catch {
