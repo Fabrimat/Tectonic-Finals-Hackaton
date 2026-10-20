@@ -11,6 +11,7 @@ import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { inflateSync } from "node:zlib";
 import { ensureBuild, evaluate, open, root, sleep, startSession } from "./lib/edge.mjs";
+import { decisionQuery } from "./lib/states.mjs";
 
 const slidesDir = join(root, "shots", "slides");
 const phonesDir = join(slidesDir, "phones");
@@ -26,6 +27,8 @@ const BACKGROUND = "#eef3f8";
 const hh = "scenario=household-maes";
 const bk = "scenario=bakery-leuven";
 const quiet = "tools=0";
+const decideHh = decisionQuery("household-maes");
+const decideBk = decisionQuery("bakery-leuven");
 
 // Phone screens. A state taller than the phone is captured by scrolling, so the sticky header and
 // tab bar stay on every part, like a real phone.
@@ -37,14 +40,14 @@ const phoneStates = [
   ["whisper", `/app?${hh}&stage=whisper&open=1&${quiet}`, "Slide 4 and 5, whisper card with the analysis layer"],
   ["forming", `/app?${hh}&stage=forming&open=1&${quiet}`, "Slide 4, forming question"],
   ["ready-confirm", `/app?${hh}&stage=ready&open=1&${quiet}`, "Slide 5, confirm card with the four consent layers"],
+  ["evidence", `/app?${hh}&stage=ready&open=1&evidence=1&${quiet}`, "Slide 5, the why disclosure with the evidence breakdown"],
+  ["bakery-evidence", `/app?${bk}&stage=whisper&open=1&evidence=1&${quiet}`, "Slide 5 or 9, bakery evidence with the withheld line"],
+  ["home-clock", `/app?${hh}&stage=whisper&clock=1&${quiet}`, "Slide 1, renovation clock hook", true],
   ["ready-board", `/app?${hh}&stage=ready&confirmed=1&open=1&${quiet}`, "Slide 6, plan board before any decision"],
-  ["ready-decided", `/app?${hh}&stage=ready&accepted=insulation&deferred=heating&rejected=solar&open=1&${quiet}`, "Slide 6, plan board with decisions and the not needed cards", false, [["decided", ".cx-state-deferred", 62], ["not-needed", ".cx-skip"]]],
+  ["ready-decided", `/app?${hh}&stage=ready&${decideHh}&open=1&${quiet}`, "Slide 6, plan board with decisions and the not needed cards", false, [["decided", ".cx-state-deferred", 62], ["not-needed", ".cx-skip"]]],
   ["bakery-forming", `/app?${bk}&stage=forming&open=1&${quiet}`, "Slide 9, bakery forming question"],
-  ["bakery-board", `/app?${bk}&stage=ready&accepted=co2,solar&open=1&${quiet}`, "Slide 9, bakery plan board"],
+  ["bakery-board", `/app?${bk}&stage=ready&${decideBk}&open=1&${quiet}`, "Slide 9, bakery plan board"],
 ];
-
-const allHousehold = "accepted=8";
-const allBakery = "accepted=6";
 
 // Desktop views. css is added after load to centre and cap the page for the 16:9 frame.
 const centre = ".{root}{display:flex;flex-direction:column;min-height:100vh}.{main}{flex:1;display:flex;flex-direction:column;justify-content:center;width:100%}";
@@ -59,27 +62,41 @@ const desktopSlides = [
   {
     file: "dashboard-household.png",
     zoom: 1.12,
-    path: `/partner?${hh}&stage=ready&${allHousehold}&partner=all&${quiet}`,
+    path: `/partner?${hh}&stage=ready&${decideHh}&partner=all&${quiet}`,
     css: portal,
     purpose: "Slide 8, advisor dashboard, household",
   },
   {
     file: "dashboard-bakery.png",
     zoom: 1.3,
-    path: `/partner?${bk}&stage=ready&${allBakery}&partner=all&${quiet}`,
+    path: `/partner?${bk}&stage=ready&${decideBk}&partner=all&${quiet}`,
     css: portal,
     purpose: "Slide 8 or 9, advisor dashboard, bakery",
   },
   {
+    file: "dashboard-cluster-household.png",
+    zoom: 1.3,
+    path: `/partner?${hh}&stage=ready&${decideHh}&cluster=1&partner=all&${quiet}`,
+    css: portal,
+    purpose: "Slide 8, neighbourhood groups card, household",
+  },
+  {
+    file: "dashboard-cluster-bakery.png",
+    zoom: 1.3,
+    path: `/partner?${bk}&stage=ready&${decideBk}&cluster=1&partner=all&${quiet}`,
+    css: portal,
+    purpose: "Slide 8 or 9, neighbourhood groups card, trade street cohort, bakery",
+  },
+  {
     file: "numbers-household.png",
-    path: `/partner/numbers?${hh}&stage=ready&${allHousehold}&${quiet}`,
+    path: `/partner/numbers?${hh}&stage=ready&${decideHh}&${quiet}`,
     css: `${portal}.pp-main{max-width:1560px}.pp-view{display:none}`,
     openDetails: true,
     purpose: "Slide 8, numbers and assumptions, household",
   },
   {
     file: "numbers-bakery.png",
-    path: `/partner/numbers?${bk}&stage=ready&${allBakery}&${quiet}`,
+    path: `/partner/numbers?${bk}&stage=ready&${decideBk}&${quiet}`,
     css: `${portal}.pp-main{max-width:1560px}.pp-view{display:none}`,
     openDetails: true,
     purpose: "Slide 8 or 9, numbers and assumptions, bakery",
