@@ -708,3 +708,26 @@
   font-size: 0.8rem;
   color: var(--muted);
 }
+
+.cx-action {
+  margin-top: 12px;
+}
+
+.cx-shares {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.cx-area-note {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 13px;
+  color: var(--kbc-navy);
+}
+
+.cx-btn:disabled {
+  opacity: 0.5;
+}

@@ -17,4 +17,9 @@ export const facts = {
     source: "Brussels Environment",
     confirmed: false,
   },
+  historicCentre: {
+    text: "This home is in a historic centre. Rules for roofs and facades can be different there, so an adviser checks them before any quote.",
+    source: "City heritage service",
+    confirmed: false,
+  },
 };

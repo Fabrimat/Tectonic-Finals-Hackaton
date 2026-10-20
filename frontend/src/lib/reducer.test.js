@@ -9,6 +9,7 @@ test("starts on the first scenario and first stage with nothing decided", () => 
     stage: stageOrder[0],
     confirmed: false,
     decisions: {},
+    choices: {},
   });
 });
 
@@ -25,7 +26,7 @@ test("changing stage drops the confirmation and every decision", () => {
 test("switching scenario restarts the ladder", () => {
   const busy = { scenarioId: "a", stage: "ready", confirmed: true, decisions: { x: "accepted" } };
   const s = reduce(busy, { type: "selectScenario", scenarioId: "b" });
-  assert.deepEqual(s, { scenarioId: "b", stage: stageOrder[0], confirmed: false, decisions: {} });
+  assert.deepEqual(s, { scenarioId: "b", stage: stageOrder[0], confirmed: false, decisions: {}, choices: {} });
 });
 
 test("decide overwrites one step and leaves the others", () => {
@@ -57,10 +58,25 @@ test("reset keeps the scenario but goes back to the first stage", () => {
     stage: stageOrder[0],
     confirmed: false,
     decisions: {},
+    choices: {},
   });
 });
 
 test("an unknown action returns the same state", () => {
   const s = initial();
   assert.equal(reduce(s, { type: "nope" }), s);
+});
+
+test("choosing an optional action is remembered and can be undone", () => {
+  let s = reduce(initial(), { type: "choose", id: "epc-check" });
+  s = reduce(s, { type: "choose", id: "meter-link" });
+  assert.deepEqual(s.choices, { "epc-check": true, "meter-link": true });
+  s = reduce(s, { type: "unchoose", id: "epc-check" });
+  assert.deepEqual(s.choices, { "meter-link": true });
+});
+
+test("changing stage or declining clears the optional choices", () => {
+  const before = { ...initial(), confirmed: true, choices: { "epc-check": true } };
+  assert.deepEqual(reduce(before, { type: "selectStage", stage: "forming" }).choices, {});
+  assert.deepEqual(reduce(before, { type: "declineSignal" }).choices, {});
 });

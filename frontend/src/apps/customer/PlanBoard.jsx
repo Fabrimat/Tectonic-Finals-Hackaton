@@ -2,6 +2,7 @@ import { useState } from "react";
 import { postIntent } from "../../lib/api";
 import StepCard from "./StepCard";
 import SkipCard from "./SkipCard";
+import { areaNotes, stockLine } from "../../lib/area";
 
 const syncText = {
   sent: "Your request reached the partner.",
@@ -23,6 +24,7 @@ export default function PlanBoard({ scenario, decisions, actions }) {
         Your plan
       </h1>
       <p className="cx-seen">{scenario.seen}</p>
+      {stockLine(scenario.area) && <p className="cx-muted">{stockLine(scenario.area)}</p>}
       <ol className="cx-steps">
         {steps.map((step) => (
           <li key={step.id}>
@@ -32,6 +34,7 @@ export default function PlanBoard({ scenario, decisions, actions }) {
               <StepCard
                 step={step}
                 signal={scenario.signal}
+                notes={areaNotes(scenario.area, step)}
                 decision={decisions[step.id]}
                 onDecide={(d) => decide(step, d)}
                 onUndo={() => actions.clearDecision(step.id)}

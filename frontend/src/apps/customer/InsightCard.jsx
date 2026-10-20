@@ -1,6 +1,6 @@
 import { stages } from "../../data/scenarios";
 
-export default function InsightCard({ scenario }) {
+export default function InsightCard({ scenario, confirmed, onConfirm, onDecline }) {
   const { insight } = scenario;
   return (
     <section className="cx-card cx-insight" aria-labelledby="cx-insight-title">
@@ -16,6 +16,23 @@ export default function InsightCard({ scenario }) {
         ))}
       </ul>
       <p className="cx-reply">{stages.whisper.note}</p>
+      {confirmed ? (
+        <p className="cx-reply" role="status">
+          Thank you. Nothing is built on this and nothing is shared. You can use the options below if you like.
+        </p>
+      ) : (
+        <>
+          <p className="cx-muted">Please check that this data is right. Nothing is built on it until you confirm.</p>
+          <div className="cx-actions">
+            <button type="button" className="cx-btn cx-btn-outline" onClick={onConfirm}>
+              This looks right
+            </button>
+            <button type="button" className="cx-btn cx-btn-ghost" onClick={onDecline}>
+              Not quite right
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }

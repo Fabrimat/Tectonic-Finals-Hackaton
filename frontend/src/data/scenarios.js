@@ -14,20 +14,38 @@ export const stageOrder = ["whisper", "forming", "ready"];
 export const stages = {
   whisper: {
     label: "Whisper",
-    window: "1 to 3 years ahead",
     note: "You turned on the energy radar. This stays in your own view. Nothing is shared and nothing is asked of you.",
   },
   forming: {
     label: "Forming",
-    window: "3 to 12 months ahead",
     note: "We only ask a question. Nothing is shared until a plan exists and you accept a step.",
   },
   ready: {
     label: "Ready",
-    window: "0 to 3 months ahead",
     note: "Steps you accept become anonymous requests to partners.",
   },
 };
+
+// The ladder stretches or compresses per segment. Windows are months ahead of the moment.
+export const segments = {
+  household: {
+    label: "Household",
+    windows: { whisper: [12, 36], forming: [3, 12], ready: [0, 3] },
+  },
+  business: {
+    label: "Small business",
+    windows: { whisper: [6, 12], forming: [3, 6], ready: [0, 3] },
+  },
+};
+
+export function windowOf(segment, stage) {
+  return segments[segment]?.windows[stage] ?? null;
+}
+
+export function windowLabel(segment, stage) {
+  const w = windowOf(segment, stage);
+  return w ? `${w[0]} to ${w[1]} months ahead` : "";
+}
 
 export const canShare = (scenario) => scenario.stage === "ready";
 
@@ -47,13 +65,17 @@ export function viewOf(scenario, stage) {
   const key = scenario.stages[stage] ? stage : stageOrder[0];
   const content = scenario.stages[key];
   const steps = (content.steps ?? []).filter((step) => !step.catalogueId || byId.has(step.catalogueId));
-  const signal = content.signal ?? { ...noSignal, dataUsed: content.insight?.basis ?? [] };
+  const signal = { ...(content.signal ?? { ...noSignal, dataUsed: content.insight?.basis ?? [] }), area: scenario.area };
   return {
     id: scenario.id,
     domain: scenario.domain,
     person: scenario.person,
+    area: scenario.area,
     stage: key,
-    lead: content.lead,
+    segment: scenario.segment,
+    monthsAhead: content.monthsAhead,
+    window: windowLabel(scenario.segment, key),
+    allowedActions: content.allowedActions ?? [],
     insight: content.insight ?? null,
     checklist: content.checklist ?? [],
     signal,
@@ -70,6 +92,12 @@ export function viewOf(scenario, stage) {
 export const scenarios = [
   {
     id: "maes-household",
+    segment: "household",
+    area: {
+      buildingStockAge: 60,
+      historicCentre: true,
+      openGroupRounds: ["round-energy-flanders", "round-solar-east-flanders"],
+    },
     domain: "Homeowners in Flanders",
     person: {
       name: "Sofie and Tom Maes",
@@ -79,7 +107,28 @@ export const scenarios = [
     },
     stages: {
       whisper: {
-        lead: "About 3 years ahead",
+        monthsAhead: 30,
+        allowedActions: [
+          { kind: "awareness" },
+          {
+            kind: "optional",
+            id: "meter-link",
+            title: "Connect your meter data through Fluvius",
+            body: "With your meter readings the trend above becomes exact instead of an estimate.",
+            partner: "Fluvius",
+            choice: "Connect meter data",
+            shares: "Fluvius would share your meter readings with KBC, only after you agree. No partner receives anything from this.",
+          },
+          {
+            kind: "optional",
+            id: "epc-check",
+            title: "A small preparation step: an EPC check",
+            body: "An up to date certificate makes every later estimate cheaper. You can do this whenever you like.",
+            partner: "De Immowinkel",
+            choice: "I would like an EPC check",
+            shares: "Nothing is sent now. Only if you later accept a step in a plan would the partner receive service, area, timeframe and budget band, never your name.",
+          },
+        ],
         insight: {
           title: "Your renovation clock has been running since you bought the house",
           body: `${facts.renovationRule.text} Your house has label E, so the deadline applies to you. Your energy bill has also gone up year after year. There is nothing to do today, but starting early keeps every option open.`,
@@ -91,7 +140,28 @@ export const scenarios = [
         },
       },
       forming: {
-        lead: "About 6 months ahead",
+        monthsAhead: 6,
+        allowedActions: [
+          { kind: "question" },
+          {
+            kind: "opportunity",
+            id: "solar-fit",
+            title: "Solar panels that fit the final plan",
+            body: "A roof of your size can cover part of what you use. It fits best after insulation and heating are decided, so there is no hurry.",
+            catalogueId: "calculate-solar-panels-and-request-a-quote",
+            choice: "Keep this in mind",
+            shares: "Nothing is shared. This is only noted on this device.",
+          },
+          {
+            kind: "introduction",
+            id: "intro-installer",
+            title: "Meet the right partners when you decide",
+            body: "KBC can introduce you to an adviser for costs and grants and to an installer for insulation and heating.",
+            partners: ["Setle", "Impact us today"],
+            choice: "I would like an introduction",
+            shares: "Nothing is sent now. Only once a plan exists and you accept a step would a partner receive service, area, timeframe and budget band, never your name.",
+          },
+        ],
         signal: {
           question: "Are you planning to renovate?",
           evidence: [
@@ -109,7 +179,8 @@ export const scenarios = [
         ],
       },
       ready: {
-        lead: "Within 3 months",
+        monthsAhead: 2,
+        allowedActions: [{ kind: "question" }, { kind: "plan" }],
         signal: {
           question: "Did your boiler just need an expensive repair?",
           evidence: [
@@ -153,6 +224,7 @@ export const scenarios = [
             summary: "Quote for roof, walls or floor, based on the certificate.",
             why: "Insulation comes before the heating system so the new boiler or heat pump is sized for the improved house.",
             catalogueId: "insulation-quote-impact-us-today",
+            areaTopics: ["historic"],
             partner: { name: "Impact us today", proposed: false },
             intent: { service: "Insulation quote", region: "Ghent", timeframe: "Q1 2027", budgetBand: "C" },
             lever: "introduction",
@@ -179,6 +251,8 @@ export const scenarios = [
             summary: "Estimate what a roof of your size can produce and request a quote.",
             why: "Panels lower the bill on top of insulation and heating, and they decide whether a battery makes sense later.",
             catalogueId: "calculate-solar-panels-and-request-a-quote",
+            areaTopics: ["historic"],
+            roundService: "solar",
             partner: { name: "Solar and battery installer (to choose)", proposed: true },
             intent: { service: "Solar panel quote", region: "Ghent", timeframe: "Q2 2027", budgetBand: "C" },
             lever: "introduction",
@@ -192,6 +266,7 @@ export const scenarios = [
             summary: "Join the next open round and compare it with your current tariff.",
             why: "Rounds open in fixed windows. Joining the next one is a matter of timing, not of effort.",
             catalogueId: "group-purchase-of-electricity-and-gas",
+            roundService: "energy",
             partner: { name: "Samen Overstappen", proposed: false },
             intent: { service: "Group energy purchase", region: "Flanders", timeframe: "Q4 2026", budgetBand: "A" },
             lever: "timing",
@@ -255,6 +330,12 @@ export const scenarios = [
   },
   {
     id: "bakery",
+    segment: "business",
+    area: {
+      buildingStockAge: 25,
+      historicCentre: false,
+      openGroupRounds: ["round-energy-flanders"],
+    },
     domain: "Small business",
     person: {
       name: "Bakery Janssens",
@@ -264,7 +345,28 @@ export const scenarios = [
     },
     stages: {
       whisper: {
-        lead: "About 2 years ahead",
+        monthsAhead: 9,
+        allowedActions: [
+          { kind: "awareness" },
+          {
+            kind: "optional",
+            id: "meter-link",
+            title: "Connect your meter data through Fluvius",
+            body: "With your meter readings the trend above becomes exact instead of an estimate.",
+            partner: "Fluvius",
+            choice: "Connect meter data",
+            shares: "Fluvius would share the premises meter readings with KBC, only after you agree. No partner receives anything from this.",
+          },
+          {
+            kind: "optional",
+            id: "epc-check",
+            title: "A small preparation step: an EPC check of the premises",
+            body: "A certificate for the building shows how much of the energy use the building itself explains.",
+            partner: "De Immowinkel",
+            choice: "I would like an EPC check",
+            shares: "Nothing is sent now. Only if you later accept a step in a plan would the partner receive service, area, timeframe and budget band, never your name.",
+          },
+        ],
         insight: {
           title: "Your energy costs are growing faster than your revenue",
           body: "The ovens and the older building take a bigger share of each month's income than before. There is nothing to do today, but it is the first thing to look at when margins tighten.",
@@ -272,7 +374,28 @@ export const scenarios = [
         },
       },
       forming: {
-        lead: "About 9 months ahead",
+        monthsAhead: 4,
+        allowedActions: [
+          { kind: "question" },
+          {
+            kind: "opportunity",
+            id: "solar-fit",
+            title: "Solar panels for the roof",
+            body: "A bakery works early in the morning and during the day, when panels produce. It fits whatever you decide about the vans.",
+            catalogueId: "calculate-solar-panels-and-request-a-quote",
+            choice: "Keep this in mind",
+            shares: "Nothing is shared. This is only noted on this device.",
+          },
+          {
+            kind: "introduction",
+            id: "intro-fleet",
+            title: "Meet partners for the vans, charging and energy",
+            body: "KBC can introduce you to a charging partner and to the next group purchase round for your energy contract.",
+            partners: ["Blink Charging (formerly Blue Corner)", "Samen Overstappen"],
+            choice: "I would like an introduction",
+            shares: "Nothing is sent now. Only once a plan exists and you accept a step would a partner receive service, area, timeframe and budget band, never your name.",
+          },
+        ],
         signal: {
           question: "Will your delivery vans need to go electric?",
           evidence: [
@@ -289,7 +412,8 @@ export const scenarios = [
         ],
       },
       ready: {
-        lead: "Within 3 months",
+        monthsAhead: 2,
+        allowedActions: [{ kind: "question" }, { kind: "plan" }],
         signal: {
           question: "Did you just put a deposit on an electric van?",
           evidence: [
@@ -333,6 +457,8 @@ export const scenarios = [
             summary: "Estimate what the roof can produce and request a quote.",
             why: "A bakery uses energy early in the morning and during the day, when panels produce.",
             catalogueId: "calculate-solar-panels-and-request-a-quote",
+            areaTopics: ["historic"],
+            roundService: "solar",
             partner: { name: "Solar and battery installer (to choose)", proposed: true },
             intent: { service: "Solar panel quote", region: "Leuven", timeframe: "Q1 2027", budgetBand: "C" },
             lever: "introduction",
@@ -373,6 +499,7 @@ export const scenarios = [
             summary: "Join the next group purchase round for electricity and gas.",
             why: "Group rounds open in fixed windows. The ovens make the contract the largest running cost to lower.",
             catalogueId: "group-purchase-of-electricity-and-gas",
+            roundService: "energy",
             partner: { name: "Samen Overstappen", proposed: false },
             intent: { service: "Group energy purchase", region: "Flanders", timeframe: "Q4 2026", budgetBand: "A" },
             lever: "timing",

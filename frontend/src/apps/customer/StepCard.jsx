@@ -21,7 +21,7 @@ export function CatalogueTag({ step }) {
   return null;
 }
 
-export default function StepCard({ step, signal, decision, onDecide, onUndo }) {
+export default function StepCard({ step, signal, notes = [], decision, onDecide, onUndo }) {
   const [open, setOpen] = useState(false);
   const panelId = `why-${step.id}`;
 
@@ -40,6 +40,11 @@ export default function StepCard({ step, signal, decision, onDecide, onUndo }) {
 
       <h2 className="cx-step-title">{step.title}</h2>
       <p className="cx-step-summary">{step.summary}</p>
+      {notes.map((note) => (
+        <p key={note} className="cx-area-note">
+          {note}
+        </p>
+      ))}
       {step.saving > 0 && <p className="cx-saving">About {money(step.saving)} saved per year</p>}
 
       <button

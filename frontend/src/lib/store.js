@@ -14,6 +14,7 @@ const CHANNEL = "ripple-sync";
 // stage:      which rung of the intent ladder is shown (a demo control)
 // confirmed:  true once the customer confirms the detected signal
 // decisions:  { [stepId]: "accepted" | "deferred" | "rejected" }
+// choices:    { [actionId]: true } optional actions chosen before a plan, local only
 
 function load() {
   try {
@@ -61,6 +62,8 @@ export const actions = {
   declineSignal: () => commit(reduce(state, { type: "declineSignal" })),
   decide: (stepId, decision) => commit(reduce(state, { type: "decide", stepId, decision })),
   clearDecision: (stepId) => commit(reduce(state, { type: "clearDecision", stepId })),
+  choose: (id) => commit(reduce(state, { type: "choose", id })),
+  unchoose: (id) => commit(reduce(state, { type: "unchoose", id })),
   reset: () => commit(reduce(state, { type: "reset" })),
 };
 

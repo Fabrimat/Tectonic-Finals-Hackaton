@@ -5,16 +5,18 @@ import ConfirmCard from "./ConfirmCard";
 import RippleReveal from "./RippleReveal";
 import StageTag from "./StageTag";
 import InsightCard from "./InsightCard";
+import ActionCard from "./ActionCard";
 import HoldCard from "./HoldCard";
 import PlanBoard from "./PlanBoard";
 import SummaryBar from "./SummaryBar";
 import "./customer.css";
 
 export default function CustomerApp() {
-  const { scenario, confirmed, decisions, actions } = useRipple();
+  const { scenario, confirmed, decisions, choices, actions } = useRipple();
   const [rippling, setRippling] = useState(false);
   const { person, stage } = scenario;
   const ready = stage === "ready";
+  const planShown = confirmed && !rippling && scenario.allowedActions.some((a) => a.kind === "plan");
 
   function confirm() {
     setRippling(true);
@@ -60,17 +62,56 @@ export default function CustomerApp() {
 
       <main className="cx-main">
         <StageTag scenario={scenario} />
-        {stage === "whisper" && <InsightCard scenario={scenario} />}
-        {stage === "forming" && !confirmed && (
-          <ConfirmCard scenario={scenario} onConfirm={actions.confirmSignal} onDecline={actions.declineSignal} />
-        )}
-        {stage === "forming" && confirmed && <HoldCard scenario={scenario} />}
-        {ready && !confirmed && <ConfirmCard scenario={scenario} onConfirm={confirm} onDecline={actions.declineSignal} />}
-        {ready && confirmed && rippling && <RippleReveal label={scenario.signal.question} onDone={() => setRippling(false)} />}
-        {ready && confirmed && !rippling && <PlanBoard scenario={scenario} decisions={decisions} actions={actions} />}
+        {scenario.allowedActions.map((action) => {
+          switch (action.kind) {
+            case "awareness":
+              return (
+                <InsightCard
+                  key="awareness"
+                  scenario={scenario}
+                  confirmed={confirmed}
+                  onConfirm={actions.confirmSignal}
+                  onDecline={actions.declineSignal}
+                />
+              );
+            case "question":
+              if (confirmed) return stage === "forming" ? <HoldCard key="question" scenario={scenario} /> : null;
+              return (
+                <ConfirmCard
+                  key="question"
+                  scenario={scenario}
+                  onConfirm={ready ? confirm : actions.confirmSignal}
+                  onDecline={actions.declineSignal}
+                />
+              );
+            case "optional":
+            case "opportunity":
+            case "introduction":
+              if (action.kind !== "optional" && !confirmed) return null;
+              return (
+                <ActionCard
+                  key={action.id}
+                  action={action}
+                  enabled={confirmed}
+                  chosen={Boolean(choices[action.id])}
+                  onChoose={() => actions.choose(action.id)}
+                  onUndo={() => actions.unchoose(action.id)}
+                />
+              );
+            case "plan":
+              if (!confirmed) return null;
+              return rippling ? (
+                <RippleReveal key="plan" label={scenario.signal.question} onDone={() => setRippling(false)} />
+              ) : (
+                <PlanBoard key="plan" scenario={scenario} decisions={decisions} actions={actions} />
+              );
+            default:
+              return null;
+          }
+        })}
       </main>
 
-      {ready && confirmed && !rippling && <SummaryBar scenario={scenario} decisions={decisions} onReset={actions.reset} />}
+      {planShown && <SummaryBar scenario={scenario} decisions={decisions} onReset={actions.reset} />}
     </div>
   );
 }
