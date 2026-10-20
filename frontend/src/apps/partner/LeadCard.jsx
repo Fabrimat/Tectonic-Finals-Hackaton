@@ -3,7 +3,7 @@ import { bandLabels } from "../../data/scenarios";
 
 // Accepted is the end state of a lead. In this prototype the customer's
 // final choice is not modelled, so cards stop at Offer sent unless marked.
-export default function LeadCard({ lead, offer, onSend }) {
+export default function LeadCard({ lead, offer, onSend, showPartner = false }) {
   const [open, setOpen] = useState(false);
   const [price, setPrice] = useState("");
   const [message, setMessage] = useState("");
@@ -24,6 +24,7 @@ export default function LeadCard({ lead, offer, onSend }) {
         <span className={`pp-status is-${status.toLowerCase().replace(" ", "-")}`}>{status}</span>
       </div>
       <h3 className="pp-service">{lead.service}</h3>
+      {showPartner && <p className="pp-for">For {lead.partner}</p>}
       <dl className="pp-facts">
         <div><dt>Region</dt><dd>{lead.region}</dd></div>
         <div><dt>Timeframe</dt><dd>{lead.timeframe}</dd></div>

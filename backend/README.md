@@ -1,6 +1,6 @@
-# Ripple backend
+# KBC energy transition backend
 
-Small NestJS API for the Ripple proof of concept. It serves the product catalogue and collects anonymous intents. Intents are whitelisted by shape and by value format: the DTO rejects unknown properties, and `region`, `service` and `timeframe` only accept known values, so a payload with a name, email or address is a 400.
+Small NestJS API for the energy transition proof of concept. It serves the product catalogue and collects anonymous intents. Intents are whitelisted by shape and by value format: the DTO rejects unknown properties, and `region`, `service` and `timeframe` only accept known values, so a payload with a name, email or address is a 400.
 
 Storage is in memory, so intents are lost on restart. At most 1000 intents are kept, oldest first out.
 

@@ -20,7 +20,8 @@ export default function PartnerApp() {
   const [picked, setPicked] = useState(view.partner || null);
   const [offers, setOffers] = useState({});
 
-  const current = partners.find((p) => p.name === picked) ?? partners[0];
+  const showAll = picked === "all";
+  const current = showAll ? null : (partners.find((p) => p.name === picked) ?? partners[0]);
   const localLeads = leadsFor(scenario, decisions, confirmed);
   const leads = live ? leadsFromIntents(remote.intents) : localLeads;
   const sendOffer = (ref, offer) => setOffers((prev) => ({ ...prev, [ref]: offer }));
@@ -55,7 +56,8 @@ export default function PartnerApp() {
         </nav>
         <div className="pp-view">
           <label htmlFor="pp-partner">Partner leads for</label>
-          <select id="pp-partner" value={current?.name ?? ""} onChange={(e) => setPicked(e.target.value)}>
+          <select id="pp-partner" value={showAll ? "all" : (current?.name ?? "")} onChange={(e) => setPicked(e.target.value)}>
+            <option value="all">All partners</option>
             {partners.map((p) => (
               <option key={p.name} value={p.name}>{p.name}</option>
             ))}
@@ -72,7 +74,7 @@ export default function PartnerApp() {
             element={
               <Leads
                 partner={current}
-                leads={leads.filter((l) => l.partner === current?.name)}
+                leads={showAll ? leads : leads.filter((l) => l.partner === current?.name)}
                 offers={offers}
                 onSend={sendOffer}
               />

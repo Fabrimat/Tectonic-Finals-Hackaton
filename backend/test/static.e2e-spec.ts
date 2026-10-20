@@ -16,12 +16,12 @@ async function createApp(staticDir?: string): Promise<INestApplication> {
 }
 
 describe('static frontend (e2e)', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'ripple-static-'));
+  const dir = mkdtempSync(join(tmpdir(), 'static-test-'));
   let app: INestApplication;
 
   beforeAll(async () => {
     mkdirSync(join(dir, 'assets'));
-    writeFileSync(join(dir, 'index.html'), '<!doctype html><title>Ripple</title>');
+    writeFileSync(join(dir, 'index.html'), '<!doctype html><title>KBC energy transition</title>');
     writeFileSync(join(dir, 'assets', 'app.js'), 'console.log(1)');
     app = await createApp(dir);
   });
@@ -33,7 +33,7 @@ describe('static frontend (e2e)', () => {
 
   it('serves index.html at the root with a strict CSP', async () => {
     const res = await request(app.getHttpServer()).get('/').expect(200);
-    expect(res.text).toContain('<title>Ripple</title>');
+    expect(res.text).toContain('<title>KBC energy transition</title>');
     expect(res.headers['content-security-policy']).toContain("default-src 'self'");
     expect(res.headers['content-security-policy']).toContain("script-src 'self'");
   });
@@ -44,7 +44,7 @@ describe('static frontend (e2e)', () => {
 
   it('falls back to index.html for client routes', async () => {
     const res = await request(app.getHttpServer()).get('/app/some/deep/link').expect(200);
-    expect(res.text).toContain('<title>Ripple</title>');
+    expect(res.text).toContain('<title>KBC energy transition</title>');
   });
 
   it('leaves /api routes alone', async () => {

@@ -5,13 +5,13 @@ export default function Leads({ partner, leads, offers, onSend }) {
   return (
     <div className="pp-leads">
       <section aria-labelledby="leads-h">
-        <h2 id="leads-h" className="pp-h">{partner ? `Leads for ${partner.name}` : "Leads"}</h2>
+        <h2 id="leads-h" className="pp-h">{partner ? `Leads for ${partner.name}` : "All partner leads"}</h2>
         {leads.length === 0 ? (
           <p className="pp-empty">No confirmed intents yet. Leads appear when a customer accepts a step.</p>
         ) : (
           <ul className="pp-list">
             {leads.map((lead) => (
-              <LeadCard key={lead.ref} lead={lead} offer={offers[lead.ref]} onSend={onSend} />
+              <LeadCard key={lead.ref} lead={lead} offer={offers[lead.ref]} onSend={onSend} showPartner={!partner} />
             ))}
           </ul>
         )}
