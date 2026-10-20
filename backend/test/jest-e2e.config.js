@@ -2,7 +2,7 @@ module.exports = {
   setupFiles: ['<rootDir>/setup-env.js'],
   rootDir: '.',
   moduleFileExtensions: ['js', 'json', 'ts'],
-  testRegex: '.*\.e2e-spec\.ts$',
+  testRegex: '\.e2e-spec\.ts$',
   transform: { '^.+\.ts$': 'ts-jest' },
   testEnvironment: 'node',
 };

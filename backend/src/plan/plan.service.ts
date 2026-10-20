@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { CatalogueService } from '../catalogue/catalogue.service';
@@ -61,7 +61,9 @@ export class PlanService {
   }
 
   async create(dto: PlanRequestDto, today: Date = new Date()): Promise<Plan> {
-    const asOf = dto.asOf ? (parseDate(dto.asOf) as Date) : (parseDate(today.toISOString().slice(0, 10)) as Date);
+    const raw = dto.asOf ?? today.toISOString().slice(0, 10);
+    const asOf = parseDate(raw);
+    if (!asOf) throw new BadRequestException('asOf must be a valid date in YYYY-MM-DD format');
     const plan = this.build(dto, asOf);
     const { steps, used } = await rewriteWhy(plan.steps, this.wording);
     return { ...plan, steps, wording: used ? 'model' : 'deterministic' };

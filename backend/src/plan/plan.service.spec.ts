@@ -184,3 +184,12 @@ describe('data files', () => {
     }
   });
 });
+
+describe('PlanService.create', () => {
+  const service = new PlanService(new CatalogueService());
+
+  it('rejects an asOf that is not a real date', async () => {
+    await expect(service.create({ asOf: '2026-02-30' })).rejects.toThrow('asOf must be a valid date');
+    await expect(service.create({ asOf: 'tomorrow' })).rejects.toThrow('asOf must be a valid date');
+  });
+});
