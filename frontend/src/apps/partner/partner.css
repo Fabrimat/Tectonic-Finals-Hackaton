@@ -1,4 +1,5 @@
 .pp {
+  --muted: #4a5666;
   min-height: 100%;
   color: var(--ink);
 }
@@ -69,7 +70,7 @@
 .pp-tag {
   background: var(--kbc-blue-soft);
   color: var(--kbc-navy);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 999px;
@@ -111,6 +112,35 @@
 .pp-empty {
   padding: 28px;
   color: var(--muted);
+  text-align: center;
+}
+
+.pp-empty svg {
+  color: var(--kbc-blue);
+}
+
+.pp-empty p {
+  margin: 6px 0 0;
+}
+
+.pp-withheld {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  display: grid;
+  gap: 2px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.pp-withheld strong {
+  font-size: 1.6rem;
+  color: var(--kbc-navy);
+}
+
+.pp-withheld span {
+  color: var(--muted);
+  font-size: 0.875rem;
 }
 
 .pp-list {
@@ -139,7 +169,7 @@
 }
 
 .pp-status {
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 999px;
@@ -178,7 +208,7 @@
 }
 
 .pp-note {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -225,7 +255,7 @@
 .pp-form label {
   display: grid;
   gap: 4px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -259,7 +289,7 @@
   padding: 4px 12px;
   background: var(--bg);
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -288,7 +318,7 @@
 }
 
 .pp-col h3 {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--kbc-blue);
@@ -364,7 +394,7 @@
 .pp-more summary {
   cursor: pointer;
   color: var(--kbc-blue);
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -373,7 +403,7 @@
 }
 
 .pp-h .pp-tag {
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -445,7 +475,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   color: var(--muted);
 }
 
@@ -465,7 +495,7 @@
   gap: 6px;
   margin: 0 0 12px;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 
 .pp-secondary {
@@ -483,7 +513,7 @@
 .pp-assume thead th {
   padding-top: 14px;
   color: var(--kbc-navy);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -504,7 +534,7 @@
 .pp-for {
   margin: -6px 0 10px;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 
 @media (min-width: 1100px) {

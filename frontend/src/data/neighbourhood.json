@@ -1,0 +1,13 @@
+{
+  "note": "Synthetic cohorts for the demo. Each cohort is an aggregate; no row is a person or a building.",
+  "cohorts": [
+    { "id": "gent-9000-e", "segment": "household", "place": "9000 Gent", "builtFrom": 1955, "builtTo": 1970, "label": "E", "window": 2027, "intent": "Renovation", "count": 12 },
+    { "id": "leuven-3000-d", "segment": "household", "place": "3000 Leuven", "builtFrom": 1971, "builtTo": 1985, "label": "D", "window": 2027, "intent": "Heating", "count": 7 },
+    { "id": "mechelen-2800-f", "segment": "household", "place": "2800 Mechelen", "builtFrom": 1945, "builtTo": 1960, "label": "F", "window": 2028, "intent": "Renovation", "count": 4 },
+    { "id": "naamsestraat-leuven", "segment": "business", "place": "Naamsestraat, Leuven", "builtFrom": 1900, "builtTo": 1945, "label": "older buildings", "window": 2027, "intent": "Energy contract", "count": 9, "kind": "shops" }
+  ],
+  "withheldByScenario": {
+    "household-maes": 3,
+    "bakery-leuven": 2
+  }
+}

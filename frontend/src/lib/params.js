@@ -1,4 +1,5 @@
 import { scenarios, stageOrder, viewOf } from "../data/scenarios.js";
+import { roles } from "../data/partners.js";
 import { initial } from "./reducer.js";
 
 // URL parameters that open a state directly, for screenshots and for sharing a view.
@@ -8,7 +9,8 @@ import { initial } from "./reducer.js";
 //   accepted   a number N (the first N steps) or a comma separated list of step ids
 //   deferred   comma separated step ids
 //   rejected   comma separated step ids
-//   partner    partner name shown first on the advisor dashboard
+//   partner    partner name shown first on the advisor dashboard, or all; unknown names are ignored
+//   cluster    1 shows only the neighbourhood groups card on the advisor dashboard
 //   tools      0 hides the demo tools
 //   clock      1 shows the renovation clock alone on the home screen, without the feed cards
 //   open       1 opens the energy radar card instead of the home screen
@@ -47,13 +49,17 @@ export function stateFromParams(search) {
   return state;
 }
 
+const partnerNames = roles.flatMap((r) => r.partners.map((p) => p.name));
+
 export function viewParams(search) {
   const params = new URLSearchParams(search);
+  const partner = params.get("partner") ?? "";
   return {
-    partner: params.get("partner") ?? "",
+    partner: partner === "all" || partnerNames.includes(partner) ? partner : "",
     tools: params.get("tools") !== "0",
     open: truthy(params.get("open")),
     clock: truthy(params.get("clock")),
+    cluster: truthy(params.get("cluster")),
     evidence: truthy(params.get("open")) && truthy(params.get("evidence")),
   };
 }

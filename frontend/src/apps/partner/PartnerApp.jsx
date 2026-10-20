@@ -73,6 +73,8 @@ export default function PartnerApp() {
             index
             element={
               <Leads
+                scenario={scenario}
+                clusterOnly={view.cluster}
                 partner={current}
                 leads={showAll ? leads : leads.filter((l) => l.partner === current?.name)}
                 offers={offers}
