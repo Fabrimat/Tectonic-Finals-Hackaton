@@ -1,4 +1,5 @@
 import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
+import { safeId } from '../common/safe-id';
 import { CatalogueService } from './catalogue.service';
 import { ListCatalogueDto } from './dto/list-catalogue.dto';
 
@@ -13,7 +14,7 @@ export class CatalogueController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    const product = this.catalogue.findOne(id);
+    const product = this.catalogue.findOne(safeId(id));
     if (!product) throw new NotFoundException('Product not found');
     return product;
   }

@@ -28,6 +28,8 @@ const KINDS_BY_STAGE: Record<Stage, ActionKind[]> = {
   ready: ['awareness', 'optional', 'opportunity', 'introduction', 'plan'],
 };
 
+const STAGES: Stage[] = ['whisper', 'forming', 'ready'];
+
 function readData<T>(name: string): T {
   return JSON.parse(readFileSync(join(__dirname, '..', '..', 'data', name), 'utf8')) as T;
 }
@@ -39,6 +41,7 @@ export class PlanService {
   private readonly rounds = readData<GroupRound[]>('group-rounds.json');
   private readonly facts = new Map(readData<Fact[]>('facts.json').map((f) => [f.id, f]));
   private readonly scenarios: CachedScenario[];
+  private readonly scenarioById: Map<string, CachedScenario>;
   private readonly wording = loadConfig().wording;
 
   constructor(private readonly catalogue: CatalogueService) {
@@ -50,6 +53,7 @@ export class PlanService {
         ready: this.sanitize(s.plans.ready),
       },
     }));
+    this.scenarioById = new Map(this.scenarios.map((s) => [s.id, s]));
   }
 
   listScenarios(): { id: string; title: string; stages: Stage[] }[] {
@@ -57,7 +61,8 @@ export class PlanService {
   }
 
   findScenario(id: string, stage: Stage = 'ready'): Plan | undefined {
-    return this.scenarios.find((s) => s.id === id)?.plans[stage];
+    if (!STAGES.includes(stage)) return undefined;
+    return this.scenarioById.get(id)?.plans[stage];
   }
 
   async create(dto: PlanRequestDto, today: Date = new Date()): Promise<Plan> {

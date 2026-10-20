@@ -54,6 +54,16 @@ describe('static frontend (e2e)', () => {
     await request(app.getHttpServer()).get('/api/intents').expect(401);
   });
 
+  it('never serves files from outside the root', async () => {
+    const paths = ['/..%2f..%2fetc/passwd', '/%2e%2e/', '/..%5c..%5cwindows/win.ini', '/.env', '//etc/passwd', '/%2e%2e/%2e%2e/etc/passwd'];
+    for (const path of paths) {
+      const res = await request(app.getHttpServer()).get(path);
+      expect([200, 400, 403, 404]).toContain(res.status);
+      if (res.status === 200) expect(res.text).toContain('<title>KBC energy transition</title>');
+      expect(res.text).not.toMatch(/root:|\[fonts\]|\[extensions\]/);
+    }
+  });
+
   it('serves nothing extra when the directory does not exist', async () => {
     const bare = await createApp(join(dir, 'missing'));
     await request(bare.getHttpServer()).get('/').expect(404);

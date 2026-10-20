@@ -66,10 +66,10 @@ export async function rewriteWhy(
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
       return { steps, used: false };
     }
-    const wording = parsed as Record<string, unknown>;
+    const wording = new Map(Object.entries(parsed as Record<string, unknown>));
     let changed = false;
     const next = steps.map((step) => {
-      const text = wording[step.id];
+      const text = wording.get(step.id);
       if (typeof text !== 'string') return step;
       const clean = text.trim();
       if (clean.length === 0 || clean.length > MAX_WHY) return step;
