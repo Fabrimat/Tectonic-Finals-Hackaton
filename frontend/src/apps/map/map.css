@@ -51,13 +51,13 @@
 
 .map-hub-name {
   fill: #fff;
-  font-size: 30px;
+  font-size: 34px;
   font-weight: 700;
 }
 
 .map-hub-sub {
   fill: #bcd3e6;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .map-role {
@@ -68,18 +68,22 @@
 
 .map-role-label {
   fill: var(--kbc-navy);
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
 }
 
 .map-partner {
   fill: var(--ink);
-  font-size: 13px;
+  font-size: 15px;
+}
+
+.map-proposed {
+  font-style: italic;
 }
 
 .map-flow-label {
   fill: var(--ink);
-  font-size: 12px;
+  font-size: 14px;
   paint-order: stroke;
   stroke: #fff;
   stroke-width: 4px;

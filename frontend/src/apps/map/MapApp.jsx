@@ -2,23 +2,23 @@ import { Link } from "react-router-dom";
 import { hub, roles, flowKinds, status } from "../../data/partners";
 import "./map.css";
 
-const W = 1000;
-const H = 760;
+const W = 1300;
+const H = 900;
 const CX = W / 2;
 const CY = H / 2;
 const HUB_R = 72;
-const BOX_W = 220;
+const BOX_W = 300;
 
 const external = roles.filter((r) => !r.inHouse);
 const inHouse = roles.filter((r) => r.inHouse);
 
 function boxHeight(role) {
-  return 46 + role.partners.length * 18;
+  return 48 + role.partners.length * 22;
 }
 
 function place(index, total) {
   const angle = -Math.PI / 2 + (index * 2 * Math.PI) / total;
-  return { x: CX + Math.cos(angle) * 360, y: CY + Math.sin(angle) * 270 };
+  return { x: CX + Math.cos(angle) * 470, y: CY + Math.sin(angle) * 340 };
 }
 
 // Point where the line from the centre to (x, y) enters a box of size w by h around (x, y).
@@ -42,7 +42,7 @@ function Flow({ x, y, h, flow, slot, slots }) {
   const start = { x: CX + ux * (HUB_R + 4), y: CY + uy * (HUB_R + 4) };
   const [a, b] = flow.direction === "out" ? [start, end] : [end, start];
   const color = flowKinds[flow.kind].color;
-  const t = flow.direction === "out" ? 0.62 : 0.4;
+  const t = flow.direction === "out" ? 0.66 : 0.34;
   const mid = { x: start.x + (end.x - start.x) * t + nx * off, y: start.y + (end.y - start.y) * t + ny * off };
   return (
     <g>
@@ -56,7 +56,7 @@ function Flow({ x, y, h, flow, slot, slots }) {
         strokeDasharray={flow.consent ? "7 5" : undefined}
         markerEnd={`url(#arrow-${flow.kind})`}
       />
-      <text x={mid.x} y={mid.y + (slot === 0 ? -6 : 14)} textAnchor="middle" className="map-flow-label">
+      <text x={mid.x} y={mid.y + (slot === 0 ? -7 : 17)} textAnchor="middle" className="map-flow-label">
         {flow.label}
       </text>
     </g>
@@ -103,9 +103,9 @@ export default function MapApp() {
             return (
               <g key={role.id} transform={`translate(${x - BOX_W / 2} ${y - h / 2})`}>
                 <rect width={BOX_W} height={h} rx="12" className="map-role" />
-                <text x="14" y="25" className="map-role-label">{role.label}</text>
+                <text x="14" y="27" className="map-role-label">{role.label}</text>
                 {role.partners.map((p, k) => (
-                  <text key={p.name} x="14" y={46 + k * 18} className="map-partner">
+                  <text key={p.name} x="14" y={50 + k * 22} className={p.proposed ? "map-partner map-proposed" : "map-partner"}>
                     {p.name}
                   </text>
                 ))}
@@ -131,12 +131,14 @@ export default function MapApp() {
                 <span>{role.brings}</span>
                 <span>
                   {role.partners
-                    .map((p) => (p.inCatalogue ? `${p.name} (already in the KBC catalogue)` : p.name))
+                    .map((p) => (p.proposed ? `${p.name}, proposed` : p.name))
                     .join(", ")}
                 </span>
               </li>
             ))}
           </ul>
+
+          <p>Names in italics are proposed, not yet in the KBC catalogue. All names are demo assumptions, not agreements.</p>
 
           <h2>Flows</h2>
           <ul className="map-legend">
