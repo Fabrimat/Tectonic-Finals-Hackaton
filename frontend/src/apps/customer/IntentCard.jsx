@@ -24,7 +24,10 @@ export default function IntentCard({ scenario, confirmed, decisions, onOpen }) {
     <button type="button" className={`cx-feed-card cx-intent${s.quiet ? " is-quiet" : ""}`} onClick={onOpen}>
       <Icon name={s.icon} size={34} className="cx-feed-icon" />
       <span className="cx-feed-body">
-        <span className="cx-feed-kicker">{s.kicker}</span>
+        <span className="cx-feed-kicker">
+          {s.kicker}
+          {s.quiet && <span className="cx-new-tag">New</span>}
+        </span>
         <span className="cx-feed-text">{s.text}</span>
         <span className="cx-intent-cta">
           {s.cta}
