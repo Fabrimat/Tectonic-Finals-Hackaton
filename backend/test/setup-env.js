@@ -1,1 +1,3 @@
-process.env.PARTNER_API_KEY = 'test-key-0123456789abcdef-test';
+const { randomBytes } = require('crypto');
+
+process.env.PARTNER_API_KEY = randomBytes(24).toString('hex');

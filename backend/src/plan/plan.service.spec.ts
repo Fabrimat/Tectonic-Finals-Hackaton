@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { CatalogueService } from '../catalogue/catalogue.service';
@@ -5,7 +6,7 @@ import { PlanService } from './plan.service';
 import { CachedScenario, Fact, Rule } from './plan.types';
 import { parseDate } from './rules';
 
-process.env.PARTNER_API_KEY ??= 'test-key-0123456789abcdef-test';
+process.env.PARTNER_API_KEY ??= randomBytes(24).toString('hex');
 
 const asOf = parseDate('2026-10-20') as Date;
 const whisper = {

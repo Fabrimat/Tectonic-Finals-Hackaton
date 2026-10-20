@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { CatalogueService } from '../catalogue/catalogue.service';
@@ -5,7 +6,7 @@ import { PlanService } from './plan.service';
 import { EngineConfig, Rule, Signals } from './plan.types';
 import { evaluateRules, parseDate } from './rules';
 
-process.env.PARTNER_API_KEY ??= 'test-key-0123456789abcdef-test';
+process.env.PARTNER_API_KEY ??= randomBytes(24).toString('hex');
 
 const read = <T>(name: string) =>
   JSON.parse(readFileSync(join(__dirname, '..', '..', 'data', name), 'utf8')) as T;

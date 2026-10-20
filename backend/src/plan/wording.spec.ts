@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { WordingConfig } from '../config/config';
 import { PlanStep } from './plan.types';
 import { rewriteWhy } from './wording';
@@ -5,7 +6,8 @@ import { rewriteWhy } from './wording';
 const steps: PlanStep[] = [
   { id: 'energy-loan', title: 'Energy loan', partnerRole: 'Finance', why: 'Base text', dataUsed: [], intent: 'x', proposed: false, notNeeded: false },
 ];
-const on: WordingConfig = { enabled: true, url: 'https://example.test/v1/chat', key: 'secret-value', model: 'm' };
+const secret = randomBytes(12).toString('hex');
+const on: WordingConfig = { enabled: true, url: 'https://example.test/v1/chat', key: secret, model: 'm' };
 const raw = (text: string, headers: Record<string, string> = {}) =>
   jest.fn().mockImplementation(async () => new Response(text, { status: 200, headers }));
 const reply = (content: string) => raw(JSON.stringify({ choices: [{ message: { content } }] }));
@@ -65,7 +67,7 @@ describe('rewriteWhy', () => {
     await rewriteWhy(steps, on, fetchFn);
     const [url, init] = fetchFn.mock.calls[0];
     expect(url).toBe(on.url);
-    expect(init.headers.authorization).toBe('Bearer secret-value');
-    expect(init.body).not.toContain('secret-value');
+    expect(init.headers.authorization).toBe(`Bearer ${secret}`);
+    expect(init.body).not.toContain(secret);
   });
 });
