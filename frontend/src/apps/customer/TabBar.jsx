@@ -18,6 +18,7 @@ export default function TabBar({ onStart }) {
           type="button"
           className={tab.id === "start" ? "cx-tab is-active" : "cx-tab"}
           aria-current={tab.id === "start" ? "page" : undefined}
+          aria-disabled={tab.id === "start" ? undefined : "true"}
           onClick={tab.id === "start" ? onStart : undefined}
         >
           <Icon name={tab.icon} size={28} />

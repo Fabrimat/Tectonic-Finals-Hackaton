@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { homeOf, walletPromo } from "../../data/accounts";
 import KbcLogo from "../../components/KbcLogo";
 import IntentCard from "./IntentCard";
 import Icon from "./icons";
+import RenovationClock from "./RenovationClock";
+import { view } from "../../lib/params";
 
 function Tile({ tone }) {
   if (tone === "card") {
@@ -58,20 +61,22 @@ function Account({ account }) {
 
 export default function HomeScreen({ scenario, confirmed, decisions, onOpen, tools }) {
   const home = homeOf(scenario.id);
+  const [dismissed, setDismissed] = useState([]);
+  const clockOnly = home.clock && view.clock;
   return (
     <div className="cx-home">
       <div className="cx-home-brand">
         <KbcLogo className="cx-logo" />
       </div>
       <header className="cx-home-top">
-        <button type="button" className="cx-round" aria-label="Settings">
+        <button type="button" className="cx-round" aria-label="Settings" aria-disabled="true">
           <Icon name="settings" size={26} />
         </button>
-        <div className="cx-search">
+        <div className="cx-search" aria-hidden="true">
           <Icon name="search" size={20} />
           <span className="cx-search-text">How can I help you?</span>
         </div>
-        <button type="button" className="cx-bell" aria-label="Notifications">
+        <button type="button" className="cx-bell" aria-label="Notifications" aria-disabled="true">
           <Icon name="bell" size={28} />
           <span className="cx-bell-dot" />
         </button>
@@ -83,28 +88,34 @@ export default function HomeScreen({ scenario, confirmed, decisions, onOpen, too
         ))}
       </ul>
 
-      <button type="button" className="cx-show-pay">
+      <button type="button" className="cx-show-pay" aria-disabled="true">
         <Icon name="chevronDown" size={20} />
         Show payments
       </button>
 
+      {home.clock && <RenovationClock />}
+
+      {!clockOnly && (
+      <>
       <section className="cx-foryou" aria-labelledby="cx-foryou-h">
         <div className="cx-section-head">
           <h2 id="cx-foryou-h">For you</h2>
-          <button type="button" className="cx-text-link">
+          <button type="button" className="cx-text-link" aria-disabled="true">
             All communications
           </button>
         </div>
         <IntentCard scenario={scenario} confirmed={confirmed} decisions={decisions} onOpen={onOpen} />
-        {home.feed.map((item) => (
+        {home.feed
+          .filter((item) => !dismissed.includes(item.icon))
+          .map((item) => (
           <div key={item.icon} className="cx-feed-card">
             <Icon name={item.icon} size={34} className="cx-feed-icon" />
             <span className="cx-feed-body">
               <span className="cx-feed-text">{item.text}</span>
             </span>
-            <span className="cx-feed-close" aria-hidden="true">
+            <button type="button" className="cx-feed-close" aria-label="Dismiss" onClick={() => setDismissed([...dismissed, item.icon])}>
               <Icon name="close" size={12} />
-            </span>
+            </button>
           </div>
         ))}
       </section>
@@ -112,7 +123,7 @@ export default function HomeScreen({ scenario, confirmed, decisions, onOpen, too
       <section className="cx-promo-wrap" aria-labelledby="cx-wallet-h">
         <div className="cx-section-head">
           <h2 id="cx-wallet-h">{walletPromo.title}</h2>
-          <button type="button" className="cx-text-link">
+          <button type="button" className="cx-text-link" aria-disabled="true">
             {walletPromo.link}
           </button>
         </div>
@@ -124,6 +135,8 @@ export default function HomeScreen({ scenario, confirmed, decisions, onOpen, too
           </span>
         </div>
       </section>
+      </>
+      )}
 
       {tools}
     </div>
