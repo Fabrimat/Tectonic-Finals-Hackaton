@@ -1,6 +1,6 @@
 # Ripple backend
 
-Small NestJS API for the Ripple proof of concept. It serves the product catalogue and collects anonymous intents. Intents never carry personal data: the DTO rejects any property it does not know, so a payload with a name or email is a 400.
+Small NestJS API for the Ripple proof of concept. It serves the product catalogue and collects anonymous intents. Intents are whitelisted by shape and by value format: the DTO rejects unknown properties, and `region`, `service` and `timeframe` only accept known values, so a payload with a name, email or address is a 400.
 
 Storage is in memory, so intents are lost on restart. At most 1000 intents are kept, oldest first out.
 
@@ -41,13 +41,13 @@ All routes are under `/api`.
 | GET | `/api/health` | Returns `{ "status": "ok" }` |
 | GET | `/api/catalogue` | Lists products, optional `?ecosystem=<ecosystemId>` |
 | GET | `/api/catalogue/:id` | One product, 404 if unknown |
-| POST | `/api/intents` | Creates an anonymous intent, returns it with a reference like `RPL-4F2A` and status `new` |
+| POST | `/api/intents` | Creates an anonymous intent, returns it with a reference like `REQ-4F2A` and status `new` |
 | GET | `/api/intents` | Lists intents. Needs the `x-api-key` header, 401 otherwise |
 | POST | `/api/plan` | Builds a plan from signals with the rules in `data/rules.json` |
 | GET | `/api/plan/scenarios` | Lists the cached scenarios |
 | GET | `/api/plan/scenarios/:id` | Cached plan, optional `?stage=whisper\|forming\|ready` (default `ready`) |
 
-Intent body: `scenarioId`, `stepId`, `service`, `region`, `timeframe` (strings, max 64 characters) and `budgetBand` (`A`, `B` or `C`).
+Intent body: `service` and `region` (one of the values in `src/intents/intent-values.ts`), `timeframe` (like `Q4 2026`), `scenarioId` and `stepId` (lowercase letters, digits, `-` and `_`, max 64 characters) and `budgetBand` (`A`, `B` or `C`). `POST /api/intents` is limited to 20 requests per minute per client.
 
 `CatalogueService.keepKnown(ids)` drops ids that are not in `data/catalogue.json`. Use it on any model-generated plan before returning it.
 

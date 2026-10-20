@@ -29,6 +29,19 @@ describe('Rate limits (e2e)', () => {
     });
     afterAll(() => app.close());
 
+    it('limits POST /api/intents to 20 per minute', async () => {
+      const body = {
+        scenarioId: 'household-maes',
+        stepId: 'insulation',
+        service: 'Insulation quote',
+        region: 'Ghent',
+        timeframe: 'Q1 2027',
+        budgetBand: 'C',
+      };
+      for (let i = 0; i < 20; i++) await request(app.getHttpServer()).post('/api/intents').send(body).expect(201);
+      await request(app.getHttpServer()).post('/api/intents').send(body).expect(429);
+    });
+
     it('limits GET /api/intents to 10 per minute and ignores x-forwarded-for', async () => {
       for (let i = 0; i < 10; i++) await listIntents(app, `203.0.113.${i}`).expect(200);
       await listIntents(app, '203.0.113.200').expect(429);

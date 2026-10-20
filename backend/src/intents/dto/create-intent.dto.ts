@@ -1,19 +1,20 @@
-import { IsIn, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsIn, IsString, Matches } from 'class-validator';
+import { ID_PATTERN, INTENT_REGIONS, INTENT_SERVICES, TIMEFRAME_PATTERN } from '../intent-values';
 
 export class CreateIntentDto {
-  @IsString() @MinLength(1) @MaxLength(64)
+  @IsString() @Matches(ID_PATTERN)
   scenarioId: string;
 
-  @IsString() @MinLength(1) @MaxLength(64)
+  @IsString() @Matches(ID_PATTERN)
   stepId: string;
 
-  @IsString() @MinLength(1) @MaxLength(64)
+  @IsIn(INTENT_SERVICES)
   service: string;
 
-  @IsString() @MinLength(1) @MaxLength(64)
+  @IsIn(INTENT_REGIONS)
   region: string;
 
-  @IsString() @MinLength(1) @MaxLength(64)
+  @IsString() @Matches(TIMEFRAME_PATTERN)
   timeframe: string;
 
   @IsIn(['A', 'B', 'C'])

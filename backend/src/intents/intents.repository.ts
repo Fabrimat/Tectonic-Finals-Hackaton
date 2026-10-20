@@ -35,7 +35,7 @@ export class IntentsRepository {
   private newReference(): string {
     let reference: string;
     do {
-      reference = `RPL-${randomBytes(2).toString('hex').toUpperCase()}`;
+      reference = `REQ-${randomBytes(2).toString('hex').toUpperCase()}`;
     } while (this.intents.has(reference));
     return reference;
   }

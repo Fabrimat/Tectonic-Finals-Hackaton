@@ -9,6 +9,7 @@ export class IntentsController {
   constructor(private readonly intents: IntentsRepository) {}
 
   @Post()
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
   create(@Body() dto: CreateIntentDto) {
     return this.intents.create(dto);
   }

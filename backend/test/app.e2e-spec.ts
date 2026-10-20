@@ -12,9 +12,9 @@ describe('API (e2e)', () => {
   const validIntent = {
     scenarioId: 'moving-home',
     stepId: 'insure',
-    service: 'home-insurance',
-    region: 'Brussels',
-    timeframe: 'next-3-months',
+    service: 'Heating quote',
+    region: 'Ghent',
+    timeframe: 'Q1 2027',
     budgetBand: 'B',
   };
 
@@ -34,7 +34,7 @@ describe('API (e2e)', () => {
 
   it('POST /api/intents accepts a valid body', async () => {
     const res = await request(app.getHttpServer()).post('/api/intents').send(validIntent).expect(201);
-    expect(res.body.reference).toMatch(/^RPL-[0-9A-F]{4}$/);
+    expect(res.body.reference).toMatch(/^REQ-[0-9A-F]{4}$/);
     expect(res.body.status).toBe('new');
   });
 
