@@ -1,0 +1,82 @@
+# Idea: Ripple
+
+An ecosystem for the efficient home. KBC sees the moment a household is ready to cut its energy costs, and connects it to the right Belgian partners at the right time, one step at a time and with the customer deciding.
+
+## The problem
+
+Customers notice a need late, compare options alone and coordinate several providers themselves. In home energy this is costly: solar, insulation, a heat pump, charging for an electric car and the energy contract all come from different companies, with different premiums and different windows to act.
+
+Many of these moments can be predicted from data the bank already holds: a mortgage that is about to end, an old house, high consumption, a car that is getting too old. Today none of it turns into action.
+
+## The ecosystem
+
+KBC sits in the middle as the orchestrator. Each partner has one role.
+
+| Role | Partner | What it brings |
+| --- | --- | --- |
+| Data | Fluvius | Meter and consumption data, shared only with consent |
+| Advice and grants | Setle, Encon | Renovation cost and grant estimates, sustainability advice |
+| Installation | Impact us today, plus a solar and battery installer to choose | Insulation, heating, air conditioning, panels, batteries |
+| Charging | Powerdale or Blue Corner | Home and public charging for electric cars |
+| Collective buying and supply | Samen Overstappen, Wikipower, provincial group purchases, winning suppliers such as EnergyVision and Mega | Group prices on electricity, gas and solar panels |
+| Finance and protection | KBC | Energy loan, home insurance, electric car insurance |
+
+Partners are assumptions for the demo, not agreements. Setle, Encon and Impact us today are already in the KBC catalogue. Group purchases of electricity and gas through Samen Overstappen are already offered inside KBC Mobile.
+
+Value flows: KBC sends qualified, confirmed demand to partners and earns commission and customer retention. Partners get leads without acquisition cost. The customer gets a plan, the best moment to act and lower costs.
+
+## Group purchases already exist
+
+Belgium already has group purchases (groepsaankoop) for electricity, gas, solar panels and heat pumps, run by provinces, energy cooperatives and platforms. We do not rebuild them. They are partners.
+
+What they do not do: they open in fixed windows that customers miss, they sell standard packages, and they do not know when a specific household is ready. Ripple adds the timing. It predicts the moment, confirms it with the customer and enrols them in the next open round, or proposes a direct offer for what no group covers, such as a battery, charging or a heat pump.
+
+## What it does
+
+1. Predict. Rules over known dates and spending find a moment that is coming. Example: two instalments left on a home loan, EUR 600 a month about to free up, a 20-year-old diesel car, and Brussels closing its low-emission zone to it.
+2. Confirm. The customer sees a short card describing what we think is happening and which data we used. Nothing is computed or shared until they say yes.
+3. Plan. One board of steps across the partners above. Each step shows why it appears and can be accepted, deferred or rejected. At least one card says "not needed" when the customer already has the answer.
+4. Act. Accepted steps become anonymous intents for the right partner: service, area, timeframe and budget band, never a name. Where a group purchase is open, the customer is routed to it.
+5. Learn. The partner screen aggregates confirmed demand per area, only above a minimum group size and only at area level.
+
+## Why it fits the challenge
+
+- Recognises an emerging need before the customer does, from deterministic signals.
+- Customer stays in control at every step.
+- A vertical ecosystem with named Belgian partners and a clear role for each.
+- Triple win: the customer saves money, KBC earns commission and keeps the customer, partners get qualified demand.
+- Scalable: detection is rules over transaction categories and dates, cheap and auditable. A language model only writes the plan from a short list of catalogue entries, once per confirmed moment.
+- Works for households and for small businesses with the same engine.
+
+## Scenarios for the demo
+
+- A household: loan ending, old diesel car, a plan around electric mobility and home energy.
+- A small business: an office or workshop that needs insulation, solar and charging for company cars.
+
+Same engine, different signal.
+
+## Screens
+
+- Customer app, mobile: confirm card, plan board, summary with what each partner receives.
+- Partner portal: anonymous leads and aggregated demand per area, with a panel stating what the partner does not see.
+- Ecosystem map: KBC in the centre, partners by role, and the flows between them.
+- Numbers page: customer saving, KBC revenue and retention, partner leads. All assumptions sit in one visible table and are marked as estimates.
+
+## Pitch outline (3 minutes)
+
+1. One household and the moment that is coming for it.
+2. The confirm card, then the plan spreading across the ecosystem.
+3. The customer rejects one step, defers one, and one card says "not needed".
+4. The ecosystem map and the partner screen.
+5. The numbers page.
+6. Ten seconds on the business scenario.
+7. Close: KBC stops being the shop and becomes the customer's agent for the home.
+
+## Constraints and risks
+
+- Synthetic data only, and we say so.
+- Partner names and group purchase rounds change over time. We present them as examples of the 2026 rounds, not as agreements.
+- The model may only pick catalogue entries, and every returned id is checked against the catalogue.
+- Scenarios are precomputed and cached, so the demo does not depend on a live model call on the organisers' device.
+- Aggregated demand needs consent. We state the minimum group size and the area level on the slide.
+- Scope freezes at 13:30, then fixes, security findings and the recorded fallback video.

@@ -1,0 +1,57 @@
+# Idea: Ripple
+
+KBC sees the moment your money frees up, before you do, and turns it into one plan you approve step by step. Partners get demand, never customers.
+
+## The problem
+
+Customers recognise a need late, compare options alone and coordinate several providers themselves. Many of these moments are predictable from data the bank already holds: a loan that ends, an insurance that renews, a child who turns 18, a car that will soon be banned from a city centre. Today none of it is turned into action.
+
+## What it does
+
+1. Predict. Rules over known dates and spending find a moment that is coming, not one that already happened. Example: two instalments left on a home loan, EUR 600 a month about to free up, a 20-year-old diesel car, and Brussels closing its low-emission zone to it.
+2. Confirm. The customer sees a short card describing what we think is happening and which data we used. Nothing is computed or shared until they say yes.
+3. Plan. One board of steps across KBC domains and partners: a car, home charging, solar, insurance, savings. Each step shows why it appears and can be accepted, deferred or rejected. At least one card says "not needed" when the customer already has the answer.
+4. Act through partners. Accepted steps become anonymous intents. A partner sees service, area, timeframe and budget band, never a name.
+5. Pool demand. Intents in the same area are aggregated. A partner sees "12 confirmed intents within 5 km want solar panels" and can quote a group price. The pool only appears above a minimum number of people and only at area level, so nobody learns who their neighbours are.
+
+## Why it fits the challenge
+
+- Recognises an emerging need before the customer does, from deterministic signals.
+- Customer stays in control at every step.
+- Activates KBC products and partners from the catalogue, plus new partners where the catalogue has a gap, such as charger installers.
+- Triple win: the customer saves money, KBC earns commission and keeps the customer, partners get qualified demand at no acquisition cost.
+- Scalable: detection is rules over transaction categories and dates, cheap and auditable. A language model only writes the plan from a short list of catalogue entries, once per confirmed moment.
+- Works for private customers and businesses. The target is one problem, what to do when money frees up, not a segment.
+
+## Scenarios for the demo
+
+- A household: loan ending, old diesel car, a plan around electric mobility and home energy.
+- A small business: first hire or a finished financing, a plan that also reaches the owner's private finances.
+
+Same engine, different signal.
+
+## Partner view
+
+A real screen, not a slide. It lists anonymous leads and the aggregated demand per area, with a panel that states what the partner does not see: name, address, contact details, balance and transaction history.
+
+## Numbers page
+
+Customer saving, KBC revenue and retention, and partner leads for the active scenario. All assumptions sit in one visible table and are marked as estimates.
+
+## Pitch outline (3 minutes)
+
+1. One person and the moment that is coming for her.
+2. The confirm card, then the plan spreading across ecosystems.
+3. She rejects one step, defers one, and one card says "not needed".
+4. The partner screen with the pooled demand.
+5. The numbers page.
+6. Ten seconds on the business scenario: same engine, different signal.
+7. Close: KBC stops being the shop and becomes the customer's agent.
+
+## Constraints and risks
+
+- Synthetic data only, and we say so.
+- The model may only pick catalogue entries, and every returned id is checked against the catalogue.
+- Scenarios are precomputed and cached, so the demo does not depend on a live model call on the organisers' device.
+- Group offers need consent and aggregation. We state the minimum group size and area level on the slide.
+- Scope freezes at 13:30, then fixes, security findings and the recorded fallback video.
