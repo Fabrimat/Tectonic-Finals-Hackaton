@@ -1,6 +1,10 @@
 {
   "note": "Synthetic estimates for the proof of concept. Assumptions, not results. The slides read the same figures.",
   "cohort": 1000,
+  "defaultDecisions": {
+    "household-maes": { "accepted": ["epc", "estimate", "insulation"], "deferred": ["heating"], "rejected": ["solar"] },
+    "bakery-leuven": { "accepted": ["co2", "advice", "van-finance"], "deferred": ["charging"], "rejected": ["solar"] }
+  },
   "kbcProducts": [
     { "id": "energy-loan", "label": "Energy loan", "stepIds": ["energy-loan"], "conversion": 0.4, "value": 220 },
     { "id": "home-insurance", "label": "Home insurance update", "stepIds": ["home-insurance"], "conversion": 0.6, "value": 90 },

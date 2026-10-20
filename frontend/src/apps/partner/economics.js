@@ -48,6 +48,28 @@ export function retentionEstimate(acceptedCount) {
   return { eligible, amount: eligible ? r.share * r.years * r.marginPerYear : 0 };
 }
 
+// The decisions the numbers page shows when none are given. Same set as the decided plan example.
+export function defaultDecisions(scenarioId) {
+  const set = data.defaultDecisions[scenarioId];
+  const decisions = {};
+  if (!set) return decisions;
+  for (const key of ["accepted", "deferred", "rejected"]) {
+    for (const id of set[key] ?? []) decisions[id] = key;
+  }
+  return decisions;
+}
+
+// Only accepted action steps count. Deferred, rejected and undecided steps add nothing.
+export function acceptedSteps(steps, decisions) {
+  return steps.filter((s) => s.kind === "action" && decisions[s.id] === "accepted");
+}
+
+export function decisionCounts(steps, decisions) {
+  const counts = { accepted: 0, deferred: 0, rejected: 0, open: 0 };
+  for (const s of steps.filter((step) => step.kind === "action")) counts[decisions[s.id] ?? "open"] += 1;
+  return counts;
+}
+
 export function kbcEstimate({ acceptedIds, leads }) {
   const products = productEstimate(acceptedIds);
   const retention = retentionEstimate(acceptedIds.length);
