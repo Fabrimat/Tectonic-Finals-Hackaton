@@ -3,14 +3,15 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { Product } from './catalogue.types';
 
+const CATALOGUE_FILE = join(__dirname, '..', '..', 'data', 'catalogue.json');
+
 @Injectable()
 export class CatalogueService {
   private readonly products: Product[];
   private readonly byId: Map<string, Product>;
 
   constructor() {
-    const file = join(__dirname, '..', '..', 'data', 'catalogue.json');
-    this.products = JSON.parse(readFileSync(file, 'utf8')) as Product[];
+    this.products = JSON.parse(readFileSync(CATALOGUE_FILE, 'utf8')) as Product[];
     this.byId = new Map(this.products.map((p) => [p.id, p]));
   }
 

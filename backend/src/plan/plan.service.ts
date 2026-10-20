@@ -30,22 +30,31 @@ const KINDS_BY_STAGE: Record<Stage, ActionKind[]> = {
 
 const STAGES: Stage[] = ['whisper', 'forming', 'ready'];
 
-function readData<T>(name: string): T {
-  return JSON.parse(readFileSync(join(__dirname, '..', '..', 'data', name), 'utf8')) as T;
+const DATA_DIR = join(__dirname, '..', '..', 'data');
+const DATA_FILES = Object.freeze({
+  rules: join(DATA_DIR, 'rules.json'),
+  engine: join(DATA_DIR, 'engine.json'),
+  groupRounds: join(DATA_DIR, 'group-rounds.json'),
+  facts: join(DATA_DIR, 'facts.json'),
+  scenarios: join(DATA_DIR, 'scenarios.json'),
+});
+
+function readData<T>(file: string): T {
+  return JSON.parse(readFileSync(file, 'utf8')) as T;
 }
 
 @Injectable()
 export class PlanService {
-  private readonly rules = readData<Rule[]>('rules.json');
-  private readonly engine = readData<EngineConfig>('engine.json');
-  private readonly rounds = readData<GroupRound[]>('group-rounds.json');
-  private readonly facts = new Map(readData<Fact[]>('facts.json').map((f) => [f.id, f]));
+  private readonly rules = readData<Rule[]>(DATA_FILES.rules);
+  private readonly engine = readData<EngineConfig>(DATA_FILES.engine);
+  private readonly rounds = readData<GroupRound[]>(DATA_FILES.groupRounds);
+  private readonly facts = new Map(readData<Fact[]>(DATA_FILES.facts).map((f) => [f.id, f]));
   private readonly scenarios: CachedScenario[];
   private readonly scenarioById: Map<string, CachedScenario>;
   private readonly wording = loadConfig().wording;
 
   constructor(private readonly catalogue: CatalogueService) {
-    this.scenarios = readData<CachedScenario[]>('scenarios.json').map((s) => ({
+    this.scenarios = readData<CachedScenario[]>(DATA_FILES.scenarios).map((s) => ({
       ...s,
       plans: {
         whisper: this.sanitize(s.plans.whisper),
