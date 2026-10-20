@@ -8,19 +8,22 @@ const STATE_LABEL = {
   rejected: "Not for me",
 };
 
-export default function StepCard({ step, signal, notes = [], decision, onDecide, onUndo }) {
+export default function StepCard({ step, signal, notes = [], decision, start = false, onDecide, onUndo }) {
   const [open, setOpen] = useState(false);
   const panelId = `why-${step.id}`;
   const item = step.catalogueId ? catalogueItem(step.catalogueId) : null;
 
   return (
     <article className={`cx-card cx-step${decision ? ` is-${decision}` : ""}`}>
-      {step.partner && (
+      {(start || step.partner) && (
         <div className="cx-tags">
-          <span className="cx-badge">
-            {step.partner.name}
-            {step.partner.proposed && <em>Proposed</em>}
-          </span>
+          {start && !decision && <span className="cx-tag cx-tag-start">Start here</span>}
+          {step.partner && (
+            <span className="cx-badge">
+              {step.partner.name}
+              {step.partner.proposed && <em>Proposed</em>}
+            </span>
+          )}
         </div>
       )}
 
@@ -40,7 +43,7 @@ export default function StepCard({ step, signal, notes = [], decision, onDecide,
       {open && (
         <div id={panelId} className="cx-why">
           <p>{step.why}</p>
-          {step.saving > 0 && <p className="cx-saving">Demo estimate: about {money(step.saving)} per year</p>}
+          {step.saving > 0 && <p className="cx-saving">Estimated saving about {money(step.saving)} a year</p>}
           {notes.map((note) => (
             <p key={note} className="cx-area-note">
               {note}
