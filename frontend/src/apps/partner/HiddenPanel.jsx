@@ -20,7 +20,7 @@ export default function HiddenPanel() {
       </ul>
       <details className="pp-more">
         <summary>What a partner sees</summary>
-        <p>First an anonymous intent: service, area, timeframe and budget band. Contact details are released only after the customer authorises that partner for that step. A paid step needs its own approval.</p>
+        <p>An anonymous intent: service, area, timeframe and budget band.<br />Contact details follow only after the customer authorises.</p>
       </details>
     </aside>
   );

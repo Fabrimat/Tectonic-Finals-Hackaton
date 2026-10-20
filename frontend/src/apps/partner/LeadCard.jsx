@@ -67,7 +67,7 @@ export default function LeadCard({ lead, offer, onSend, showPartner = false }) {
       )}
       {!offer && !open && (
         <button type="button" className="pp-btn" onClick={() => setOpen(true)}>
-          Send offer
+          Send offer (no contact details)
         </button>
       )}
       {!offer && open && (

@@ -45,6 +45,13 @@ test("decisions are ignored for stages without steps", () => {
 });
 
 test("view parameters read the partner and the tools switch", () => {
-  assert.deepEqual(viewParams("?partner=Setle&tools=0"), { partner: "Setle", tools: false, open: false });
-  assert.deepEqual(viewParams(""), { partner: "", tools: true, open: false });
+  assert.deepEqual(viewParams("?partner=Setle&tools=0"), { partner: "Setle", tools: false, open: false, cluster: false });
+  assert.deepEqual(viewParams(""), { partner: "", tools: true, open: false, cluster: false });
+  assert.equal(viewParams("?cluster=1").cluster, true);
+});
+
+test("the partner parameter accepts all and known partners only", () => {
+  assert.equal(viewParams("?partner=all").partner, "all");
+  assert.equal(viewParams("?partner=Samen%20Overstappen").partner, "Samen Overstappen");
+  assert.equal(viewParams("?partner=Nobody").partner, "");
 });
