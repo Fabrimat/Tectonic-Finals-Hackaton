@@ -70,6 +70,9 @@ export const PHONE_NAMES = [
   "ready-decided",
   "bakery-forming",
   "bakery-board",
+  "journey-decide",
+  "journey-act",
+  "journey-result",
 ];
 export const PHONE_PARTS = ["", "-part1", "-part2", "-part3", "-part4", "-decided", "-not-needed"];
 export const SLIDE_IMAGES = [

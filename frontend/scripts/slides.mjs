@@ -70,6 +70,9 @@ const phoneStates = [
   ["home-clock", `/app?${hh}&stage=whisper&clock=1&${quiet}`, "Slide 1, renovation clock hook", true],
   ["ready-board", `/app?${hh}&stage=ready&confirmed=1&open=1&${quiet}`, "Slide 6, plan board before any decision"],
   ["ready-decided", `/app?${hh}&stage=ready&${decideHh}&open=1&${quiet}`, "Slide 6, plan board with decisions and the not needed cards", false, [["decided", ".cx-state-deferred", 62], ["not-needed", ".cx-skip"]]],
+  ["journey-decide", `/app?${hh}&stage=ready&${decideHh}&open=1&${quiet}`, "Journey, the plan board with decisions applied and the saving bar", true, [], [".cx-state-deferred", -316]],
+  ["journey-act", `/app?${hh}&stage=ready&${decideHh}&open=1&sheet=1&${quiet}`, "Journey, what partners see for the accepted steps", true],
+  ["journey-result", `/app?${hh}&stage=ready&${decideHh}&${quiet}`, "Journey, home with the accepted steps and saving card", true, [], [".cx-foryou", -70]],
   ["bakery-forming", `/app?${bk}&stage=forming&open=1&${quiet}`, "Slide 9, bakery forming question"],
   ["bakery-board", `/app?${bk}&stage=ready&${decideBk}&open=1&${quiet}`, "Slide 9, bakery plan board"],
 ];
@@ -196,13 +199,15 @@ async function shoot(page, key, clip) {
 }
 
 // Captures one phone state, scrolling for the parts. Returns the file paths.
-async function exportPhone(page, base, [name, path, purpose, single, focus = []]) {
+async function exportPhone(page, base, [name, path, purpose, single, focus = [], scroll = null]) {
   await open(page, base + path, PHONE[0], PHONE[1]);
   const height = await evaluate(page, "document.documentElement.scrollHeight");
   const parts = single || height <= PHONE[1] ? 1 : 1 + Math.ceil((height - PHONE[1]) / SCROLL_STEP);
   const files = [];
   for (let i = 0; i < parts; i += 1) {
     await evaluate(page, `window.scrollTo(0, ${i * SCROLL_STEP})`);
+    // scroll is [selector, offset]: bring that element to the top, then move by the offset
+    if (scroll) await evaluate(page, `document.querySelector(${JSON.stringify(scroll[0])})?.scrollIntoView({ block: "start" }); window.scrollBy(0, ${Number(scroll[1])})`);
     await sleep(250);
     const key = `phones/${parts === 1 ? name : `${name}-part${i + 1}`}-screen.png`;
     await shoot(page, key);
