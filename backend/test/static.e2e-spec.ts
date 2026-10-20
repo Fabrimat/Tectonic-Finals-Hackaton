@@ -1,0 +1,63 @@
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+import request from 'supertest';
+import { AppModule } from '../src/app.module';
+import { configureApp } from '../src/setup';
+
+async function createApp(staticDir?: string): Promise<INestApplication> {
+  const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+  const app = moduleRef.createNestApplication();
+  configureApp(app, ['http://localhost:5173'], staticDir);
+  await app.init();
+  return app;
+}
+
+describe('static frontend (e2e)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'ripple-static-'));
+  let app: INestApplication;
+
+  beforeAll(async () => {
+    mkdirSync(join(dir, 'assets'));
+    writeFileSync(join(dir, 'index.html'), '<!doctype html><title>Ripple</title>');
+    writeFileSync(join(dir, 'assets', 'app.js'), 'console.log(1)');
+    app = await createApp(dir);
+  });
+
+  afterAll(async () => {
+    await app.close();
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it('serves index.html at the root with a strict CSP', async () => {
+    const res = await request(app.getHttpServer()).get('/').expect(200);
+    expect(res.text).toContain('<title>Ripple</title>');
+    expect(res.headers['content-security-policy']).toContain("default-src 'self'");
+    expect(res.headers['content-security-policy']).toContain("script-src 'self'");
+  });
+
+  it('serves built assets', async () => {
+    await request(app.getHttpServer()).get('/assets/app.js').expect(200);
+  });
+
+  it('falls back to index.html for client routes', async () => {
+    const res = await request(app.getHttpServer()).get('/app/some/deep/link').expect(200);
+    expect(res.text).toContain('<title>Ripple</title>');
+  });
+
+  it('leaves /api routes alone', async () => {
+    const health = await request(app.getHttpServer()).get('/api/health').expect(200);
+    expect(health.body).toEqual({ status: 'ok' });
+    await request(app.getHttpServer()).get('/api/does-not-exist').expect(404);
+    await request(app.getHttpServer()).get('/api/intents').expect(401);
+  });
+
+  it('serves nothing extra when the directory does not exist', async () => {
+    const bare = await createApp(join(dir, 'missing'));
+    await request(bare.getHttpServer()).get('/').expect(404);
+    await request(bare.getHttpServer()).get('/api/health').expect(200);
+    await bare.close();
+  });
+});
