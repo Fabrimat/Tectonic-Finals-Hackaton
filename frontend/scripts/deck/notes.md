@@ -4,7 +4,7 @@ About 20 seconds per slide, three minutes in total. Lines starting with "To chec
 
 ## 1. Title
 
-Most people notice an energy need late, when something breaks or a deadline arrives. We built a way for KBC to see it coming and to help before the customer has to ask. Everything you will see is synthetic data and simulated integrations.
+Most people notice an energy need late, when something breaks or a deadline arrives. We built a way for KBC to see it coming and to help before the customer has to ask. On the phone, the renovation clock shows about four years left, an estimate. Everything you will see is synthetic data and simulated integrations.
 
 ## 2. A deadline nobody noticed
 
@@ -24,7 +24,7 @@ Three stages. Whisper, one to three years ahead: awareness only, inside the cust
 
 ## 5. Four consents
 
-Consent is not one switch. Analysis, goal, sharing and commitment are each asked on their own and can be withdrawn. A partner first sees an anonymous intent, never a name. Contact details follow only when the customer authorises that partner for that step. This is also our GDPR slide.
+Consent is not one switch. Analysis, goal, sharing and commitment are each asked on their own and can be withdrawn. A partner first sees an anonymous intent, never a name. Contact details follow only when the customer authorises that partner for that step. The phone shows the evidence behind the question and the data we did not use. This is also our GDPR slide.
 
 ## 6. One plan across partners
 
@@ -36,7 +36,7 @@ KBC sits in the centre and each partner has one role: data, certificates, advice
 
 ## 8. Value for KBC and its partners
 
-KBC values an ecosystem first by conversion into its own products: the energy loan, insurance, leasing. That is the big number, a demo estimate per customer. Partner commission comes second and only exists for some partners. Advisors see anonymous leads and demand per area. All assumptions are in one visible table.
+KBC values an ecosystem first by conversion into its own products: the energy loan, insurance, leasing. That is the big number, a demo estimate per customer. Partner commission comes second and only exists for some partners. Advisors see anonymous leads and demand per area. The neighbourhood card groups demand by area and hides any group below the minimum size. All assumptions are in one visible table.
 
 ## 9. Same engine, different signals, and close
 

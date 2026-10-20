@@ -14,6 +14,7 @@ import { leadsFor } from "../src/apps/partner/leadData.js";
 import { scenarios, viewOf } from "../src/data/scenarios.js";
 import data from "../src/data/synthetic.json" with { type: "json" };
 import { ensureBuild, evaluate, open, root, sleep, startSession } from "./lib/edge.mjs";
+import { decisionMap } from "./lib/states.mjs";
 
 const deckSrc = join(root, "scripts", "deck");
 const outDir = join(root, "shots", "deck");
@@ -28,9 +29,10 @@ const fileUrl = (path) => pathToFileURL(path).href;
 function figures() {
   const base = scenarios.find((s) => s.id === "household-maes");
   const view = viewOf(base, "ready");
-  const decisions = Object.fromEntries(view.steps.filter((s) => s.kind === "action").map((s) => [s.id, "accepted"]));
+  const decisions = decisionMap("household-maes");
   const leads = leadsFor(view, decisions, true);
-  const estimate = kbcEstimate({ acceptedIds: Object.keys(decisions), leads });
+  const acceptedIds = Object.keys(decisions).filter((id) => decisions[id] === "accepted");
+  const estimate = kbcEstimate({ acceptedIds, leads });
   const take = (id) => `${Math.round(data.kbcProducts.find((p) => p.id === id).conversion * 100)}%`;
   return {
     kbcValue: eurWhole(estimate.own),
