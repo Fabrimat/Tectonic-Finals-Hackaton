@@ -1,15 +1,16 @@
 import { useState } from "react";
 import PartnerSheet from "./PartnerSheet";
 import { money } from "./format";
+import { view } from "../../lib/params";
 
 function count(steps, decisions, value) {
   return steps.filter((s) => s.kind === "action" && decisions[s.id] === value).length;
 }
 
 export default function SummaryBar({ scenario, decisions, onReset }) {
-  const [sheet, setSheet] = useState(false);
   const { steps } = scenario;
   const accepted = steps.filter((s) => decisions[s.id] === "accepted");
+  const [sheet, setSheet] = useState(view.sheet && accepted.length > 0);
   const saved = accepted.reduce((sum, s) => sum + s.saving, 0);
   const avoided = steps.filter((s) => s.kind === "skip").reduce((sum, s) => sum + s.saving, 0);
   const shared = accepted.filter((s) => s.intent);

@@ -14,6 +14,7 @@ import { initial } from "./reducer.js";
 //   tools      0 hides the demo tools
 //   clock      1 shows the renovation clock alone on the home screen, without the feed cards
 //   open       1 opens the energy radar card instead of the home screen
+//   sheet      1 opens the What partners see sheet; only with open=1 and at least one accepted step
 // Unknown values are ignored. Any decision implies a confirmed signal.
 
 const truthy = (value) => value === "1" || value === "true";
@@ -61,6 +62,7 @@ export function viewParams(search) {
     clock: truthy(params.get("clock")),
     cluster: truthy(params.get("cluster")),
     evidence: truthy(params.get("open")) && truthy(params.get("evidence")),
+    sheet: truthy(params.get("open")) && truthy(params.get("sheet")),
   };
 }
 
