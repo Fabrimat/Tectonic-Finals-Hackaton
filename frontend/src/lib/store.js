@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
-import { scenarios, stageOrder, viewOf } from "../data/scenarios";
+import { scenarios, viewOf } from "../data/scenarios";
+import { initial, reduce } from "./reducer";
 
 const KEY = "ripple-state-v2";
 const CHANNEL = "ripple-sync";
@@ -7,14 +8,12 @@ const CHANNEL = "ripple-sync";
 // One state object shared by the customer app and the partner portal.
 // Both read it through useRipple(), and changes are mirrored across tabs
 // so the partner screen updates while the customer taps on a phone-sized window.
+// The state shape and transitions live in reducer.js.
 //
 // scenarioId: which scenario is active
 // stage:      which rung of the intent ladder is shown (a demo control)
 // confirmed:  true once the customer confirms the detected signal
 // decisions:  { [stepId]: "accepted" | "deferred" | "rejected" }
-function initial() {
-  return { scenarioId: scenarios[0].id, stage: stageOrder[0], confirmed: false, decisions: {} };
-}
 
 function load() {
   try {
@@ -56,28 +55,13 @@ function subscribe(fn) {
 }
 
 export const actions = {
-  selectScenario(scenarioId) {
-    commit({ scenarioId, stage: stageOrder[0], confirmed: false, decisions: {} });
-  },
-  selectStage(stage) {
-    commit({ ...state, stage, confirmed: false, decisions: {} });
-  },
-  confirmSignal() {
-    commit({ ...state, confirmed: true });
-  },
-  declineSignal() {
-    commit({ ...state, confirmed: false, decisions: {} });
-  },
-  decide(stepId, decision) {
-    commit({ ...state, decisions: { ...state.decisions, [stepId]: decision } });
-  },
-  clearDecision(stepId) {
-    const { [stepId]: _removed, ...rest } = state.decisions;
-    commit({ ...state, decisions: rest });
-  },
-  reset() {
-    commit({ ...initial(), scenarioId: state.scenarioId });
-  },
+  selectScenario: (scenarioId) => commit(reduce(state, { type: "selectScenario", scenarioId })),
+  selectStage: (stage) => commit(reduce(state, { type: "selectStage", stage })),
+  confirmSignal: () => commit(reduce(state, { type: "confirmSignal" })),
+  declineSignal: () => commit(reduce(state, { type: "declineSignal" })),
+  decide: (stepId, decision) => commit(reduce(state, { type: "decide", stepId, decision })),
+  clearDecision: (stepId) => commit(reduce(state, { type: "clearDecision", stepId })),
+  reset: () => commit(reduce(state, { type: "reset" })),
 };
 
 export function useRipple() {

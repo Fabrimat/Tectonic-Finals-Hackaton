@@ -1,5 +1,5 @@
-import catalogue from "./catalogue.json";
-import { facts } from "./facts";
+import catalogue from "./catalogue.json" with { type: "json" };
+import { facts } from "./facts.js";
 
 const byId = new Map(catalogue.map((item) => [item.id, item]));
 
