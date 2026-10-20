@@ -1,3 +1,5 @@
+import { canShare } from "../../data/scenarios";
+
 function hash(text) {
   let h = 2166136261;
   for (const ch of text) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
@@ -21,7 +23,7 @@ export function partnersOf(scenario) {
 
 // Only the intent fields cross this boundary, nothing about the person.
 export function leadsFor(scenario, decisions, confirmed) {
-  if (!confirmed) return [];
+  if (!confirmed || !canShare(scenario)) return [];
   return scenario.steps
     .filter((s) => s.partner && s.intent && decisions[s.id] === "accepted")
     .map((s) => ({

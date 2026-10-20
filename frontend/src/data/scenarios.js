@@ -8,6 +8,28 @@ export function catalogueItem(id) {
   return byId.get(id) ?? null;
 }
 
+// Intent ladder. A scenario carries one stage and how many months ahead the
+// moment is expected. Only "ready" ever produces anything the partner side can see.
+export const stages = {
+  whisper: {
+    label: "Early sign",
+    window: "6 to 12 months ahead",
+    note: "Only you can see this. Nothing is shared and nothing is asked of you.",
+  },
+  forming: {
+    label: "Taking shape",
+    window: "3 to 6 months ahead",
+    note: "We only ask a question. Nothing is shared until a plan exists and you accept a step.",
+  },
+  ready: {
+    label: "Plan ready",
+    window: "0 to 3 months ahead",
+    note: "Steps you accept become anonymous requests to partners.",
+  },
+};
+
+export const canShare = (scenario) => scenario.stage === "ready";
+
 // A null catalogueId with proposed: true is a new capability KBC does not offer yet.
 // kind: "action" is a step the customer can accept, defer or reject.
 // kind: "skip" is a "not needed" card explaining why a product is left out.
@@ -15,6 +37,8 @@ export function catalogueItem(id) {
 export const scenarios = [
   {
     id: "ev-deposit",
+    stage: "ready",
+    monthsAhead: 2,
     domain: "Energy and sustainability",
     person: {
       name: "Sofie Maes",
@@ -122,6 +146,8 @@ export const scenarios = [
   },
   {
     id: "first-hire",
+    stage: "forming",
+    monthsAhead: 4,
     domain: "Entrepreneurship and business growth",
     person: {
       name: "Jonas Peeters",
@@ -237,6 +263,31 @@ export const scenarios = [
         order: 8,
       },
     ],
+  },
+  {
+    id: "loan-ending",
+    stage: "whisper",
+    monthsAhead: 9,
+    domain: "Home and finance",
+    person: {
+      name: "Lien Verhaegen",
+      initials: "LV",
+      city: "Antwerp",
+      line: "Nurse, 41, owns a house",
+    },
+    insight: {
+      title: "Your home loan ends in about nine months",
+      body: "About EUR 600 a month will free up. People in this position often use it for energy costs at home or for a car that is getting old. There is nothing to do today.",
+      basis: ["The end date of your home loan", "The monthly instalment"],
+    },
+    signal: {
+      question: "",
+      evidence: [],
+      dataUsed: ["The end date of your home loan", "The monthly instalment"],
+      dataNotUsed: ["Account balance", "Other payments"],
+    },
+    seen: "",
+    steps: [],
   },
 ];
 

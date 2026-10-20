@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { scenarios } from "./data/scenarios";
+import { scenarios, stages } from "./data/scenarios";
 import { useRipple } from "./lib/store";
 import "./Landing.css";
 
@@ -22,6 +22,9 @@ export default function Landing() {
             >
               {s.person.name}
               <span>{s.domain}</span>
+              <span>
+                {stages[s.stage].label}, about {s.monthsAhead} months ahead
+              </span>
             </button>
           ))}
         </div>
@@ -33,6 +36,7 @@ export default function Landing() {
       <nav className="landing-links">
         <Link to="/app">Customer app</Link>
         <Link to="/partner">Partner portal</Link>
+        <Link to="/map">Ecosystem map</Link>
       </nav>
     </main>
   );

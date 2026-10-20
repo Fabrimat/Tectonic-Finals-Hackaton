@@ -605,3 +605,69 @@
 .cx-intents dd {
   margin: 0;
 }
+
+/* intent ladder */
+.cx-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.cx-switch select {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--ink);
+}
+
+.cx-stage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+
+.cx-stage-label {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  background: var(--kbc-blue-soft);
+  color: var(--kbc-navy);
+}
+
+.cx-stage-window {
+  color: var(--muted);
+}
+
+.cx-stage-whisper .cx-stage-label {
+  background: var(--bg);
+  border: 1px dashed var(--muted);
+  color: var(--muted);
+}
+
+.cx-stage-ready .cx-stage-label {
+  background: var(--kbc-navy);
+  color: #fff;
+}
+
+.cx-insight {
+  border-style: dashed;
+  box-shadow: none;
+  background: var(--bg);
+}
+
+.cx-insight-body {
+  margin: 10px 0 14px;
+  color: var(--ink);
+}
+
+.cx-insight .cx-reply {
+  margin-top: 14px;
+  background: var(--card);
+}
