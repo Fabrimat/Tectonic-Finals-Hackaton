@@ -1,4 +1,6 @@
 import Icon from "./icons";
+import { money } from "./format";
+import { planProgress } from "./plan";
 
 function summary(scenario, confirmed, decisions) {
   const { stage } = scenario;
@@ -9,6 +11,17 @@ function summary(scenario, confirmed, decisions) {
     return confirmed
       ? { icon: "radar", kicker: "Energy radar", text: "Noted. We will come back later.", cta: "Open" }
       : { icon: "radar", kicker: "A quick question", text: scenario.signal.question, cta: "Answer" };
+  }
+  const progress = planProgress(scenario, decisions);
+  if (progress) {
+    const word = progress.accepted === 1 ? "step" : "steps";
+    return {
+      icon: "list",
+      kicker: "Your energy plan",
+      text: `${progress.accepted} ${word} accepted`,
+      detail: `About ${money(progress.saved)} a year saved (estimate)`,
+      cta: "Open your plan",
+    };
   }
   const steps = scenario.steps.filter((s) => s.kind === "action");
   const decided = steps.filter((s) => decisions[s.id]).length;
@@ -29,6 +42,7 @@ export default function IntentCard({ scenario, confirmed, decisions, onOpen }) {
           {s.quiet && <span className="cx-new-tag">New</span>}
         </span>
         <span className="cx-feed-text">{s.text}</span>
+        {s.detail && <span className="cx-feed-detail">{s.detail}</span>}
         <span className="cx-intent-cta">
           {s.cta}
           <Icon name="chevronRight" size={16} />

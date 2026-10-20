@@ -28,3 +28,12 @@ export function acceptAllActions(steps, decisions = {}) {
     .filter((s) => !decisions[s.id])
     .map((s) => ({ type: "decide", stepId: s.id, decision: "accepted" }));
 }
+
+// The progress card on the home screen: how many steps are accepted and what they save a year.
+// Only for the ready stage and once at least one step is accepted, otherwise null.
+export function planProgress(scenario, decisions = {}) {
+  if (scenario.stage !== "ready") return null;
+  const accepted = scenario.steps.filter((s) => s.kind === "action" && decisions[s.id] === "accepted");
+  if (accepted.length === 0) return null;
+  return { accepted: accepted.length, saved: accepted.reduce((sum, s) => sum + s.saving, 0) };
+}

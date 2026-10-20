@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { scenarios, viewOf } from "../../data/scenarios.js";
 import { initial, reduce } from "../../lib/reducer.js";
-import { acceptAllActions, recommendedSteps, shownIds, startStep } from "./plan.js";
+import { acceptAllActions, planProgress, recommendedSteps, shownIds, startStep } from "./plan.js";
 
 const ready = scenarios.map((s) => viewOf(s, "ready"));
 
@@ -50,4 +50,16 @@ test("accept all leaves earlier choices alone", () => {
   const first = recommendedSteps(view.steps)[0];
   const actions = acceptAllActions(view.steps, { [first.id]: "rejected" });
   assert.ok(!actions.some((a) => a.stepId === first.id));
+});
+
+test("plan progress counts accepted steps and sums their saving, ready stage only", () => {
+  const view = ready.find((v) => v.id === "household-maes");
+  const accepted = recommendedSteps(view.steps).slice(0, 3);
+  const decisions = Object.fromEntries(accepted.map((s) => [s.id, "accepted"]));
+  const progress = planProgress(view, decisions);
+  assert.equal(progress.accepted, 3);
+  assert.equal(progress.saved, accepted.reduce((sum, s) => sum + s.saving, 0));
+  assert.equal(planProgress(view, {}), null);
+  assert.equal(planProgress(view, { [accepted[0].id]: "deferred" }), null);
+  assert.equal(planProgress({ ...view, stage: "forming" }, decisions), null);
 });
