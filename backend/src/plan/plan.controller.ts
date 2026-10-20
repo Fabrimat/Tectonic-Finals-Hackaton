@@ -1,0 +1,26 @@
+import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { PlanRequestDto } from './dto/plan-request.dto';
+import { ScenarioQueryDto } from './dto/scenario-query.dto';
+import { PlanService } from './plan.service';
+
+@Controller('plan')
+export class PlanController {
+  constructor(private readonly plans: PlanService) {}
+
+  @Post()
+  create(@Body() dto: PlanRequestDto) {
+    return this.plans.create(dto);
+  }
+
+  @Get('scenarios')
+  listScenarios() {
+    return this.plans.listScenarios();
+  }
+
+  @Get('scenarios/:id')
+  findScenario(@Param('id') id: string, @Query() query: ScenarioQueryDto) {
+    const plan = this.plans.findScenario(id, query.stage);
+    if (!plan) throw new NotFoundException(`Scenario "${id}" not found`);
+    return plan;
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "renovation-obligation",
+    "text": "In Flanders a home with EPC label E or F must reach at least label D within six years of a change of ownership.",
+    "source": "Flemish energy agency",
+    "verified": false
+  },
+  {
+    "id": "grant-changes",
+    "text": "Since March 2026 the Mijn VerbouwPremie for insulation and high-efficiency glazing has stopped for owner-occupiers in income categories 1 and 2, and heat pump amounts were lowered.",
+    "source": "Flemish energy agency",
+    "verified": false
+  },
+  {
+    "id": "brussels-low-emission-zone",
+    "text": "Euro 5 diesel cars and vans are no longer allowed in the Brussels low-emission zone.",
+    "source": "Brussels Environment",
+    "verified": false
+  }
+]

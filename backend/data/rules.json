@@ -1,0 +1,143 @@
+[
+  {
+    "id": "home-renovation-clock",
+    "intent": "home-energy-renovation",
+    "title": "Home renovation ahead of the EPC deadline",
+    "keyDate": "renovation_deadline",
+    "when": [{ "flag": "epc_e_or_f" }],
+    "stages": {
+      "whisper": [{ "date": "renovation_deadline", "stage": "whisper" }],
+      "forming": [{ "date": "boiler_end_of_life", "stage": "forming" }],
+      "ready": [{ "flag": "boiler_repair_invoice" }]
+    },
+    "messages": {
+      "whisper": "The renovation clock for this home is running and the energy bill keeps rising. Nothing is shared with partners.",
+      "forming": "The heating system is reaching the end of its life. Are you planning to renovate?",
+      "ready": "A boiler repair points to work starting now. Here is a plan across partners for you to approve step by step."
+    },
+    "facts": ["renovation-obligation", "grant-changes"],
+    "candidates": [
+      {
+        "id": "certificates-and-inspections-de-immowinkel",
+        "role": "Certificates",
+        "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+        "dataUsed": ["EPC label", "purchase date"]
+      },
+      {
+        "id": "estimate-renovation-costs-and-grants-setle",
+        "role": "Advice and grants",
+        "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+        "dataUsed": ["EPC label", "renovation deadline"]
+      },
+      {
+        "id": "insulation-quote-impact-us-today",
+        "role": "Installation",
+        "why": "Insulation lowers the heat the home needs, so it comes before the heating system is sized.",
+        "dataUsed": ["EPC label", "energy bill trend"]
+      },
+      {
+        "id": "heat-pump-installation",
+        "role": "Installation",
+        "why": "The boiler is at the end of its life and a heat pump can replace it once the home is insulated.",
+        "dataUsed": ["boiler repair invoice", "EPC label"],
+        "proposed": true,
+        "title": "Heat pump installation"
+      },
+      {
+        "id": "calculate-solar-panels-and-request-a-quote",
+        "role": "Installation",
+        "why": "Panels cover part of the electricity a heat pump will use.",
+        "dataUsed": ["energy bill trend"]
+      },
+      {
+        "id": "group-purchase-of-electricity-and-gas",
+        "role": "Collective buying and supply",
+        "why": "A group round gives a better price on the energy contract than a standard offer.",
+        "dataUsed": ["energy bill trend"]
+      },
+      {
+        "id": "energy-loan",
+        "role": "Finance and protection",
+        "why": "A loan sized against the expected savings spreads the cost of the renovation.",
+        "dataUsed": ["mortgage", "EPC label"]
+      },
+      {
+        "id": "home-insurance",
+        "role": "Finance and protection",
+        "why": "The insured value and cover change once the home is renovated.",
+        "dataUsed": ["mortgage"]
+      },
+      {
+        "id": "calculate-a-home-battery-and-request-a-quote",
+        "role": "Installation",
+        "why": "Not needed yet. A battery only pays back once solar panels produce more than the home uses during the day.",
+        "dataUsed": ["energy bill trend"],
+        "notNeeded": true
+      }
+    ]
+  },
+  {
+    "id": "business-vans-and-premises",
+    "intent": "business-energy-and-fleet",
+    "title": "Premises and delivery vans",
+    "when": [],
+    "stages": {
+      "whisper": [{ "flag": "energy_cost_rising" }],
+      "forming": [{ "flag": "delivery_vans_in_brussels_zone" }],
+      "ready": [{ "category": "vehicle_deposit", "minCount": 1 }]
+    },
+    "messages": {
+      "whisper": "Energy costs are rising faster than revenue. Nothing is shared with partners.",
+      "forming": "The Brussels low-emission zone now reaches your delivery vans. Are you planning to replace them?",
+      "ready": "A deposit on an electric van points to a decision now. Here is a plan across partners for you to approve step by step."
+    },
+    "facts": ["brussels-low-emission-zone"],
+    "candidates": [
+      {
+        "id": "business-co2-insights-and-sector-comparison",
+        "role": "Business footprint",
+        "why": "A view of emissions and a comparison with similar bakeries shows where energy cost comes from.",
+        "dataUsed": ["energy cost trend"]
+      },
+      {
+        "id": "sustainability-advice-encon",
+        "role": "Advice and grants",
+        "why": "Advice on the ovens and the building comes before any investment.",
+        "dataUsed": ["energy cost trend"]
+      },
+      {
+        "id": "calculate-solar-panels-and-request-a-quote",
+        "role": "Installation",
+        "why": "Roof panels lower the daytime power cost and part of the charging cost.",
+        "dataUsed": ["energy cost trend"]
+      },
+      {
+        "id": "blink-charging-business",
+        "role": "Charging",
+        "why": "Charging at the bakery lets the new van charge overnight.",
+        "dataUsed": ["vehicle deposit"],
+        "proposed": true,
+        "title": "Business charging with Blink Charging"
+      },
+      {
+        "id": "b2b-asset-financing",
+        "role": "Finance and protection",
+        "why": "Asset financing spreads the cost of replacing the vans.",
+        "dataUsed": ["vehicle deposit"]
+      },
+      {
+        "id": "group-purchase-of-electricity-and-gas",
+        "role": "Collective buying and supply",
+        "why": "A group round lowers the price of electricity and gas for the premises.",
+        "dataUsed": ["energy cost trend"]
+      },
+      {
+        "id": "kube-esg",
+        "role": "Business footprint",
+        "why": "Not needed at this size. An ESG report matters for larger companies and their reporting duties.",
+        "dataUsed": ["employee count"],
+        "notNeeded": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,508 @@
+[
+  {
+    "id": "household-maes",
+    "title": "Sofie and Tom Maes, Ghent",
+    "plans": {
+      "whisper": {
+        "scenarioId": "household-maes",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "home-renovation-clock",
+            "intent": "home-energy-renovation",
+            "title": "Home renovation ahead of the EPC deadline",
+            "stage": "whisper",
+            "keyDate": "2029-06-15",
+            "message": "The renovation clock for this home is running and the energy bill keeps rising. Nothing is shared with partners.",
+            "facts": [
+              {
+                "id": "renovation-obligation",
+                "text": "In Flanders a home with EPC label E or F must reach at least label D within six years of a change of ownership.",
+                "source": "Flemish energy agency",
+                "verified": false
+              },
+              {
+                "id": "grant-changes",
+                "text": "Since March 2026 the Mijn VerbouwPremie for insulation and high-efficiency glazing has stopped for owner-occupiers in income categories 1 and 2, and heat pump amounts were lowered.",
+                "source": "Flemish energy agency",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [],
+        "watching": [
+          {
+            "id": "certificates-and-inspections-de-immowinkel",
+            "title": "Certificates and inspections - De Immowinkel",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "estimate-renovation-costs-and-grants-setle",
+            "title": "Estimate renovation costs and grants - Setle",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "insulation-quote-impact-us-today",
+            "title": "Insulation quote - Impact us today",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "energy-loan",
+            "title": "Energy loan",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "home-insurance",
+            "title": "Home insurance",
+            "intent": "home-energy-renovation"
+          }
+        ]
+      },
+      "forming": {
+        "scenarioId": "household-maes",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "home-renovation-clock",
+            "intent": "home-energy-renovation",
+            "title": "Home renovation ahead of the EPC deadline",
+            "stage": "forming",
+            "keyDate": "2029-06-15",
+            "message": "The heating system is reaching the end of its life. Are you planning to renovate?",
+            "facts": [
+              {
+                "id": "renovation-obligation",
+                "text": "In Flanders a home with EPC label E or F must reach at least label D within six years of a change of ownership.",
+                "source": "Flemish energy agency",
+                "verified": false
+              },
+              {
+                "id": "grant-changes",
+                "text": "Since March 2026 the Mijn VerbouwPremie for insulation and high-efficiency glazing has stopped for owner-occupiers in income categories 1 and 2, and heat pump amounts were lowered.",
+                "source": "Flemish energy agency",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [],
+        "watching": [
+          {
+            "id": "certificates-and-inspections-de-immowinkel",
+            "title": "Certificates and inspections - De Immowinkel",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "estimate-renovation-costs-and-grants-setle",
+            "title": "Estimate renovation costs and grants - Setle",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "insulation-quote-impact-us-today",
+            "title": "Insulation quote - Impact us today",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "energy-loan",
+            "title": "Energy loan",
+            "intent": "home-energy-renovation"
+          },
+          {
+            "id": "home-insurance",
+            "title": "Home insurance",
+            "intent": "home-energy-renovation"
+          }
+        ]
+      },
+      "ready": {
+        "scenarioId": "household-maes",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "home-renovation-clock",
+            "intent": "home-energy-renovation",
+            "title": "Home renovation ahead of the EPC deadline",
+            "stage": "ready",
+            "keyDate": "2029-06-15",
+            "message": "A boiler repair points to work starting now. Here is a plan across partners for you to approve step by step.",
+            "facts": [
+              {
+                "id": "renovation-obligation",
+                "text": "In Flanders a home with EPC label E or F must reach at least label D within six years of a change of ownership.",
+                "source": "Flemish energy agency",
+                "verified": false
+              },
+              {
+                "id": "grant-changes",
+                "text": "Since March 2026 the Mijn VerbouwPremie for insulation and high-efficiency glazing has stopped for owner-occupiers in income categories 1 and 2, and heat pump amounts were lowered.",
+                "source": "Flemish energy agency",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [
+          {
+            "id": "certificates-and-inspections-de-immowinkel",
+            "title": "Certificates and inspections - De Immowinkel",
+            "partnerRole": "Certificates",
+            "why": "An up-to-date EPC certificate shows where the home stands against the renovation target.",
+            "dataUsed": [
+              "EPC label",
+              "purchase date"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "estimate-renovation-costs-and-grants-setle",
+            "title": "Estimate renovation costs and grants - Setle",
+            "partnerRole": "Advice and grants",
+            "why": "A cost and grant estimate shows what each renovation step costs now that grants have changed.",
+            "dataUsed": [
+              "EPC label",
+              "renovation deadline"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "insulation-quote-impact-us-today",
+            "title": "Insulation quote - Impact us today",
+            "partnerRole": "Installation",
+            "why": "Insulation lowers the heat the home needs, so it comes before the heating system is sized.",
+            "dataUsed": [
+              "EPC label",
+              "energy bill trend"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "heat-pump-installation",
+            "title": "Heat pump installation",
+            "partnerRole": "Installation",
+            "why": "The boiler is at the end of its life and a heat pump can replace it once the home is insulated.",
+            "dataUsed": [
+              "boiler repair invoice",
+              "EPC label"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": true,
+            "notNeeded": false
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "partnerRole": "Installation",
+            "why": "Panels cover part of the electricity a heat pump will use.",
+            "dataUsed": [
+              "energy bill trend"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "partnerRole": "Collective buying and supply",
+            "why": "A group round gives a better price on the energy contract than a standard offer.",
+            "dataUsed": [
+              "energy bill trend"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "energy-loan",
+            "title": "Energy loan",
+            "partnerRole": "Finance and protection",
+            "why": "A loan sized against the expected savings spreads the cost of the renovation.",
+            "dataUsed": [
+              "mortgage",
+              "EPC label"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "home-insurance",
+            "title": "Home insurance",
+            "partnerRole": "Finance and protection",
+            "why": "The insured value and cover change once the home is renovated.",
+            "dataUsed": [
+              "mortgage"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "calculate-a-home-battery-and-request-a-quote",
+            "title": "Calculate a home battery and request a quote",
+            "partnerRole": "Installation",
+            "why": "Not needed yet. A battery only pays back once solar panels produce more than the home uses during the day.",
+            "dataUsed": [
+              "energy bill trend"
+            ],
+            "intent": "home-energy-renovation",
+            "proposed": false,
+            "notNeeded": true
+          }
+        ],
+        "watching": []
+      }
+    }
+  },
+  {
+    "id": "bakery-leuven",
+    "title": "Bakery in Leuven",
+    "plans": {
+      "whisper": {
+        "scenarioId": "bakery-leuven",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "business-vans-and-premises",
+            "intent": "business-energy-and-fleet",
+            "title": "Premises and delivery vans",
+            "stage": "whisper",
+            "message": "Energy costs are rising faster than revenue. Nothing is shared with partners.",
+            "facts": [
+              {
+                "id": "brussels-low-emission-zone",
+                "text": "Euro 5 diesel cars and vans are no longer allowed in the Brussels low-emission zone.",
+                "source": "Brussels Environment",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [],
+        "watching": [
+          {
+            "id": "business-co2-insights-and-sector-comparison",
+            "title": "Business CO2 insights and sector comparison",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "sustainability-advice-encon",
+            "title": "Sustainability advice - Encon",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "b2b-asset-financing",
+            "title": "B2B Asset Financing",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "intent": "business-energy-and-fleet"
+          }
+        ]
+      },
+      "forming": {
+        "scenarioId": "bakery-leuven",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "business-vans-and-premises",
+            "intent": "business-energy-and-fleet",
+            "title": "Premises and delivery vans",
+            "stage": "forming",
+            "message": "The Brussels low-emission zone now reaches your delivery vans. Are you planning to replace them?",
+            "facts": [
+              {
+                "id": "brussels-low-emission-zone",
+                "text": "Euro 5 diesel cars and vans are no longer allowed in the Brussels low-emission zone.",
+                "source": "Brussels Environment",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [],
+        "watching": [
+          {
+            "id": "business-co2-insights-and-sector-comparison",
+            "title": "Business CO2 insights and sector comparison",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "sustainability-advice-encon",
+            "title": "Sustainability advice - Encon",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "b2b-asset-financing",
+            "title": "B2B Asset Financing",
+            "intent": "business-energy-and-fleet"
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "intent": "business-energy-and-fleet"
+          }
+        ]
+      },
+      "ready": {
+        "scenarioId": "bakery-leuven",
+        "asOf": "2026-10-20",
+        "source": "cached",
+        "wording": "deterministic",
+        "matches": [
+          {
+            "ruleId": "business-vans-and-premises",
+            "intent": "business-energy-and-fleet",
+            "title": "Premises and delivery vans",
+            "stage": "ready",
+            "message": "A deposit on an electric van points to a decision now. Here is a plan across partners for you to approve step by step.",
+            "facts": [
+              {
+                "id": "brussels-low-emission-zone",
+                "text": "Euro 5 diesel cars and vans are no longer allowed in the Brussels low-emission zone.",
+                "source": "Brussels Environment",
+                "verified": false
+              }
+            ]
+          }
+        ],
+        "steps": [
+          {
+            "id": "business-co2-insights-and-sector-comparison",
+            "title": "Business CO2 insights and sector comparison",
+            "partnerRole": "Business footprint",
+            "why": "A view of emissions and a comparison with similar bakeries shows where energy cost comes from.",
+            "dataUsed": [
+              "energy cost trend"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "sustainability-advice-encon",
+            "title": "Sustainability advice - Encon",
+            "partnerRole": "Advice and grants",
+            "why": "Advice on the ovens and the building comes before any investment.",
+            "dataUsed": [
+              "energy cost trend"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "calculate-solar-panels-and-request-a-quote",
+            "title": "Calculate solar panels and request a quote",
+            "partnerRole": "Installation",
+            "why": "Roof panels lower the daytime power cost and part of the charging cost.",
+            "dataUsed": [
+              "energy cost trend"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "blink-charging-business",
+            "title": "Business charging with Blink Charging",
+            "partnerRole": "Charging",
+            "why": "Charging at the bakery lets the new van charge overnight.",
+            "dataUsed": [
+              "vehicle deposit"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": true,
+            "notNeeded": false
+          },
+          {
+            "id": "b2b-asset-financing",
+            "title": "B2B Asset Financing",
+            "partnerRole": "Finance and protection",
+            "why": "Asset financing spreads the cost of replacing the vans.",
+            "dataUsed": [
+              "vehicle deposit"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "group-purchase-of-electricity-and-gas",
+            "title": "Group purchase of electricity and gas",
+            "partnerRole": "Collective buying and supply",
+            "why": "A group round lowers the price of electricity and gas for the premises.",
+            "dataUsed": [
+              "energy cost trend"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": false
+          },
+          {
+            "id": "kube-esg",
+            "title": "Kube ESG",
+            "partnerRole": "Business footprint",
+            "why": "Not needed at this size. An ESG report matters for larger companies and their reporting duties.",
+            "dataUsed": [
+              "employee count"
+            ],
+            "intent": "business-energy-and-fleet",
+            "proposed": false,
+            "notNeeded": true
+          }
+        ],
+        "watching": []
+      }
+    }
+  }
+]

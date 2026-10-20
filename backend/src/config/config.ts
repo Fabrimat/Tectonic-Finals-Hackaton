@@ -3,6 +3,14 @@ export interface AppConfig {
   corsOrigins: string[];
   rateLimitPerMinute: number;
   partnerApiKey: string;
+  wording: WordingConfig;
+}
+
+export interface WordingConfig {
+  enabled: boolean;
+  url: string;
+  key: string;
+  model: string;
 }
 
 function positiveInt(name: string, raw: string | undefined, fallback: number, max: number): number {
@@ -34,10 +42,28 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     throw new Error('PARTNER_API_KEY must be set to a random value of at least 24 characters');
   }
 
+  const wording: WordingConfig = {
+    enabled: env.PLAN_WORDING_ENABLED === 'true',
+    url: env.PLAN_WORDING_URL ?? '',
+    key: env.PLAN_WORDING_KEY ?? '',
+    model: env.PLAN_WORDING_MODEL ?? '',
+  };
+  if (wording.enabled) {
+    if (!wording.key || !wording.model) {
+      throw new Error('PLAN_WORDING_KEY and PLAN_WORDING_MODEL are required when PLAN_WORDING_ENABLED=true');
+    }
+    try {
+      new URL(wording.url);
+    } catch {
+      throw new Error('PLAN_WORDING_URL must be a valid URL when PLAN_WORDING_ENABLED=true');
+    }
+  }
+
   return {
     port: positiveInt('PORT', env.PORT, 3000, 65535),
     corsOrigins,
     rateLimitPerMinute: positiveInt('RATE_LIMIT_PER_MINUTE', env.RATE_LIMIT_PER_MINUTE, 300, 100000),
     partnerApiKey,
+    wording,
   };
 }

@@ -5,6 +5,7 @@ import { loadConfig } from './config/config';
 import { HealthModule } from './health/health.module';
 import { CatalogueModule } from './catalogue/catalogue.module';
 import { IntentsModule } from './intents/intents.module';
+import { PlanModule } from './plan/plan.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { IntentsModule } from './intents/intents.module';
     HealthModule,
     CatalogueModule,
     IntentsModule,
+    PlanModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
