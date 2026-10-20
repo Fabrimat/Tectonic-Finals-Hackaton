@@ -1,0 +1,18 @@
+:root {
+  --kbc-blue: #00a0dc;
+  --kbc-navy: #003057;
+  --kbc-blue-soft: #dcf2fa;
+  --bg: #f3f6f9;
+  --card: #ffffff;
+  --line: #e3e8ee;
+  --ink: #1d2733;
+  --muted: #6b7785;
+  --warn: #f5a623;
+  --alert: #e5484d;
+  --ok: #1a9d6c;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgba(0, 48, 87, 0.06), 0 4px 16px rgba(0, 48, 87, 0.06);
+  --font: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

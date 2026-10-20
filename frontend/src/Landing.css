@@ -1,0 +1,73 @@
+.landing {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 48px 16px;
+  display: grid;
+  gap: 20px;
+}
+
+.landing h1 {
+  color: var(--kbc-navy);
+  font-size: 2rem;
+}
+
+.landing-lead {
+  color: var(--muted);
+}
+
+.landing-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+
+.landing-choices {
+  display: grid;
+  gap: 8px;
+}
+
+.choice {
+  text-align: left;
+  background: var(--bg);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: grid;
+}
+
+.choice span {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.choice.active {
+  border-color: var(--kbc-blue);
+  background: var(--kbc-blue-soft);
+}
+
+.landing-reset {
+  justify-self: start;
+  background: none;
+  border: none;
+  color: var(--kbc-blue);
+  padding: 0;
+}
+
+.landing-links {
+  display: flex;
+  gap: 12px;
+}
+
+.landing-links a {
+  flex: 1;
+  text-align: center;
+  background: var(--kbc-navy);
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}

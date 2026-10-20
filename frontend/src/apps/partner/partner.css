@@ -1,0 +1,405 @@
+.pp {
+  min-height: 100%;
+  color: var(--ink);
+}
+
+.pp :focus-visible {
+  outline: 3px solid var(--kbc-blue);
+  outline-offset: 2px;
+}
+
+.pp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  padding: 14px 32px;
+  background: var(--kbc-navy);
+  color: #fff;
+}
+
+.pp-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.pp-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.pp-nav a,
+.pp-back {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.pp-nav a.active {
+  background: var(--kbc-blue);
+}
+
+.pp-nav a:hover,
+.pp-back:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.pp-nav a.active:hover {
+  background: var(--kbc-blue);
+}
+
+.pp-view {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.pp-view select {
+  font: inherit;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+}
+
+.pp-tag {
+  background: var(--kbc-blue-soft);
+  color: var(--kbc-navy);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.pp-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.pp-h {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+  color: var(--kbc-navy);
+  margin-bottom: 14px;
+}
+
+.pp-leads {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.pp-empty,
+.pp-card,
+.pp-hidden,
+.pp-col,
+.pp-foot,
+.pp-assume {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.pp-empty {
+  padding: 28px;
+  color: var(--muted);
+}
+
+.pp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.pp-card {
+  padding: 18px 20px;
+}
+
+.pp-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.pp-ref {
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.pp-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--kbc-blue-soft);
+  color: var(--kbc-navy);
+}
+
+.pp-status.is-offer-sent {
+  background: var(--warn);
+  color: var(--kbc-navy);
+}
+
+.pp-status.is-accepted {
+  background: var(--ok);
+  color: #fff;
+}
+
+.pp-service {
+  font-size: 1.05rem;
+  color: var(--kbc-navy);
+  margin-bottom: 10px;
+}
+
+.pp-facts {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 8px 32px;
+  margin: 0 0 14px;
+}
+
+.pp-facts dt,
+.pp-note {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.pp-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.pp-offer {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.pp-btn {
+  border: 0;
+  background: var(--kbc-blue);
+  color: #fff;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 999px;
+}
+
+.pp-btn:hover {
+  background: var(--kbc-navy);
+}
+
+.pp-btn-quiet {
+  background: transparent;
+  color: var(--kbc-navy);
+  border: 1px solid var(--line);
+}
+
+.pp-btn-quiet:hover {
+  background: var(--bg);
+}
+
+.pp-form {
+  display: grid;
+  gap: 10px;
+}
+
+.pp-form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.pp-form input {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+}
+
+.pp-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pp-hidden {
+  padding: 20px;
+}
+
+.pp-hidden ul {
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.pp-hidden li {
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+}
+
+.pp-hidden p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.pp-lock {
+  color: var(--kbc-blue);
+  flex: none;
+}
+
+.pp-cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.pp-col {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pp-col h3 {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kbc-blue);
+}
+
+.pp-big {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--kbc-navy);
+}
+
+.pp-big-sm {
+  font-size: 1.3rem;
+  margin-top: 10px;
+}
+
+.pp-bar-track {
+  height: 10px;
+  background: var(--kbc-blue-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+
+.pp-bar-fill {
+  height: 100%;
+  background: var(--kbc-blue);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.pp-sum,
+.pp-split {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.pp-sum div,
+.pp-split li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.92rem;
+}
+
+.pp-sum dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.pp-foot,
+.pp-assume {
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.pp-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pp-chips li {
+  background: var(--kbc-blue-soft);
+  color: var(--kbc-navy);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 5px 14px;
+  border-radius: 999px;
+}
+
+.pp-assume table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+}
+
+.pp-assume th,
+.pp-assume td {
+  text-align: left;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.pp-assume th {
+  font-weight: 400;
+  color: var(--muted);
+  width: 40%;
+}
+
+@media (max-width: 900px) {
+  .pp-bar,
+  .pp-main {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .pp-leads {
+    grid-template-columns: 1fr;
+  }
+
+  .pp-cols {
+    grid-template-columns: 1fr;
+  }
+
+  .pp-facts {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  .pp-view {
+    margin-left: 0;
+  }
+}

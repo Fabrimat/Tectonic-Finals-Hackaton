@@ -1,0 +1,39 @@
+import { Link } from "react-router-dom";
+import { scenarios } from "./data/scenarios";
+import { useRipple } from "./lib/store";
+import "./Landing.css";
+
+export default function Landing() {
+  const { scenarioId, actions } = useRipple();
+
+  return (
+    <main className="landing">
+      <h1>Ripple</h1>
+      <p className="landing-lead">Demo controls. Open the customer app and the partner portal side by side.</p>
+
+      <section className="landing-card">
+        <h2>Scenario</h2>
+        <div className="landing-choices">
+          {scenarios.map((s) => (
+            <button
+              key={s.id}
+              className={s.id === scenarioId ? "choice active" : "choice"}
+              onClick={() => actions.selectScenario(s.id)}
+            >
+              {s.person.name}
+              <span>{s.domain}</span>
+            </button>
+          ))}
+        </div>
+        <button className="landing-reset" onClick={actions.reset}>
+          Reset decisions
+        </button>
+      </section>
+
+      <nav className="landing-links">
+        <Link to="/app">Customer app</Link>
+        <Link to="/partner">Partner portal</Link>
+      </nav>
+    </main>
+  );
+}
