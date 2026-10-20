@@ -51,6 +51,14 @@ cd frontend && npm run shots
 
 This builds the app if needed, starts a preview server on a spare port, drives the installed Microsoft Edge in headless mode and writes PNGs to `frontend/shots` (git ignored). The customer app is captured at 390 px wide, the dashboard, numbers and map at 1440 px wide. Add shot names after `--` to render only some, and `--build` to force a build. Set `EDGE_PATH` if Edge is not in a standard location.
 
+For the slides there is a second command:
+
+```
+cd frontend && npm run shots:slides
+```
+
+It writes 1920x1080 slides (3840x2160 pixels) and phone compositions to `frontend/shots/slides`, every phone screen as `-screen.png` and as `-framed.png` with a transparent background in `frontend/shots/slides/phones`, and `INDEX.txt` listing each file, its size and the outline slide it belongs to.
+
 ## URL parameters
 
 Any state opens directly. Parameters apply on load, are not saved and are not sent to other tabs. Unknown values are ignored.
@@ -63,7 +71,7 @@ Any state opens directly. Parameters apply on load, are not saved and are not se
 | `accepted` | a number N for the first N steps, or step ids | `/app?stage=ready&accepted=3&open=1` |
 | `deferred`, `rejected` | step ids | `/app?stage=ready&accepted=epc&deferred=heating&rejected=solar&open=1` |
 | `open` | `1` opens the energy radar card instead of the home screen | `/app?stage=ready&open=1` |
-| `partner` | partner shown first on the dashboard | `/partner?stage=ready&accepted=6&partner=Setle` |
+| `partner` | partner shown first on the dashboard, or `all` | `/partner?stage=ready&accepted=6&partner=all` |
 | `tools` | `0` hides the demo tools and the access field | `/app?tools=0` |
 
 Any decision implies a confirmed signal. `/partner` and `/partner/numbers` accept the same `scenario`, `stage` and `accepted` parameters and build their leads from that state, without the backend or a key.
