@@ -7,16 +7,40 @@
 //   phones/NAME-framed.png  the same screen in a slim rounded frame, transparent outside the frame
 //   INDEX.txt        file, pixel size and the outline slide each file is for
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { relative } from "node:path";
 import { pathToFileURL } from "node:url";
 import { inflateSync } from "node:zlib";
 import { ensureBuild, evaluate, open, sleep, startSession } from "./lib/edge.mjs";
-import { PHONE_NAMES, SLIDES_DIR, SLIDE_IMAGES, allowed, parseFlags, safeJoin } from "./lib/paths.mjs";
+import { PHONE_NAMES, PHONE_PARTS, SLIDES_DIR, SLIDE_IMAGES, allowed, parseFlags, safeJoin } from "./lib/paths.mjs";
 import { decisionQuery } from "./lib/states.mjs";
 
 const slidesDir = SLIDES_DIR;
 const phonesDir = safeJoin(slidesDir, "phones");
 const tmpDir = safeJoin(slidesDir, ".compose");
+
+// Every file this script reads or writes is looked up by key in these maps. The maps are built once
+// from the constant name lists, so no fs call takes a path made from arguments or the environment.
+const OUT = new Map([["INDEX.txt", safeJoin(slidesDir, "INDEX.txt")]]);
+for (const name of SLIDE_IMAGES) OUT.set(`${name}.png`, safeJoin(slidesDir, `${name}.png`));
+for (const name of PHONE_NAMES) {
+  for (const part of PHONE_PARTS) {
+    for (const kind of ["screen", "framed"]) OUT.set(`phones/${name}${part}-${kind}.png`, safeJoin(phonesDir, `${name}${part}-${kind}.png`));
+  }
+}
+const TMP = new Map([
+  ["frame", safeJoin(tmpDir, "frame.html")],
+  ["slide", safeJoin(tmpDir, "slide.html")],
+]);
+
+function outPath(key) {
+  const path = OUT.get(key);
+  if (!path) throw new Error(`Unknown output file: ${String(key).slice(0, 60)}`);
+  return path;
+}
+function tmpPath(key) {
+  const path = TMP.get(key);
+  if (!path) throw new Error(`Unknown temporary file: ${String(key).slice(0, 60)}`);
+  return path;
+}
 
 const PHONE = [390, 844];
 const SLIDE = [1920, 1080];
@@ -113,17 +137,17 @@ const desktopSlides = [
 
 const rows = [];
 
-function pngInfo(file) {
-  const buf = readFileSync(safeJoin(slidesDir, file));
+function pngInfo(key) {
+  const buf = readFileSync(outPath(key));
   return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20), colorType: buf[25] };
 }
 
 // Decodes an 8 bit RGBA PNG and returns [r, g, b, a] at x, y. Enough to check corners without a library.
-function pixelAt(file, x, y) {
-  const buf = readFileSync(safeJoin(slidesDir, file));
+function pixelAt(key, x, y) {
+  const buf = readFileSync(outPath(key));
   const width = buf.readUInt32BE(16);
   const height = buf.readUInt32BE(20);
-  if (buf[24] !== 8 || buf[25] !== 6) throw new Error(`${file} is not 8 bit RGBA`);
+  if (buf[24] !== 8 || buf[25] !== 6) throw new Error(`${key} is not 8 bit RGBA`);
   let offset = 8;
   const chunks = [];
   while (offset < buf.length) {
@@ -159,16 +183,16 @@ function pixelAt(file, x, y) {
   return [out[at], out[at + 1], out[at + 2], out[at + 3]];
 }
 
-function record(file, purpose) {
-  const { width, height } = pngInfo(file);
-  rows.push([relative(slidesDir, file).replaceAll("\\", "/"), `${width}x${height}`, purpose]);
+function record(key, purpose) {
+  const { width, height } = pngInfo(key);
+  rows.push([key, `${width}x${height}`, purpose]);
 }
 
-async function shoot(page, file, clip) {
+async function shoot(page, key, clip) {
   const params = { format: "png" };
   if (clip) params.clip = clip;
   const { data } = await page.send("Page.captureScreenshot", params);
-  writeFileSync(file, Buffer.from(data, "base64"));
+  writeFileSync(outPath(key), Buffer.from(data, "base64"));
 }
 
 // Captures one phone state, scrolling for the parts. Returns the file paths.
@@ -180,19 +204,19 @@ async function exportPhone(page, base, [name, path, purpose, single, focus = []]
   for (let i = 0; i < parts; i += 1) {
     await evaluate(page, `window.scrollTo(0, ${i * SCROLL_STEP})`);
     await sleep(250);
-    const file = safeJoin(phonesDir, `${parts === 1 ? name : `${name}-part${i + 1}`}-screen.png`);
-    await shoot(page, file);
-    files.push(file);
-    record(file, `${purpose}${parts > 1 ? ` (part ${i + 1} of ${parts})` : ""}`);
+    const key = `phones/${parts === 1 ? name : `${name}-part${i + 1}`}-screen.png`;
+    await shoot(page, key);
+    files.push(key);
+    record(key, `${purpose}${parts > 1 ? ` (part ${i + 1} of ${parts})` : ""}`);
   }
   // focus captures scroll a named element into the middle, for states where the interesting card is far down
   for (const [suffix, selector, offset = 0] of focus) {
     await evaluate(page, `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({ block: "center" }); window.scrollBy(0, ${offset})`);
     await sleep(250);
-    const file = safeJoin(phonesDir, `${name}-${suffix}-screen.png`);
-    await shoot(page, file);
-    files.push(file);
-    record(file, `${purpose} (${suffix})`);
+    const key = `phones/${name}-${suffix}-screen.png`;
+    await shoot(page, key);
+    files.push(key);
+    record(key, `${purpose} (${suffix})`);
   }
   return files;
 }
@@ -203,18 +227,17 @@ const frameCss = `
 `;
 
 function writeHtml(name, body) {
-  const file = safeJoin(tmpDir, `${name}.html`);
-  writeFileSync(file, `<!doctype html><meta charset="utf-8"><title>${name}</title><style>html,body{margin:0}${body.css}</style>${body.html}`);
-  return file;
+  writeFileSync(tmpPath(name), `<!doctype html><meta charset="utf-8"><title>${name}</title><style>html,body{margin:0}${body.css}</style>${body.html}`);
+  return name;
 }
 
-const imgTag = (file) => `<div class="phone"><img src="${pathToFileURL(file).href}" alt=""></div>`;
+const imgTag = (key) => `<div class="phone"><img src="${pathToFileURL(outPath(key)).href}" alt=""></div>`;
 
-async function renderHtml(page, htmlFile, [width, height], file, transparent = false) {
+async function renderHtml(page, htmlName, [width, height], key, transparent = false) {
   if (transparent) await page.send("Emulation.setDefaultBackgroundColorOverride", { color: { r: 0, g: 0, b: 0, a: 0 } });
   try {
-    await open(page, pathToFileURL(htmlFile).href, width, height, 2, 350);
-    await shoot(page, file);
+    await open(page, pathToFileURL(tmpPath(htmlName)).href, width, height, 2, 350);
+    await shoot(page, key);
   } finally {
     if (transparent) await page.send("Emulation.setDefaultBackgroundColorOverride");
   }
@@ -223,11 +246,11 @@ async function renderHtml(page, htmlFile, [width, height], file, transparent = f
 const FRAMED = [PHONE[0] + 18, PHONE[1] + 18];
 const alphaChecks = [];
 
-async function frameOne(page, file, purpose) {
-  const out = file.replace(/-screen.png$/, "-framed.png");
+async function frameOne(page, key, purpose) {
+  const out = key.replace(/-screen\.png$/, "-framed.png");
   const html = writeHtml("frame", {
     css: `html,body{background:transparent}body{width:${FRAMED[0]}px;height:${FRAMED[1]}px}${frameCss}`,
-    html: imgTag(file),
+    html: imgTag(key),
   });
   await renderHtml(page, html, FRAMED, out, true);
   record(out, `${purpose}, framed, transparent outside the frame`);
@@ -238,15 +261,15 @@ async function frameOne(page, file, purpose) {
 }
 
 // Phones side by side on a 1920x1080 canvas. align "right" leaves the left side free for a title.
-async function composeSlide(page, file, images, purpose, align = "center") {
+async function composeSlide(page, key, images, purpose, align = "center") {
   const justify = align === "right" ? "flex-end" : "center";
   const pad = align === "right" ? "padding-right:300px;" : "";
   const html = writeHtml("slide", {
     css: `body{width:${SLIDE[0]}px;height:${SLIDE[1]}px;background:${BACKGROUND};display:flex;align-items:center;justify-content:${justify};gap:72px;${pad}box-sizing:border-box}.phone{box-shadow:0 24px 60px rgba(0,48,87,.22)}${frameCss}`,
     html: images.map(imgTag).join(""),
   });
-  await renderHtml(page, html, SLIDE, file);
-  record(file, purpose);
+  await renderHtml(page, html, SLIDE, key);
+  record(key, purpose);
 }
 
 // Full page views, scaled down only when they are taller than the frame.
@@ -272,9 +295,8 @@ async function desktopSlide(page, base, spec) {
     if (zoom < 0.7) console.warn(`Warning: ${spec.file} is scaled to ${Math.round(zoom * 100)}%, text may be small`);
     await sleep(300);
   }
-  const file = safeJoin(slidesDir, spec.file);
-  await shoot(page, file);
-  record(file, spec.purpose);
+  await shoot(page, spec.file);
+  record(spec.file, spec.purpose);
 }
 
 async function main() {
@@ -298,28 +320,28 @@ async function main() {
     const part = (name, n = 1) => screens[name][Math.min(n, screens[name].length) - 1];
     const named = (name, suffix) => screens[name].find((f) => f.includes(`-${suffix}-screen`));
 
-    await composeSlide(page, safeJoin(slidesDir, "title-phone.png"), [part("home-household-forming")], "Slide 1, title, one phone on the right and room for the title text", "right");
+    await composeSlide(page, "title-phone.png", [part("home-household-forming")], "Slide 1, title, one phone on the right and room for the title text", "right");
     await composeSlide(
       page,
-      safeJoin(slidesDir, "ladder-household.png"),
+      "ladder-household.png",
       [part("whisper"), part("forming"), part("ready-confirm")],
       "Slide 4, intent ladder: whisper, forming, ready (opened cards, they show the stage best)",
     );
     await composeSlide(
       page,
-      safeJoin(slidesDir, "consent-layers.png"),
+      "consent-layers.png",
       [part("whisper"), part("ready-confirm"), part("ready-board")],
       "Slide 5, four consents: analysis, goal (confirm card), sharing (plan)",
     );
     await composeSlide(
       page,
-      safeJoin(slidesDir, "decisions-household.png"),
+      "decisions-household.png",
       [part("ready-decided", 1), named("ready-decided", "decided"), named("ready-decided", "not-needed")],
       "Slide 6, plan board with accepted, deferred, rejected and the not needed card",
     );
     await composeSlide(
       page,
-      safeJoin(slidesDir, "bakery-forming-ready.png"),
+      "bakery-forming-ready.png",
       [part("bakery-forming"), part("bakery-board")],
       "Slide 9, bakery: forming and ready side by side",
     );
@@ -338,7 +360,7 @@ async function main() {
   const w1 = Math.max(...table.map((r) => r[1].length), 4);
   const lines = [`${"File".padEnd(w0)}  ${"Size".padEnd(w1)}  Slide`, ...table.map((r) => `${r[0].padEnd(w0)}  ${r[1].padEnd(w1)}  ${r[2]}`)];
   const text = `${lines.join("\n")}\n`;
-  writeFileSync(safeJoin(slidesDir, "INDEX.txt"), text);
+  writeFileSync(outPath("INDEX.txt"), text);
   console.log(text);
   const bad = alphaChecks.filter((c) => c.corners.some((a) => a !== 0) || c.centre !== 255);
   console.log(`Alpha check: ${alphaChecks.length} framed phones, corner alpha 0 and centre alpha 255 in ${alphaChecks.length - bad.length}`);
