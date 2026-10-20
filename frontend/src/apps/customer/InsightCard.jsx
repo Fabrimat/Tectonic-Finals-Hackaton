@@ -1,4 +1,5 @@
 import { stages } from "../../data/scenarios";
+import ConsentStrip from "./ConsentStrip";
 
 export default function InsightCard({ scenario, confirmed, onConfirm, onDecline }) {
   const { insight } = scenario;
@@ -9,6 +10,7 @@ export default function InsightCard({ scenario, confirmed, onConfirm, onDecline 
         {insight.title}
       </h1>
       <p className="cx-insight-body">{insight.body}</p>
+      <ConsentStrip context="analysis" />
       <h2 className="cx-small-title">Data used</h2>
       <ul className="cx-plain-list">
         {insight.basis.map((line) => (

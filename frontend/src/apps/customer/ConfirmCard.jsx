@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ConsentStrip from "./ConsentStrip";
 
 const REPLIES = {
   later: "No problem. We will not ask again until you open the app next time.",
@@ -39,6 +40,8 @@ export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
         </ul>
         <p className="cx-consent">With your consent, in line with GDPR</p>
       </div>
+
+      <ConsentStrip context="goal" />
 
       <details className="cx-disclosure">
         <summary>Why am I seeing this?</summary>

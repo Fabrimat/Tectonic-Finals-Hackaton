@@ -1,0 +1,513 @@
+/* KBC Mobile style home screen and tab bar */
+.cx {
+  --tab-h: 76px;
+  --cx-bg: #f1f6fb;
+  background: var(--cx-bg);
+}
+
+.cx-is-home {
+  background: linear-gradient(#fff 0, #fff 330px, var(--cx-bg) 560px);
+}
+
+.cx-home {
+  flex: 1;
+  padding: 22px 0 24px;
+  color: var(--kbc-navy);
+}
+
+.cx-home-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.cx-round {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #eaf4fb;
+  color: var(--kbc-blue);
+}
+
+.cx-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid #c9e2f1;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--kbc-blue);
+}
+
+.cx-search svg {
+  flex: none;
+}
+
+.cx-search-text {
+  flex: 1;
+  color: #7da9c6;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.cx-search-logo {
+  height: 15px;
+  width: auto;
+  color: var(--kbc-navy);
+}
+
+.cx-search-logo.kbc-logo-text {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.cx-bell {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 40px;
+  border: 0;
+  background: none;
+  color: var(--kbc-blue);
+}
+
+.cx-bell-dot {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #f0555a;
+}
+
+/* account tiles */
+.cx-accounts {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0 -18px;
+  padding: 18px 14px 30px;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cx-accounts::-webkit-scrollbar {
+  display: none;
+}
+
+.cx-acc {
+  flex: none;
+  width: 134px;
+  align-self: flex-start;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 48, 87, 0.14);
+}
+
+.cx-acc.is-active {
+  margin-bottom: -10px;
+  padding-bottom: 2px;
+  box-shadow: 0 6px 16px rgba(0, 48, 87, 0.2);
+}
+
+.cx-tile {
+  position: relative;
+}
+
+.cx-tile-art {
+  display: block;
+  height: 92px;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(150deg, #00a0dc, #3fb4e8);
+}
+
+.cx-tile-art.is-navy {
+  background: linear-gradient(150deg, #003057, #2a5882);
+}
+
+.cx-tile-art.is-sky {
+  background: linear-gradient(150deg, #0a8fd0, #5cc1ec);
+}
+
+.cx-acc-tag {
+  position: absolute;
+  top: -17px;
+  right: 6px;
+  padding: 3px 8px;
+  border-radius: 6px 6px 0 0;
+  background: #e5f4d4;
+  color: #3c7d12;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.cx-acc-edit {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--kbc-blue);
+}
+
+.cx-acc-info {
+  padding: 9px 11px 11px;
+}
+
+.cx-acc-name {
+  overflow: hidden;
+  color: #3c6a8c;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cx-acc-amount {
+  margin-top: 6px;
+  color: var(--kbc-navy);
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cx-acc-amount small {
+  font-size: 11px;
+}
+
+.cx-acc-bar {
+  display: block;
+  height: 4px;
+  margin-top: 8px;
+  border-radius: 2px;
+  background: #0a56b4;
+}
+
+.cx-show-pay {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 12px 0 0 32px;
+  padding: 10px 0;
+  border: 0;
+  background: none;
+  color: var(--kbc-blue);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* feed */
+.cx-foryou {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 0 15px;
+}
+
+.cx-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 8px 0 4px;
+}
+
+.cx-section-head h2 {
+  color: var(--kbc-navy);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.cx-text-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--kbc-blue);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cx-feed-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  width: 100%;
+  padding: 16px 40px 16px 16px;
+  border: 0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0, 48, 87, 0.12);
+  color: var(--kbc-navy);
+  font: inherit;
+  text-align: left;
+}
+
+.cx-feed-icon {
+  flex: none;
+  margin-top: 2px;
+  color: #3c6a8c;
+}
+
+.cx-feed-body {
+  display: grid;
+  gap: 4px;
+}
+
+.cx-feed-kicker {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.cx-feed-text {
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.cx-feed-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e7edf3;
+  color: var(--kbc-navy);
+}
+
+.cx-intent {
+  cursor: pointer;
+  padding-right: 16px;
+  border: 1.5px solid #b7dcf0;
+}
+
+.cx-intent.is-quiet {
+  border: 1.5px dashed #9fb4c6;
+  background: #fafcfe;
+  box-shadow: none;
+}
+
+.cx-intent .cx-feed-icon {
+  color: var(--kbc-blue);
+}
+
+.cx-intent-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  color: var(--kbc-blue);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* wallet promo */
+.cx-promo-wrap {
+  margin-top: 30px;
+  padding: 0 15px;
+}
+
+.cx-promo {
+  position: relative;
+  min-height: 150px;
+  padding: 20px 18px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(120deg, #0b5f9a, #2a9bd0);
+  color: #fff;
+}
+
+.cx-promo h3 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.cx-promo p {
+  max-width: 220px;
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.cx-promo-fab {
+  position: absolute;
+  right: 6px;
+  bottom: 14px;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--kbc-blue);
+  box-shadow: 0 4px 12px rgba(0, 48, 87, 0.3);
+}
+
+.cx-home .cx-tools {
+  margin-top: 28px;
+}
+
+/* tab bar */
+.cx-tabs {
+  position: sticky;
+  bottom: 0;
+  z-index: 8;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  min-height: var(--tab-h);
+  padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid #e3ebf2;
+  background: #fff;
+  box-shadow: 0 -4px 16px rgba(0, 48, 87, 0.08);
+}
+
+.cx-tab {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  border: 0;
+  background: none;
+  color: var(--kbc-navy);
+  font-size: 12px;
+}
+
+.cx-tab.is-active svg {
+  fill: var(--kbc-navy);
+}
+
+/* detail header */
+.cx-back {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: -8px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: #fff;
+}
+
+.cx-top-title {
+  flex: 1;
+  margin-left: 4px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cx-top .cx-logo {
+  color: #fff;
+}
+
+.cx-summary {
+  bottom: var(--tab-h);
+}
+
+/* the logo has dark colours, so every header around it is light */
+.cx-top {
+  background: #fff;
+  color: var(--kbc-navy);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.cx-back,
+.cx-top .cx-logo {
+  color: var(--kbc-navy);
+}
+
+.cx-top button:focus-visible {
+  outline-color: var(--kbc-blue);
+}
+
+.cx-top .cx-logo {
+  height: 40px;
+}
+
+.cx-home-brand {
+  padding: 0 18px 10px;
+}
+
+.cx-home-brand .cx-logo {
+  height: 44px;
+}
+
+/* four consent layers */
+.cx-consent-strip {
+  margin: 4px 0 14px;
+  padding: 10px 12px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--cx-bg);
+}
+
+.cx-layers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.cx-layers li {
+  display: grid;
+  gap: 4px;
+}
+
+.cx-layer-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: #cfdbe6;
+}
+
+.cx-layers .is-done .cx-layer-bar,
+.cx-layers .is-now .cx-layer-bar {
+  background: var(--kbc-blue);
+}
+
+.cx-layer-label {
+  color: var(--cx-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cx-layers .is-now .cx-layer-label {
+  color: var(--kbc-navy);
+}
+
+.cx-layer-now,
+.cx-layer-not {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.cx-layer-now {
+  color: var(--kbc-navy);
+}
+
+.cx-layer-not {
+  margin-top: 3px;
+  color: var(--cx-muted);
+}
+
+.cx-layer-chip {
+  margin: 8px 0 6px;
+  color: var(--cx-muted);
+  font-size: 12px;
+  font-weight: 600;
+}

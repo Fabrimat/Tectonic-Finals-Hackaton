@@ -36,3 +36,24 @@ button {
 a {
   color: var(--kbc-blue);
 }
+
+.logo-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--kbc-navy);
+}
+
+.logo-chip .kbc-logo {
+  display: block;
+  height: 36px;
+  width: auto;
+}
+
+.logo-chip .kbc-logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}

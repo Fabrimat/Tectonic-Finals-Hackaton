@@ -6,6 +6,12 @@ const LABEL = {
   introduction: "An introduction",
 };
 
+const LAYER = {
+  optional: "Consent layer: analysis. Nothing goes to a partner.",
+  opportunity: "Consent layer: goal. Noted on this device only.",
+  introduction: "Consent layer: sharing, not yet. You authorise each partner per step.",
+};
+
 export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }) {
   const item = action.catalogueId ? catalogueItem(action.catalogueId) : null;
   const names = action.partners ?? (action.partner ? [action.partner] : []);
@@ -27,6 +33,7 @@ export default function ActionCard({ action, enabled, chosen, onChoose, onUndo }
       </div>
       <h2 className="cx-step-title">{action.title}</h2>
       <p className="cx-step-summary">{action.body}</p>
+      <p className="cx-layer-chip">{LAYER[action.kind]}</p>
       <p className="cx-shares">{action.shares}</p>
       {chosen ? (
         <div className="cx-decided">

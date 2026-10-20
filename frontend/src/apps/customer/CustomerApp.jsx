@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { scenarios, stages, stageOrder } from "../../data/scenarios";
 import { useRipple } from "../../lib/store";
+import { view } from "../../lib/params";
 import ConfirmCard from "./ConfirmCard";
 import RippleReveal from "./RippleReveal";
 import StageTag from "./StageTag";
@@ -9,13 +10,18 @@ import ActionCard from "./ActionCard";
 import HoldCard from "./HoldCard";
 import PlanBoard from "./PlanBoard";
 import SummaryBar from "./SummaryBar";
+import HomeScreen from "./HomeScreen";
+import TabBar from "./TabBar";
+import Icon from "./icons";
 import KbcLogo from "../../components/KbcLogo";
 import "./customer.css";
+import "./home.css";
 
 export default function CustomerApp() {
   const { scenario, confirmed, decisions, choices, actions } = useRipple();
   const [rippling, setRippling] = useState(false);
-  const { person, stage } = scenario;
+  const [open, setOpen] = useState(view.open);
+  const { stage } = scenario;
   const ready = stage === "ready";
   const planShown = confirmed && !rippling && scenario.allowedActions.some((a) => a.kind === "plan");
 
@@ -24,47 +30,54 @@ export default function CustomerApp() {
     actions.confirmSignal();
   }
 
+  const tools = view.tools && (
+    <div className="cx-tools">
+      <p className="cx-tools-title">Demo tools</p>
+      <div className="cx-switch">
+        <label htmlFor="cx-scenario">Customer</label>
+        <select id="cx-scenario" value={scenario.id} onChange={(e) => actions.selectScenario(e.target.value)}>
+          {scenarios.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.person.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="cx-switch cx-demo" role="group" aria-label="Demo control, ladder stage">
+        <span>Demo control, stage</span>
+        {stageOrder.map((key) => (
+          <button
+            key={key}
+            type="button"
+            className={key === stage ? "cx-stage-btn is-active" : "cx-stage-btn"}
+            aria-pressed={key === stage}
+            onClick={() => actions.selectStage(key)}
+          >
+            {stages[key].label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (!open) {
+    return (
+      <div className="cx cx-is-home">
+        <HomeScreen scenario={scenario} confirmed={confirmed} decisions={decisions} onOpen={() => setOpen(true)} tools={tools} />
+        <TabBar onStart={() => setOpen(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="cx">
       <header className="cx-top">
-        <span className="cx-wordmark">
-          <KbcLogo className="cx-logo" />
-        </span>
-        <span className="cx-person">
-          <span className="cx-person-name">{person.name}</span>
-          <span className="cx-avatar" aria-hidden="true">
-            {person.initials}
-          </span>
-        </span>
+        <button type="button" className="cx-back" aria-label="Back to start" onClick={() => setOpen(false)}>
+          <Icon name="back" size={26} />
+        </button>
+        <p className="cx-top-title">Energy radar</p>
+        <KbcLogo className="cx-logo" />
       </header>
-
-      <div className="cx-tools">
-        <p className="cx-tools-title">Demo tools</p>
-        <div className="cx-switch">
-          <label htmlFor="cx-scenario">Customer</label>
-          <select id="cx-scenario" value={scenario.id} onChange={(e) => actions.selectScenario(e.target.value)}>
-            {scenarios.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.person.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="cx-switch cx-demo" role="group" aria-label="Demo control, ladder stage">
-          <span>Demo control, stage</span>
-          {stageOrder.map((key) => (
-            <button
-              key={key}
-              type="button"
-              className={key === stage ? "cx-stage-btn is-active" : "cx-stage-btn"}
-              aria-pressed={key === stage}
-              onClick={() => actions.selectStage(key)}
-            >
-              {stages[key].label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <main className="cx-main">
         <StageTag scenario={scenario} />
@@ -118,6 +131,7 @@ export default function CustomerApp() {
       </main>
 
       {planShown && <SummaryBar scenario={scenario} decisions={decisions} onReset={actions.reset} />}
+      <TabBar onStart={() => setOpen(false)} />
     </div>
   );
 }

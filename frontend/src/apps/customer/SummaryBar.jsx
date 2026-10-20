@@ -23,11 +23,11 @@ export default function SummaryBar({ scenario, decisions, onReset }) {
           <span>{count(steps, decisions, "rejected")} not for me</span>
         </p>
         <p className="cx-totals">
-          Saved per year: <strong>{money(saved)}</strong>
+          Estimated saving per year: <strong>{money(saved)}</strong>
           {avoided > 0 && (
             <>
               {" "}
-              <span className="cx-muted">+ {money(avoided)} avoided cost</span>
+              <span className="cx-muted">+ {money(avoided)} estimated avoided cost</span>
             </>
           )}
         </p>

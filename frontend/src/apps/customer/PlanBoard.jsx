@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { postIntent } from "../../lib/api";
+import ConsentStrip from "./ConsentStrip";
 import StepCard from "./StepCard";
 import SkipCard from "./SkipCard";
 import { areaNotes, stockLine } from "../../lib/area";
@@ -24,6 +25,7 @@ export default function PlanBoard({ scenario, decisions, actions }) {
         Your plan
       </h1>
       <p className="cx-seen">{scenario.seen}</p>
+      <ConsentStrip context="plan" />
       {stockLine(scenario.area) && <p className="cx-muted">{stockLine(scenario.area)}</p>}
       <ol className="cx-steps">
         {steps.map((step) => (

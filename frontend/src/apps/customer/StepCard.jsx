@@ -45,7 +45,7 @@ export default function StepCard({ step, signal, notes = [], decision, onDecide,
           {note}
         </p>
       ))}
-      {step.saving > 0 && <p className="cx-saving">About {money(step.saving)} saved per year</p>}
+      {step.saving > 0 && <p className="cx-saving">Estimated saving about {money(step.saving)} per year</p>}
 
       <button
         type="button"

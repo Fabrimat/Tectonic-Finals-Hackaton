@@ -10,7 +10,7 @@ export default function SkipCard({ step }) {
       </div>
       <h2 className="cx-step-title">{step.title}</h2>
       <p className="cx-step-summary">{step.why}</p>
-      {step.saving > 0 && <p className="cx-avoided">Avoided cost: about {money(step.saving)}</p>}
+      {step.saving > 0 && <p className="cx-avoided">Estimated avoided cost: about {money(step.saving)}</p>}
     </article>
   );
 }
