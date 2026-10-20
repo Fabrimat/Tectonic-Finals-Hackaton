@@ -8,3 +8,7 @@ docs
 agent.md
 Dockerfile
 .dockerignore
+**/shots
+**/.vscode
+**/.env.*
+**/*.md
