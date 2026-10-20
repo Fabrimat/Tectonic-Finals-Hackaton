@@ -80,4 +80,8 @@ describe('Odd request values (e2e)', () => {
       .expect(400);
     expect(({} as Record<string, unknown>).flags).toBeUndefined();
   });
+
+  it('keeps the 10 kb body limit', async () => {
+    await http().post('/api/plan').send({ flags: ['a'.repeat(20_000)] }).expect(413);
+  });
 });
