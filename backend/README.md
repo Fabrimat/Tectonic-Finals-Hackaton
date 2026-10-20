@@ -43,6 +43,7 @@ All routes are under `/api`.
 | GET | `/api/catalogue/:id` | One product, 404 if unknown |
 | POST | `/api/intents` | Creates an anonymous intent, returns it with a reference like `LD-4F2A` and status `new` |
 | GET | `/api/intents` | Lists intents. Needs the `x-api-key` header, 401 otherwise |
+| DELETE | `/api/intents/:reference` | Removes one intent. Needs the `x-api-key` header (401 otherwise), 404 if unknown, 204 on success. Limited to 10 requests per minute |
 | POST | `/api/plan` | Builds a plan from signals with the rules in `data/rules.json` |
 | GET | `/api/plan/scenarios` | Lists the cached scenarios |
 | GET | `/api/plan/scenarios/:id` | Cached plan, optional `?stage=whisper\|forming\|ready` (default `ready`) |

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { ApiKeyGuard } from '../auth/api-key.guard';
 import { CreateIntentDto } from './dto/create-intent.dto';
@@ -19,5 +19,13 @@ export class IntentsController {
   @UseGuards(ApiKeyGuard)
   findAll() {
     return this.intents.findAll();
+  }
+
+  @Delete(':reference')
+  @HttpCode(204)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @UseGuards(ApiKeyGuard)
+  remove(@Param('reference') reference: string): void {
+    if (!this.intents.remove(reference)) throw new NotFoundException('Intent not found');
   }
 }

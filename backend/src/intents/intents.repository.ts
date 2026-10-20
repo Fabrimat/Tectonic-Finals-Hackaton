@@ -32,6 +32,10 @@ export class IntentsRepository {
     return [...this.intents.values()];
   }
 
+  remove(reference: string): boolean {
+    return this.intents.delete(reference);
+  }
+
   private newReference(): string {
     let reference: string;
     do {

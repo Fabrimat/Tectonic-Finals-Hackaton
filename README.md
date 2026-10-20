@@ -43,6 +43,17 @@ cd frontend && npm run lint && npm run build && npm test
 cd backend && npm run typecheck && npm test
 ```
 
+## Container
+
+The `Dockerfile` has not been built or run on the machine this was written on, so treat these commands as untested. The app writes nothing to disk, so a read-only filesystem should be enough:
+
+```
+docker build -t lead-demo .
+docker run --read-only --cap-drop ALL --security-opt no-new-privileges -e PARTNER_API_KEY=<at least 24 random characters> -p 3000:3000 lead-demo
+```
+
+If something fails on a missing temporary directory, add `--tmpfs /tmp`.
+
 ## Screenshots
 
 ```
@@ -79,6 +90,10 @@ Any decision implies a confirmed signal. `/partner` and `/partner/numbers` accep
 ## Numbers
 
 All estimates, assumptions and per product conversion rates live in `frontend/src/data/synthetic.json`, and the slides use the same file. KBC value leads with conversion into its own products. Partner commission is a secondary line and only exists for some partners.
+
+## Privacy
+
+Retention, what intents carry and how to remove one are in the Privacy section of `SECURITY.md`.
 
 ## Unfinished
 

@@ -50,6 +50,19 @@ describe('API (e2e)', () => {
     await request(app.getHttpServer()).get('/api/intents').set('x-api-key', 'wrong').expect(401);
   });
 
+  it('DELETE /api/intents/:reference needs the key, 404s on unknown and removes a known intent', async () => {
+    const key = process.env.PARTNER_API_KEY as string;
+    const created = await request(app.getHttpServer()).post('/api/intents').send(validIntent).expect(201);
+    const path = `/api/intents/${created.body.reference}`;
+    await request(app.getHttpServer()).delete(path).expect(401);
+    await request(app.getHttpServer()).delete(path).set('x-api-key', 'wrong').expect(401);
+    await request(app.getHttpServer()).delete('/api/intents/LD-0000').set('x-api-key', key).expect(404);
+    await request(app.getHttpServer()).delete(path).set('x-api-key', key).expect(204);
+    await request(app.getHttpServer()).delete(path).set('x-api-key', key).expect(404);
+    const list = await request(app.getHttpServer()).get('/api/intents').set('x-api-key', key).expect(200);
+    expect(list.body.some((i: { reference: string }) => i.reference === created.body.reference)).toBe(false);
+  });
+
   it('GET /api/intents with the key lists intents', async () => {
     const res = await request(app.getHttpServer()).get('/api/intents').set('x-api-key', apiKey).expect(200);
     expect(Array.isArray(res.body)).toBe(true);
