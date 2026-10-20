@@ -1,5 +1,5 @@
 import catalogue from "./catalogue.json" with { type: "json" };
-import { facts } from "./facts.js";
+import { facts, factLine } from "./facts.js";
 
 const byId = new Map(catalogue.map((item) => [item.id, item]));
 
@@ -130,8 +130,8 @@ export const scenarios = [
           },
         ],
         insight: {
-          title: "Your renovation clock has been running since you bought the house",
-          body: `${facts.renovationRule.text} Your house has label E, so the deadline applies to you. Your energy bill has also gone up year after year. There is nothing to do today, but starting early keeps every option open.`,
+          title: "Your energy use has been creeping up, and there is time to prepare",
+          body: `Your energy bill has gone up year after year, and your home has energy label E. ${factLine(facts.renovationRule)} There is nothing to do today. The options below are yours to use whenever you like.`,
           basis: [
             "The date your mortgage started",
             "The energy label recorded when the home was financed",
@@ -165,9 +165,9 @@ export const scenarios = [
         signal: {
           question: "Are you planning to renovate?",
           evidence: [
-            { label: "Heating system", detail: "The boiler is 22 years old", category: "Housing" },
+            { label: "Heating system", detail: "The boiler is more than twenty years old", category: "Housing" },
             { label: "Energy pages in KBC Mobile", detail: "Several visits in the last weeks", category: "Housing" },
-            { label: "Grants", detail: facts.grantChanges.text, category: "Housing" },
+            { label: "Grants", detail: factLine(facts.grantChanges), category: "Housing" },
           ],
           dataUsed: ["Age of the heating system", "Pages viewed in KBC Mobile", "The date your mortgage started"],
           dataNotUsed: ["Account balance", "Other payments", "Location history"],
@@ -185,7 +185,7 @@ export const scenarios = [
           question: "Did your boiler just need an expensive repair?",
           evidence: [
             { label: "Payment to a heating technician", detail: "A repair invoice paid last week", category: "Housing" },
-            { label: "Energy label E", detail: "The renovation deadline is still ahead", category: "Housing" },
+            { label: "Energy label E", detail: "Recorded when the home was financed", category: "Housing" },
           ],
           dataUsed: ["One card payment (category and amount)", "The date your mortgage started"],
           dataNotUsed: ["Account balance", "Health, family or location history"],
@@ -209,7 +209,7 @@ export const scenarios = [
             id: "estimate",
             title: "Renovation cost and grant estimate",
             summary: "A first estimate of what each work costs and which grants may apply.",
-            why: `${facts.grantChanges.text} Knowing the amounts before you decide helps you pick the right order.`,
+            why: `${factLine(facts.grantChanges)} Knowing the amounts before you decide helps you pick the right order.`,
             catalogueId: "estimate-renovation-costs-and-grants-setle",
             partner: { name: "Setle", proposed: false },
             intent: { service: "Renovation cost and grant estimate", region: "Ghent", timeframe: "Q4 2026", budgetBand: "A" },
@@ -235,7 +235,7 @@ export const scenarios = [
           {
             id: "heating",
             title: "Heating quote",
-            summary: "Quote to replace the 22-year-old boiler with an efficient system.",
+            summary: "Quote to replace the old boiler with an efficient system.",
             why: "The boiler has just needed a repair. Replacing it as part of the plan beats repairing it again.",
             catalogueId: "heating-quote-impact-us-today",
             partner: { name: "Impact us today", proposed: false },
@@ -400,7 +400,7 @@ export const scenarios = [
           question: "Will your delivery vans need to go electric?",
           evidence: [
             { label: "Two diesel vans", detail: "Regular fuel payments and deliveries to Brussels", category: "Mobility" },
-            { label: "Low-emission zone", detail: facts.brusselsBan.text, category: "Mobility" },
+            { label: "Low-emission zone", detail: factLine(facts.brusselsBan), category: "Mobility" },
           ],
           dataUsed: ["Fuel payments (category and amount)", "Delivery area inferred from payments"],
           dataNotUsed: ["Private account", "Customer names", "Invoice contents"],

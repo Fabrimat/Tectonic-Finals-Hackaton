@@ -35,29 +35,32 @@ export default function CustomerApp() {
         </span>
       </header>
 
-      <div className="cx-switch">
-        <label htmlFor="cx-scenario">Customer</label>
-        <select id="cx-scenario" value={scenario.id} onChange={(e) => actions.selectScenario(e.target.value)}>
-          {scenarios.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.person.name}
-            </option>
+      <div className="cx-tools">
+        <p className="cx-tools-title">Demo tools</p>
+        <div className="cx-switch">
+          <label htmlFor="cx-scenario">Customer</label>
+          <select id="cx-scenario" value={scenario.id} onChange={(e) => actions.selectScenario(e.target.value)}>
+            {scenarios.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.person.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="cx-switch cx-demo" role="group" aria-label="Demo control, ladder stage">
+          <span>Demo control, stage</span>
+          {stageOrder.map((key) => (
+            <button
+              key={key}
+              type="button"
+              className={key === stage ? "cx-stage-btn is-active" : "cx-stage-btn"}
+              aria-pressed={key === stage}
+              onClick={() => actions.selectStage(key)}
+            >
+              {stages[key].label}
+            </button>
           ))}
-        </select>
-      </div>
-      <div className="cx-switch cx-demo" role="group" aria-label="Demo control, ladder stage">
-        <span>Demo control, stage</span>
-        {stageOrder.map((key) => (
-          <button
-            key={key}
-            type="button"
-            className={key === stage ? "cx-stage-btn is-active" : "cx-stage-btn"}
-            aria-pressed={key === stage}
-            onClick={() => actions.selectStage(key)}
-          >
-            {stages[key].label}
-          </button>
-        ))}
+        </div>
       </div>
 
       <main className="cx-main">
