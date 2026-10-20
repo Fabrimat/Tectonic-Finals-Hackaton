@@ -1,5 +1,7 @@
 import { stages } from "../../data/scenarios";
 import ConsentStrip from "./ConsentStrip";
+import EvidencePanel from "./EvidencePanel";
+import { view } from "../../lib/params";
 
 export default function InsightCard({ scenario, confirmed, onConfirm, onDecline }) {
   const { insight } = scenario;
@@ -17,8 +19,9 @@ export default function InsightCard({ scenario, confirmed, onConfirm, onDecline 
       </ul>
       <p className="cx-consent">With your consent, in line with GDPR</p>
       <ConsentStrip context="analysis" />
-      <details className="cx-disclosure">
+      <details className="cx-disclosure" open={view.evidence || undefined}>
         <summary>More about this</summary>
+        <EvidencePanel scenarioId={scenario.id} stage="whisper" />
         <p>{insight.more}</p>
         <p className="cx-muted">{stages.whisper.note}</p>
         <p className="cx-muted">Please check that this data is right. Nothing is built on it until you confirm.</p>

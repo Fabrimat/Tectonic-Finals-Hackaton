@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ConsentStrip, { ConsentText } from "./ConsentStrip";
+import EvidencePanel from "./EvidencePanel";
+import { view } from "../../lib/params";
 
 const REPLIES = {
   later: "No problem. We will ask next time.",
@@ -27,19 +29,9 @@ export default function ConfirmCard({ scenario, onConfirm, onDecline }) {
 
       <ConsentStrip context="goal" note="With your consent, in line with GDPR" inline />
 
-      <details className="cx-disclosure">
+      <details className="cx-disclosure" open={view.evidence || undefined}>
         <summary>Why am I seeing this?</summary>
-        {/* Slot for the evidence breakdown. The list below stands in until it is filled. */}
-        <div className="evidence-slot">
-          <ul className="cx-evidence">
-            {signal.evidence.map((item) => (
-              <li key={item.label}>
-                <span className="cx-evidence-label">{item.label}</span>
-                <span className="cx-evidence-detail">{item.detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <EvidencePanel scenarioId={scenario.id} stage={scenario.stage} />
         <h2 className="cx-small-title">What we did not use</h2>
         <ul className="cx-plain-list">
           {signal.dataNotUsed.map((line) => (
