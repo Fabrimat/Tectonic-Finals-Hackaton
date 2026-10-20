@@ -65,10 +65,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     if (!wording.key || !wording.model) {
       throw new Error('PLAN_WORDING_KEY and PLAN_WORDING_MODEL are required when PLAN_WORDING_ENABLED=true');
     }
+    let parsed: URL | undefined;
     try {
-      new URL(wording.url);
+      parsed = new URL(wording.url);
     } catch {
-      throw new Error('PLAN_WORDING_URL must be a valid URL when PLAN_WORDING_ENABLED=true');
+      parsed = undefined;
+    }
+    if (!parsed || parsed.protocol !== 'https:') {
+      throw new Error('PLAN_WORDING_URL must be a valid https URL when PLAN_WORDING_ENABLED=true');
     }
   }
 
