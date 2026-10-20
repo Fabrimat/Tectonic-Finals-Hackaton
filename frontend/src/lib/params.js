@@ -10,6 +10,7 @@ import { initial } from "./reducer.js";
 //   rejected   comma separated step ids
 //   partner    partner name shown first on the advisor dashboard
 //   tools      0 hides the demo tools
+//   clock      1 shows the renovation clock alone on the home screen, without the feed cards
 //   open       1 opens the energy radar card instead of the home screen
 // Unknown values are ignored. Any decision implies a confirmed signal.
 
@@ -48,7 +49,7 @@ export function stateFromParams(search) {
 
 export function viewParams(search) {
   const params = new URLSearchParams(search);
-  return { partner: params.get("partner") ?? "", tools: params.get("tools") !== "0", open: truthy(params.get("open")) };
+  return { partner: params.get("partner") ?? "", tools: params.get("tools") !== "0", open: truthy(params.get("open")), clock: truthy(params.get("clock")) };
 }
 
 export const view = viewParams(typeof window === "undefined" ? "" : window.location.search);

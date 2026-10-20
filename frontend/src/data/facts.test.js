@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { facts, factLine } from "./facts.js";
+import { facts, factLine, clockRemaining, clockLabel } from "./facts.js";
 import { scenarios } from "./scenarios.js";
 
 function strings(value, out = []) {
@@ -44,4 +44,34 @@ test("whisper and forming copy never names the label letters or the six year rul
       assert.ok(!/label E or F|label D|six years/i.test(copy), `${base.id} ${key}`);
     }
   }
+});
+
+test("clock counts down from a fixed date and clamps at zero", () => {
+  const clock = { purchaseDate: "2024-06-15", periodYears: 6 };
+  const mid = clockRemaining(clock, "2026-10-20");
+  assert.equal(mid.days, 1334);
+  assert.ok(mid.fraction > 0.6 && mid.fraction < 0.62);
+  assert.equal(clockLabel(mid), "about 4 years left");
+  assert.equal(clockRemaining(clock, "2024-06-15").fraction, 1);
+  const end = clockRemaining(clock, "2030-06-15");
+  assert.equal(end.days, 0);
+  assert.equal(clockLabel(end), "Time is up");
+  const past = clockRemaining(clock, "2035-01-01");
+  assert.equal(past.days, 0);
+  assert.equal(past.fraction, 0);
+  assert.equal(clockLabel(clockRemaining(clock, "2030-03-15")), "about 3 months left");
+  assert.equal(clockLabel(clockRemaining(clock, "2030-05-20")), "about 1 month left");
+});
+
+test("clock rejects bad dates and periods", () => {
+  assert.equal(clockRemaining({ purchaseDate: "15/06/2024", periodYears: 6 }), null);
+  assert.equal(clockRemaining({ purchaseDate: "2024-02-31", periodYears: 6 }), null);
+  assert.equal(clockRemaining({ purchaseDate: "2024-06-15", periodYears: 0 }), null);
+  assert.equal(clockRemaining({ purchaseDate: "2024-06-15", periodYears: 6 }, "nope"), null);
+  assert.equal(clockRemaining(undefined), null);
+  assert.equal(clockLabel(null), "");
+});
+
+test("the shipped clock is valid and the fact is unconfirmed", () => {
+  assert.ok(clockRemaining(facts.renovationRule.clock));
 });

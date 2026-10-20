@@ -2,6 +2,7 @@
 // Names and amounts are invented. tone picks the tile colour, cents are kept apart for display.
 export const homes = {
   "household-maes": {
+    clock: true,
     accounts: [
       { id: "personal", name: "Personal Account", tone: "blue", amount: "4 218", cents: "36", active: true },
       { id: "joint", name: "Joint Account", tone: "navy", amount: "2 905", cents: "12" },
