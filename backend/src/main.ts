@@ -8,7 +8,7 @@ import { configureApp } from './setup';
 async function bootstrap() {
   const config = loadConfig();
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  configureApp(app, config.corsOrigins, config.staticDir);
+  configureApp(app, config.corsOrigins, config.staticDir, config.trustProxy);
   await app.listen(config.port);
 }
 

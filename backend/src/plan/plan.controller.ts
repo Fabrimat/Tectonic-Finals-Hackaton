@@ -1,4 +1,5 @@
 import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { PlanRequestDto } from './dto/plan-request.dto';
 import { ScenarioQueryDto } from './dto/scenario-query.dto';
 import { PlanService } from './plan.service';
@@ -8,6 +9,7 @@ export class PlanController {
   constructor(private readonly plans: PlanService) {}
 
   @Post()
+  @Throttle({ default: { limit: 60, ttl: 60_000 } })
   create(@Body() dto: PlanRequestDto) {
     return this.plans.create(dto);
   }

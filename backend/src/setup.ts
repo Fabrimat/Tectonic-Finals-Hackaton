@@ -5,7 +5,8 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import type { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
-export function configureApp(app: INestApplication, corsOrigins: string[], staticDir?: string): void {
+export function configureApp(app: INestApplication, corsOrigins: string[], staticDir?: string, trustProxy = 0): void {
+  if (trustProxy > 0) (app as NestExpressApplication).set('trust proxy', trustProxy);
   (app as NestExpressApplication).useBodyParser('json', { limit: '10kb' });
   app.use(
     helmet({

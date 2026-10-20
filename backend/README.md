@@ -20,6 +20,7 @@ Configuration (environment variables, validated at startup):
 | `PORT` | `3000` | HTTP port |
 | `CORS_ORIGINS` | `http://localhost:5173` | Comma separated list of allowed origins |
 | `RATE_LIMIT_PER_MINUTE` | `300` | Requests per minute per client |
+| `TRUST_PROXY` | `0` | Number of reverse proxies in front of the app. Behind a proxy, set it so the rate limit keys on the real client address |
 | `PARTNER_API_KEY` | none | Required, at least 24 characters. Sent as the `x-api-key` header to read intents |
 | `STATIC_DIR` | `frontend/dist` of the repository | Built frontend served from the same origin, skipped when the directory has no `index.html` |
 

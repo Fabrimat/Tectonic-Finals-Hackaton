@@ -6,6 +6,7 @@ export interface AppConfig {
   rateLimitPerMinute: number;
   partnerApiKey: string;
   staticDir: string;
+  trustProxy: number;
   wording: WordingConfig;
 }
 
@@ -21,6 +22,15 @@ function positiveInt(name: string, raw: string | undefined, fallback: number, ma
   const value = Number(raw);
   if (!Number.isInteger(value) || value < 1 || value > max) {
     throw new Error(`Invalid ${name}: expected an integer between 1 and ${max}, got "${raw}"`);
+  }
+  return value;
+}
+
+function proxyHops(raw: string | undefined): number {
+  if (raw === undefined || raw === '' || raw === 'false') return 0;
+  const value = Number(raw);
+  if (!Number.isInteger(value) || value < 0 || value > 10) {
+    throw new Error(`Invalid TRUST_PROXY: expected a number of proxy hops between 0 and 10, got "${raw}"`);
   }
   return value;
 }
@@ -68,6 +78,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     rateLimitPerMinute: positiveInt('RATE_LIMIT_PER_MINUTE', env.RATE_LIMIT_PER_MINUTE, 300, 100000),
     partnerApiKey,
     staticDir: env.STATIC_DIR || join(__dirname, '..', '..', '..', 'frontend', 'dist'),
+    trustProxy: proxyHops(env.TRUST_PROXY),
     wording,
   };
 }
