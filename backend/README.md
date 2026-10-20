@@ -71,6 +71,26 @@ Global settings live in `data/engine.json`:
 
 ### Evaluation on synthetic data
 
-`data/eval-customers.json` holds 96 synthetic customers with a true stage, written by `scripts/generate-eval.js` (`npm run generate:eval`, fixed seed). The generator draws the stage first and then adds noise, such as missing and spurious signals. `src/plan/evaluation.spec.ts` runs the engine over it, prints a confusion matrix and asserts precision and recall at ready and forming. These numbers only show that the rules agree with synthetic labels. They say nothing about real customers.
+Two synthetic sets are written by `scripts/generate-eval.js` (`npm run generate:eval`, fixed seeds, committed output). `src/plan/evaluation.spec.ts` runs the engine over both, prints a confusion matrix with precision and recall per stage, and asserts conservative thresholds. Labels come from the same synthetic generator, drawn before the signals and never from the engine output. The numbers measure the rules against synthetic labels only and say nothing about real customers.
+
+Clean set, `data/eval-customers.json`, 96 customers with some missing and spurious signals (rows are true, columns are predicted):
+
+| true \ predicted | none | whisper | forming | ready | precision | recall |
+| --- | --- | --- | --- | --- | --- | --- |
+| none | 24 | 0 | 0 | 0 | | |
+| whisper | 7 | 17 | 0 | 0 | 0.74 | 0.71 |
+| forming | 1 | 3 | 20 | 0 | 0.91 | 0.83 |
+| ready | 0 | 3 | 2 | 19 | 1.00 | 0.79 |
+
+Noisy set, `data/eval-noisy.json`, 320 customers. It deliberately contains contradictory signals (a ready level spend with a far deadline, flags that point at a later stage than the dates), missing and unparseable dates, dates exactly on a window edge and one day either side, spend rows in sensitive categories mixed with valid signals, duplicate rows, stale dates, and history with dismissed and snoozed decisions around the cooldown limits. The true stage is defined in the generator from the customer's underlying facts (for example a vehicle deposit means ready), and a customer who dismissed the intent less than 90 days ago is labelled none. Each customer also carries a copy of its signals without the sensitive rows, and the spec asserts the prediction is identical with and without them.
+
+| true \ predicted | none | whisper | forming | ready | precision | recall |
+| --- | --- | --- | --- | --- | --- | --- |
+| none | 98 | 0 | 0 | 0 | | |
+| whisper | 35 | 40 | 0 | 0 | 0.46 | 0.53 |
+| forming | 20 | 21 | 36 | 0 | 1.00 | 0.47 |
+| ready | 12 | 26 | 0 | 32 | 1.00 | 0.46 |
+
+On the noisy set no customer is shown forming or ready without that label, but many true customers are missed or shown a lower stage: recall is below one half at forming and ready. Whisper precision is 0.46 because forming and ready customers with weak evidence are shown as whisper. The spec asserts only precision of at least 0.9 at forming and ready, recall of at least 0.35, and at most 10 percent of true none customers shown a card.
 
 Optional wording: with `PLAN_WORDING_ENABLED=true` and `PLAN_WORDING_URL` (https only), `PLAN_WORDING_KEY`, `PLAN_WORDING_MODEL` set, `POST /api/plan` asks the configured endpoint (chat completions format) to rephrase each `why`. It cannot change ids, titles or roles. Any failure returns the deterministic text. It is off by default.
