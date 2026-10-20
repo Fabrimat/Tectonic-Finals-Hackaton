@@ -702,3 +702,9 @@
   background: var(--kbc-navy);
   color: #fff;
 }
+
+.cx-sync {
+  margin: 14px 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}

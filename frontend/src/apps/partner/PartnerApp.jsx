@@ -1,20 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { fetchIntents, readAccessKey, writeAccessKey } from "../../lib/api";
 import { useRipple } from "../../lib/store";
-import { leadsFor, partnersOf } from "./leadData";
+import { allPartners, leadsFor, leadsFromIntents, partnersOf } from "./leadData";
+import AccessField from "./AccessField";
 import Leads from "./Leads";
 import Numbers from "./Numbers";
 import "./partner.css";
 
 export default function PartnerApp() {
   const { scenario, confirmed, decisions } = useRipple();
-  const partners = partnersOf(scenario);
+  const [key, setKey] = useState(readAccessKey);
+  const [remote, setRemote] = useState({ status: "nokey", intents: [] });
+  const live = remote.status === "ok";
+  const localPartners = partnersOf(scenario);
+  const partners = live ? allPartners() : localPartners;
   const [picked, setPicked] = useState(null);
   const [offers, setOffers] = useState({});
 
   const current = partners.find((p) => p.name === picked) ?? partners[0];
-  const leads = leadsFor(scenario, decisions, confirmed);
+  const localLeads = leadsFor(scenario, decisions, confirmed);
+  const leads = live ? leadsFromIntents(remote.intents) : localLeads;
   const sendOffer = (ref, offer) => setOffers((prev) => ({ ...prev, [ref]: offer }));
+
+  useEffect(() => {
+    let active = true;
+    const load = () =>
+      fetchIntents(key).then((result) => {
+        if (active) setRemote(result);
+      });
+    load();
+    const timer = key ? setInterval(load, 5000) : null;
+    return () => {
+      active = false;
+      clearInterval(timer);
+    };
+  }, [key]);
+
+  const changeKey = (value) => {
+    writeAccessKey(value);
+    setKey(value);
+  };
 
   return (
     <div className="pp">
@@ -36,6 +62,7 @@ export default function PartnerApp() {
         <Link className="pp-back" to="/">Back to start</Link>
       </header>
       <main className="pp-main">
+        <AccessField value={key} onChange={changeKey} status={remote.status} />
         <Routes>
           <Route
             index
@@ -50,7 +77,7 @@ export default function PartnerApp() {
           />
           <Route
             path="numbers"
-            element={<Numbers scenario={scenario} decisions={decisions} leads={leads} partners={partners} />}
+            element={<Numbers scenario={scenario} decisions={decisions} leads={localLeads} partners={localPartners} />}
           />
           <Route path="*" element={<Navigate to="/partner" replace />} />
         </Routes>

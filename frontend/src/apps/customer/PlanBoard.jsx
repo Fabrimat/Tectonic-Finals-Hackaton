@@ -1,8 +1,21 @@
+import { useState } from "react";
+import { postIntent } from "../../lib/api";
 import StepCard from "./StepCard";
 import SkipCard from "./SkipCard";
 
+const syncText = {
+  sent: "Your request reached the partner.",
+  local: "Saved on this device. It will not reach the partner until the service is back.",
+};
+
 export default function PlanBoard({ scenario, decisions, actions }) {
   const steps = [...scenario.steps].sort((a, b) => a.order - b.order);
+  const [sync, setSync] = useState("");
+
+  const decide = (step, decision) => {
+    actions.decide(step.id, decision);
+    if (decision === "accepted" && step.intent) postIntent(scenario.id, step).then(setSync);
+  };
 
   return (
     <section aria-labelledby="cx-plan-title">
@@ -20,13 +33,18 @@ export default function PlanBoard({ scenario, decisions, actions }) {
                 step={step}
                 signal={scenario.signal}
                 decision={decisions[step.id]}
-                onDecide={(d) => actions.decide(step.id, d)}
+                onDecide={(d) => decide(step, d)}
                 onUndo={() => actions.clearDecision(step.id)}
               />
             )}
           </li>
         ))}
       </ol>
+      {syncText[sync] && (
+        <p className="cx-sync" role="status">
+          {syncText[sync]}
+        </p>
+      )}
     </section>
   );
 }

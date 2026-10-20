@@ -1,4 +1,4 @@
-import { canShare } from "../../data/scenarios";
+import { canShare, scenarios, viewOf } from "../../data/scenarios.js";
 
 function hash(text) {
   let h = 2166136261;
@@ -36,4 +36,36 @@ export function leadsFor(scenario, decisions, confirmed) {
       timeframe: s.intent.timeframe,
       band: s.intent.budgetBand,
     }));
+}
+
+function readyStepsOf() {
+  return scenarios.flatMap((base) => viewOf(base, "ready").steps.map((step) => ({ scenarioId: base.id, step })));
+}
+
+export function allPartners() {
+  const seen = new Map();
+  for (const { step } of readyStepsOf()) {
+    if (step.partner && step.intent && !seen.has(step.partner.name)) seen.set(step.partner.name, step.partner);
+  }
+  return [...seen.values()];
+}
+
+// Turns server intents into lead rows. An intent whose step is not in the local content is dropped.
+export function leadsFromIntents(intents) {
+  const known = readyStepsOf();
+  const leads = [];
+  for (const intent of intents) {
+    const match = known.find((k) => k.scenarioId === intent.scenarioId && k.step.id === intent.stepId);
+    if (!match || !match.step.partner) continue;
+    leads.push({
+      id: intent.stepId,
+      ref: intent.reference,
+      partner: match.step.partner.name,
+      service: intent.service,
+      region: intent.region,
+      timeframe: intent.timeframe,
+      band: intent.budgetBand,
+    });
+  }
+  return leads;
 }
